@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@id/fragment_movies">
+
+    <fragment
+        android:id="@+id/fragment_movies"
+        android:name="com.mustafa.movieapp.view.ui.movies.movielist.MovieListFragment"
+        android:label="fragment_movies"
+        tools:layout="@layout/fragment_movies">
+        <action
+            android:id="@+id/action_movies_to_movieDetail"
+            app:destination="@id/movieDetail" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/movieDetail"
+        android:name="com.mustafa.movieapp.view.ui.movies.moviedetail.MovieDetailFragment"
+        android:label="fragmentMovieDetail"
+        tools:layout="@layout/fragment_movie_detail">
+        <argument
+            android:name="movie"
+            app:argType="com.mustafa.movieapp.models.entity.Movie" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/celebrities"
+        android:name="com.mustafa.movieapp.view.ui.person.CelebritiesListFragment"
+        android:label="celebrities"
+        tools:layout="@layout/fragment_celebrities">
+        <action
+            android:id="@+id/action_celebrities_to_celebrity"
+            app:destination="@id/celebrityDetail" />
+
+
+    </fragment>
+    <fragment
+        android:id="@+id/celebrityDetail"
+        android:name="com.mustafa.movieapp.view.ui.person.CelebrityDetailFragment"
+        android:label="celebrityDetail"
+        tools:layout="@layout/fragment_celebrity_detail">
+
+        <argument
+            android:name="person"
+            app:argType="com.mustafa.movieapp.models.entity.Person" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tvsList"
+        android:name="com.mustafa.movieapp.view.ui.tv.TvListFragment"
+        android:label="tvs"
+        tools:layout="@layout/fragment_tvs">
+        <action
+            android:id="@+id/action_tvs_to_tvDetail"
+            app:destination="@id/tvDetail" />
+
+        <argument
+            android:name="tvId"
+            app:argType="integer" />
+
+
+    </fragment>
+    <fragment
+        android:id="@+id/tvDetail"
+        android:name="com.mustafa.movieapp.view.ui.tv.TvDetailFragment"
+        android:label="tvDetail"
+        tools:layout="@layout/fragment_tv_detail">
+        <argument
+            android:name="tv"
+            app:argType="com.mustafa.movieapp.models.entity.Tv" />
+    </fragment>
+
+
+
+</navigation>

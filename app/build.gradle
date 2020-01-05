@@ -1,0 +1,170 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'jacoco'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
+apply plugin: "kotlin-allopen"
+
+def getProperty(String filename, String propName) {
+    def propsFile = rootProject.file(filename)
+    if (propsFile.exists()) {
+        def props = new Properties()
+        props.load(new FileInputStream(propsFile))
+        if (props[propName] != null) {
+            return props[propName]
+        } else {
+            print("No such property " + propName + " in file " + filename)
+        }
+    } else {
+        print(filename + " does not exist!")
+    }
+}
+
+allOpen {
+    // allows mocking for classes w/o directly opening them for release builds
+    annotation 'com.mustafa.movieapp.testing.OpenClass'
+}
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    defaultConfig {
+        applicationId "com.mustafa.movieapp"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "com.mustafa.movieapp.runner.AndroidJunitTestRunner"
+        buildConfigField "String", "TMDB_API_KEY", "\"${getProperty("local.properties", "tmdb_api_key")}\""
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    kapt {
+        correctErrorTypes = true
+    }
+    dataBinding {
+        enabled = true
+    }
+    androidExtensions {
+        experimental = true
+    }
+    sourceSets {
+        androidTest.java.srcDirs += "src/test-common/java"
+        test.java.srcDirs += "src/test-common/java"
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile ('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    def androidxVersion = '1.0.0'
+    def accompatVersion = '1.1.0'
+    def androidFragment = '1.2.0-rc04'
+    def materialVersion = '1.2.0-alpha03'
+    def recyclerVersion = '1.2.0-alpha01'
+    def ankoVersion = '0.10.8'
+    def archCompomentVersion = '2.1.0'
+    def roomVersion = '2.2.3'
+    def lifecycleVersion = '2.2.0-rc03'
+    def daggerVersion = '2.25.4'
+    def retrofitVersion = '2.7.1'
+    def googleJssonVersion = '2.8.6'
+    def okhttpVersion = '4.3.0'
+    def timberVersion = '4.7.1'
+    def stethoVersion = '1.5.1'
+    def glideVersion = '4.10.0'
+    def glidePaletteVersion = '2.1.2'
+    def baseAdapterVersion = '0.1.3'
+    def androidTagViewVersion = '1.1.4'
+    def expandableTextViewVersion = '0.1.4'
+    def mockWebServerVersion = '3.9.0'
+    def mockitoKotlinVersion = '2.1.0'
+    def junitVersion = '4.13'
+    def espressoVersion = '3.2.0'
+    def androidxTestCore = '1.1.0'
+    def androidxTestRules = '1.2.0'
+    def nav_version = '2.1.0'
+    def circleImageVersion = '3.0.1'
+
+    // support library
+    implementation "androidx.appcompat:appcompat:$accompatVersion"
+    implementation 'androidx.activity:activity:1.1.0-rc03'
+    implementation 'androidx.activity:activity-ktx:1.1.0-rc03'
+    implementation "androidx.fragment:fragment:$androidFragment"
+    implementation "androidx.fragment:fragment-ktx:$androidFragment"
+    implementation "com.google.android.material:material:$materialVersion"
+    implementation "androidx.palette:palette:$androidxVersion"
+    implementation "androidx.recyclerview:recyclerview:$recyclerVersion"
+
+    // kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    implementation "org.jetbrains.anko:anko:$ankoVersion"
+
+    // architecture components
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    testImplementation "androidx.arch.core:core-testing:$archCompomentVersion"
+
+    // navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    implementation "de.hdodenhof:circleimageview:$circleImageVersion"
+
+    // dependency injection
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.google.dagger:dagger-android:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+
+    debugImplementation "androidx.fragment:fragment-testing:$androidFragment"
+
+    // network
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+    implementation "com.google.code.gson:gson:$googleJssonVersion"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$okhttpVersion"
+
+    // glide
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    implementation "com.github.florent37:glidepalette:$glidePaletteVersion"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+
+    // adapter
+    implementation "com.github.skydoves:baserecyclerviewadapter:$baseAdapterVersion"
+
+    // debugging
+    implementation "com.jakewharton.timber:timber:$timberVersion"
+    implementation "com.facebook.stetho:stetho:$stethoVersion"
+    implementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
+
+    // custom view
+    implementation "co.lujun:androidtagview:$androidTagViewVersion"
+    implementation "com.ms-square:expandableTextView:$expandableTextViewVersion"
+
+    // unit test
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "androidx.test.ext:junit:1.1.1"
+    androidTestImplementation "androidx.test:core:1.2.0"
+    androidTestImplementation "androidx.test:rules:$androidxTestRules"
+    androidTestImplementation "androidx.test:runner:$androidxTestRules"
+    androidTestImplementation "androidx.arch.core:core-testing:$archCompomentVersion"
+}

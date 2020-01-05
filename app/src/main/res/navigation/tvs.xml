@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tvs"
+    app:startDestination="@+id/tvsList">
+
+    <fragment
+        android:id="@+id/tvsList"
+        android:name="com.mustafa.movieapp.view.ui.tv.TvListFragment"
+        android:label="tvs"
+        tools:layout="@layout/fragment_tvs">
+        <action
+            android:id="@+id/action_tvs_to_tvDetail"
+            app:destination="@id/tvDetail" />
+
+        <argument
+            android:name="tvId"
+            app:argType="integer" />
+
+
+    </fragment>
+    <fragment
+        android:id="@+id/tvDetail"
+        android:name="com.mustafa.movieapp.view.ui.tv.TvDetailFragment"
+        android:label="tvDetail"
+        tools:layout="@layout/fragment_tv_detail">
+        <argument
+            android:name="tv"
+            app:argType="com.mustafa.movieapp.models.entity.Tv" />
+    </fragment>
+
+</navigation>

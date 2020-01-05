@@ -1,0 +1,48 @@
+<androidx.appcompat.widget.Toolbar
+    android:id="@+id/toolbar_main"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/colorPrimary"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    android:elevation="4dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/arrow_back"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:focusableInTouchMode="true"
+        android:focusable="true"
+        android:tooltipText="Go back"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_arrow_back_white_24dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/filter"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:focusableInTouchMode="true"
+            android:focusable="true"
+            android:tooltipText="Filter your search..."
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_action_filter"/>
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
+            android:iconifiedByDefault="true"
+            android:layout_marginStart="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layoutDirection="rtl"
+            android:layout_toStartOf="@+id/filter"
+            app:queryHint="Search...">
+        </androidx.appcompat.widget.SearchView>
+    </RelativeLayout>
+</androidx.appcompat.widget.Toolbar>
