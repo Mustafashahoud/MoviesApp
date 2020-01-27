@@ -58,7 +58,7 @@ android {
         }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile ('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -97,6 +97,7 @@ dependencies {
     def androidxTestRules = '1.2.0'
     def nav_version = '2.1.0'
     def circleImageVersion = '3.0.1'
+    def constraintLayout = '2.0.0-beta4'
 
     // support library
     implementation "androidx.appcompat:appcompat:$accompatVersion"
@@ -107,6 +108,7 @@ dependencies {
     implementation "com.google.android.material:material:$materialVersion"
     implementation "androidx.palette:palette:$androidxVersion"
     implementation "androidx.recyclerview:recyclerview:$recyclerVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
 
     // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
@@ -116,6 +118,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.room:room-runtime:$roomVersion"
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     kapt "androidx.room:room-compiler:$roomVersion"
     testImplementation "androidx.arch.core:core-testing:$archCompomentVersion"
 

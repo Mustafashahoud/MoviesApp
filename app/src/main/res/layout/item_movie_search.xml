@@ -3,20 +3,27 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="com.mustafa.movieapp.utils.StringUtils"/>
+
+        <variable
+            name="movie"
+            type="com.mustafa.movieapp.models.entity.Movie" />
+    </data>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="140dp"
-        android:layout_margin="4dp"
-        app:cardElevation="0.5dp">
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="1dp">
 
         <RelativeLayout
             android:id="@+id/relative_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:foreground="?attr/selectableItemBackground"
-            android:background="@color/background"
-            tools:background="@color/background">
+            android:background="@color/itemsColor"
+            tools:background="@color/itemsColor">
 
             <ImageView
                 android:id="@+id/item_poster_post"
@@ -31,7 +38,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="20dp"
                 android:minHeight="50dp"
@@ -40,32 +47,20 @@
 
                 <TextView
                     android:id="@+id/item_poster_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
                     android:padding="3dp"
                     android:ellipsize="middle"
-                    android:maxLines="2"
+                    android:singleLine="true"
                     android:textColor="@color/white"
                     android:text="@{movie.title}"
                     tools:text="Vikings"
                     android:textSize="14sp"
                     android:textStyle="bold" />
-                <TextView
-                    android:id="@+id/item_release_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="5dp"
-                    android:padding="3dp"
-                    android:ellipsize="middle"
-                    android:maxLines="2"
-                    android:textColor="@color/preview"
-                    android:text="@{movie.release_date}"
-                    tools:text="2009"
-                    android:textSize="14sp"
-                    />
+
+
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -92,22 +87,45 @@
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="5dp"
                         android:ellipsize="middle"
-                        android:maxLines="2"
+                        android:singleLine="true"
                         android:textColor="@color/white"
                         android:text="@{String.valueOf(movie.vote_average)}"
                         tools:text="7.9"
                         android:textSize="14sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/item_release_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="13dp"
+                        android:layout_marginTop="5dp"
+                        android:ellipsize="middle"
+                        android:singleLine="true"
+                        android:text="@{StringUtils.formatReleaseDate(movie.release_date)}"
+                        android:textColor="@color/preview"
+                        android:textSize="14sp"
+                        tools:text="Release: 2009 " />
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/preview"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
+                    android:textSize="14sp"
+                    android:text="@{StringUtils.getMovieGenresById(movie.genre_ids)}"
+                    tools:text="Release: 2009 "/>
+
             </LinearLayout>
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
-    <data>
-        <variable
-            name="movie"
-            type="com.mustafa.movieapp.models.entity.Movie" />
-    </data>
+
 </layout>
 
 

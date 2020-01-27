@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto">
-  <item
-    android:id="@+id/movies"
-    android:enabled="true"
-    android:icon="@drawable/ic_movie_filter_white_24dp"
-    android:title="@string/fragment_movies"
-    app:showAsAction="ifRoom" />
-  <item
-    android:id="@+id/tvs"
-    android:enabled="true"
-    android:icon="@drawable/ic_live_tv_white_24dp"
-    android:title="@string/fragment_tvs"
-    app:showAsAction="ifRoom" />
-  <item
-    android:id="@+id/stars"
-    android:enabled="true"
-    android:icon="@drawable/ic_star_white_24dp"
-    android:title="@string/fragment_celebrities"
-    app:showAsAction="ifRoom" />
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/moviesFragment"
+        android:icon="@drawable/ic_movie_filter_white_24dp"
+        android:state_checked="true"
+        android:title="@string/fragment_movies"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/tvsFragment"
+        android:icon="@drawable/ic_live_tv_white_24dp"
+        android:title="@string/fragment_tvs"
+        android:state_checked="false"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/celebritiesFragment"
+        android:icon="@drawable/ic_star_white_24dp"
+        android:title="@string/fragment_celebrities"
+        android:state_checked="false"/>
+        app:showAsAction="ifRoom" />
 </menu>

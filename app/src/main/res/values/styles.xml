@@ -1,14 +1,26 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlHighlight">@color/colorPrimary</item>
+
+        <item name="colorControlHighlight">@color/white</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColor">@android:color/white</item>
+
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+
+            <!--      colorOnPrimary textColor on Buttton  k-->
+        <item name="colorOnPrimary">@color/colorAccent</item>
+
+
+        <item name="colorSecondary">@color/colorPrimary</item>
+        <item name="colorSecondaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnSecondary">@color/colorAccent</item>
+
     </style>
 
     <style name="filterTheme" parent="AppTheme">
@@ -22,17 +34,76 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">18sp</item>
     </style>
-
-
-    <style name="splashScreenTheme" parent="@android:style/Theme.DeviceDefault.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/splash</item>
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="CollapsedExpandedTitleText" parent="AppTheme">
         <item name="android:textColor">@android:color/transparent</item>
     </style>
+
+
+
+    <style name="splashScreenTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!--  AlertDialogTheme Theme  -->
+    <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/BodyTextStyle</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+
+    </style>
+
+
+    <style name="SelectableItemTheme" parent="ThemeOverlay.MaterialComponents">
+        <item name="colorControlHighlight">@android:color/white</item>
+        <item name="android:textAlignment">viewStart</item>
+    </style>
+
+    <style name="SelectableFilterTheme" parent="ThemeOverlay.MaterialComponents">
+        <item name="colorControlHighlight">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/colorPrimary</item>
+        <item name="colorOnSecondary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/blueClearColor</item>
+        <item name="android:theme">@style/SelectableItemTheme</item>
+
+    </style>
+
+    <style name="NegativeButtonStyle" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/blueClearColor</item>
+        <item name="android:theme">@style/SelectableItemTheme</item>
+    </style>
+
+
+    <style name="BodyTextStyle" >
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize"> 16sp</item>
+    </style>
+
+<!--    Widget.MaterialComponents.Button-->
+
+    <style name="filterButtonTheme"  parent="ThemeOverlay.MaterialComponents">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:theme">@style/SelectableFilterTheme</item>
+    </style>
+
+    <style name="seeResultTextView" parent="@style/Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:background">@color/colorAccent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAlignment">center</item>
+
+    </style>
+
+<!--    <style name="buttonTheme"-->
+
+
 
 </resources>

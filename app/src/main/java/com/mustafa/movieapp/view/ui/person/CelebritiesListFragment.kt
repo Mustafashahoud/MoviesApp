@@ -81,15 +81,15 @@ class CelebritiesListFragment : Fragment(), Injectable {
         recycler_view_main_fragment_star.adapter = adapter
 
         recycler_view_main_fragment_star.layoutManager = GridLayoutManager(context, 2)
-        val paginator = object : RecyclerViewPaginator(
-                recyclerView = recycler_view_main_fragment_star,
-                hasNext = { viewModel.peopleLiveData.value?.hasNextPage!! }
-        ) {
-            override fun onLoadMore(currentPage: Int) {
-                loadMoreStars(currentPage)
-            }
-        }
-        paginator.resetCurrentPage()
+//        val paginator = object : RecyclerViewPaginator(
+//                recyclerView = recycler_view_main_fragment_star,
+//                hasNext = { viewModel.peopleLiveData.value?.hasNextPage!! }
+//        ) {
+//            override fun onLoadMore(currentPage: Int) {
+//                loadMoreStars(currentPage)
+//            }
+//        }
+//        paginator.resetCurrentPage()
     }
 
 

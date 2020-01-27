@@ -1,8 +1,24 @@
 <resources>
-  <string name="app_name">MovieApp</string>
-  <string name="fragment_movies">Movies</string>
-  <string name="fragment_tvs">Series</string>
-  <string name="fragment_celebrities">Celebrities </string>
-  <string name="transition_profile">transition_profile</string>
-  <string name="main_fragment_movie">main_fragment_movie</string>
+    <string name="app_name">MovieApp</string>
+    <string name="fragment_movies">Movies</string>
+    <string name="fragment_tvs">Series</string>
+    <string name="fragment_celebrities">Celebrities </string>
+    <string name="transition_profile">transition_profile</string>
+    <string name="main_fragment_movie">main_fragment_movie</string>
+    <string name="retry">Retry</string>
+    <string name="unknown_error">Unknown Error</string>
+    <string name="empty_search_result">No results for <b>%s</b></string>
+    <string name="recent">Recent</string>
+    <string name="filter_movies">Filter &amp; Find Movies</string>
+    <string name="recent_searches">Recent Searches</string>
+    <string name="clear">CLEAR</string>
+    <string name="dialog_message">Clear recent searches and pages?</string>
+    <string name="cancel">Cancel</string>
+    <string name="see_results">SEE RESULTS</string>
+    <string name="imdb_rating">IMDb Rating</string>
+    <string name="genre">Genre</string>
+    <string name="year">Year</string>
+    <string name="language">Language</string>
+    <string name="country">Country</string>
+    <string name="search_type">Search Type</string>
 </resources>

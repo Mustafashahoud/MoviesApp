@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="com.mustafa.movieapp.models.Resource"/>
+        <import type="com.mustafa.movieapp.models.Status"/>
+
+        <variable
+            name="resource"
+            type="Resource" />
+        <variable
+            name="callback"
+            type="com.mustafa.movieapp.view.ui.common.RetryCallback" />
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        app:visibleGone="@{resource.data == null}"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            app:visibleGone="@{resource.status == Status.LOADING}"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress_bar"
+            android:layout_margin="8dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/retry"
+            android:id="@+id/retry"
+            android:onClick="@{() -> callback.retry()}"
+            app:visibleGone="@{resource.status == Status.ERROR}" />
+
+        <TextView
+            android:id="@+id/error_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{resource.message ?? @string/unknown_error}"
+            app:visibleGone="@{resource.status == Status.ERROR}" />
+    </LinearLayout>
+</layout>

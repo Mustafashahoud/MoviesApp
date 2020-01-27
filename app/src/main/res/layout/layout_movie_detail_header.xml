@@ -41,6 +41,19 @@
       app:bindReleaseDate="@{movie}"
       tools:text="Release Date :" />
 
+    <TextView
+        android:id="@+id/detail_header_genre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:ellipsize="middle"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:bindMovieGenre="@{movie}"
+        tools:text="Genre :" />
+
     <RatingBar
       android:id="@+id/detail_header_star"
       style="?android:attr/ratingBarStyleSmall"

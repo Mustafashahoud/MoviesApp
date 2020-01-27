@@ -7,6 +7,7 @@ import com.mustafa.movieapp.view.ui.movies.moviedetail.MovieDetailViewModel
 import com.mustafa.movieapp.view.ui.person.PersonDetailViewModel
 import com.mustafa.movieapp.view.ui.tv.TvDetailViewModel
 import com.mustafa.movieapp.view.ui.movies.movielist.MovieListViewModel
+import com.mustafa.movieapp.view.ui.movies.moviesearch.MovieSearchViewModel
 import com.mustafa.movieapp.view.ui.person.CelebritiesListViewModel
 import com.mustafa.movieapp.view.ui.tv.TvListViewModel
 import dagger.Binds
@@ -48,6 +49,11 @@ abstract class ViewModelModule {
   @IntoMap
   @ViewModelKey(PersonDetailViewModel::class)
   abstract fun bindPersonDetailViewModel(personDetailViewModel: PersonDetailViewModel): ViewModel
+
+  @Binds
+  @IntoMap
+  @ViewModelKey(MovieSearchViewModel::class)
+  abstract fun bindMovieSearchViewModel(movieSearchViewModel: MovieSearchViewModel): ViewModel
 
   @Binds
   abstract fun bindViewModelFactory(factory: AppViewModelFactory): ViewModelProvider.Factory

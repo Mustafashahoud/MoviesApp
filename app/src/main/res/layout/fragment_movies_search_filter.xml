@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundDarker">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/search_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/search_type_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textSize="16sp"
+                        android:text="@string/search_type"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view_search_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:orientation="horizontal"
+                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/imdb_rating"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/search_type"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="2dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/ratings_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:text="@string/imdb_rating"
+                        android:textSize="16sp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view_ratings"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:orientation="horizontal"
+                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/genre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imdb_rating"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="2dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/genre_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textSize="16sp"
+                        android:text="@string/genre" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view_genres"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:orientation="horizontal"
+                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/year"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/genre"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="2dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/year_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:layout_marginStart="5dp"
+                        android:text="@string/year" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view_years"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:orientation="horizontal"
+                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/language"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/year"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="2dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/language_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textSize="16sp"
+                        android:text="@string/language" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view_languages"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:orientation="horizontal"
+                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:id="@+id/country"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/language"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="2dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/country_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:layout_marginStart="5dp"
+                        android:text="@string/country" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view_countries"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:orientation="horizontal"
+                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                </LinearLayout>
+            </RelativeLayout>
+        </ScrollView>
+
+
+
+        <RelativeLayout
+            android:id="@+id/clear_and_see_results_bar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorPrimary"
+            android:layout_gravity="bottom">
+
+            <TextView
+                android:id="@+id/clear_filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
+                android:text="@string/clear"
+                android:padding="10dp"
+                android:enabled="false"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:textColor="@color/clearFilterColor"
+                android:focusable="true" />
+
+            <Button
+                android:id="@+id/see_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:layout_marginEnd="20dp"
+                android:layout_toEndOf="@+id/clear_filter"
+                android:backgroundTint="@color/colorAccent"
+                android:text="@string/see_results"
+                android:foreground="?attr/selectableItemBackground"
+                android:textColor="@color/colorPrimaryDark" />
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

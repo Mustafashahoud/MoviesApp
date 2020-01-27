@@ -19,6 +19,7 @@ import com.mustafa.movieapp.models.entity.Person
 import com.mustafa.movieapp.models.entity.Tv
 import com.mustafa.movieapp.models.network.PersonDetail
 import com.mustafa.movieapp.utils.KeywordListMapper
+import com.mustafa.movieapp.utils.StringUtils
 
 @BindingAdapter("visibilityByResource")
 fun bindVisibilityByResource(view: View, resource: Resource<List<Any>>?) {
@@ -28,6 +29,12 @@ fun bindVisibilityByResource(view: View, resource: Resource<List<Any>>?) {
         }
     }
 }
+
+@BindingAdapter("visibleGone")
+fun showHide(view: View, show: Boolean) {
+    view.visibility = if (show) View.VISIBLE else View.GONE
+}
+
 
 @BindingAdapter("mapKeywordList")
 fun bindMapKeywordList(view: TagContainerLayout, resource: Resource<List<Keyword>>?) {
@@ -63,13 +70,26 @@ fun bindTags(view: TagContainerLayout, resource: Resource<PersonDetail>?) {
 @SuppressLint("SetTextI18n")
 @BindingAdapter("bindReleaseDate")
 fun bindReleaseDate(view: TextView, movie: Movie) {
-    view.text = "Release Date : ${movie.release_date}"
+    view.text = "Release Date: ${movie.release_date}"
+}
+
+
+@SuppressLint("SetTextI18n")
+@BindingAdapter("bindMovieGenre")
+fun bindMovieGenre(view: TextView, movie: Movie) {
+    view.text = "Genre: ${StringUtils.getMovieGenresById(movie.genre_ids)}"
 }
 
 @SuppressLint("SetTextI18n")
 @BindingAdapter("bindAirDate")
 fun bindAirDate(view: TextView, tv: Tv) {
-    view.text = "First Air Date : ${tv.first_air_date}"
+    view.text = "First Air Date: ${tv.first_air_date}"
+}
+
+@SuppressLint("SetTextI18n")
+@BindingAdapter("bindTvGenre")
+fun bindTvGenre(view: TextView, tv: Tv) {
+    view.text = "Genre: ${StringUtils.getTvGenresById(tv.genre_ids)}"
 }
 
 @BindingAdapter("bindBackDrop")

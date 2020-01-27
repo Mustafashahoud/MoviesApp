@@ -15,9 +15,9 @@ abstract class RecyclerViewBase<T, V : ViewDataBinding> :
 
     private val itemList = arrayListOf<T>()
 
-    fun submitList(newList: List<T>) {
-        itemList.addAll(newList)
-        notifyItemRangeInserted(itemList.size, newList.size)
+    fun submitList(newList: List<T>?) {
+        newList?.let{itemList.addAll(newList)}
+        newList?.size?.let { notifyItemRangeInserted(itemList.size, it) }
     }
 
     fun clearList(){
@@ -37,14 +37,6 @@ abstract class RecyclerViewBase<T, V : ViewDataBinding> :
     }
 
     override fun getItemCount(): Int = itemList.size
-
-//    override fun getItemId(position: Int): Long {
-//        return position.toLong()
-//    }
-//
-//    override fun getItemViewType(position: Int): Int {
-//        return position
-//    }
 
     protected abstract fun bind(binding: V, item: T)
 }

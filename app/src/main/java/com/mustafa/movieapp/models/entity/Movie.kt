@@ -3,14 +3,18 @@ package com.mustafa.movieapp.models.entity
 
 import android.os.Parcelable
 import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.mustafa.movieapp.models.Keyword
 import com.mustafa.movieapp.models.Review
 import com.mustafa.movieapp.models.Video
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-@Entity(primaryKeys = [("id")])
+@Entity( indices = [Index("id")])
 data class Movie(
+  @PrimaryKey
+  val id: Int,
   var page: Int,
   var keywords: List<Keyword>? = ArrayList(),
   var videos: List<Video>? = ArrayList(),
@@ -19,8 +23,7 @@ data class Movie(
   val adult: Boolean,
   val overview: String,
   val release_date: String?,
-  val genre_ids: List<Int>,
-  val id: Int,
+  var genre_ids: List<Int>,
   val original_title: String,
   val original_language: String,
   val title: String,
@@ -30,4 +33,32 @@ data class Movie(
   val video: Boolean,
   val vote_average: Float,
   var search: Boolean?
-) : Parcelable
+) : Parcelable {
+
+  /**
+   * Empty constructor will be used in [@SuggestionsAdapter]
+   */
+  constructor(id: Int, title: String, poster_path: String?, vote_average: Float, release_date: String?) : this(
+    id,
+    0,
+    null,
+    null,
+    null,
+    poster_path,
+    false,
+    "",
+    release_date,
+    listOf(),
+    "",
+    "",
+    title,
+    null,
+    0F,
+    0,
+    false,
+    vote_average,
+    false
+  )
+}
+
+

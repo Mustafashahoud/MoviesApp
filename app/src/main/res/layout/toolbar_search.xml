@@ -1,47 +1,36 @@
-<androidx.appcompat.widget.Toolbar
+<androidx.appcompat.widget.Toolbar xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toolbar_main"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/colorPrimary"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    android:elevation="4dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/toolbar_title"
-        style="@style/TextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:gravity="start"
-        android:text="Celebrities" />
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/filter"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:focusableInTouchMode="true"
-            android:focusable="true"
-            android:tooltipText="Filter your search..."
-            android:layout_alignParentEnd="true"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize">
+        <TextView
+            android:id="@+id/toolbar_title"
+            style="@style/TextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="start"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/ic_action_filter"/>
+            android:text="Celebrities" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/search_icon"
-            android:layout_width="35dp"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_toLeftOf="@id/filter"
+            android:background="?attr/actionBarItemBackground"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:scaleType="fitCenter"
             android:layout_marginEnd="20dp"
+            android:layoutDirection="rtl"
             android:layout_centerVertical="true"
-            android:src="@drawable/search_icon"
-            />
-
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_search"
+            tools:ignore="ContentDescription" />
     </RelativeLayout>
 
 

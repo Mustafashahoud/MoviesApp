@@ -1,17 +1,20 @@
 package com.mustafa.movieapp.view.adapter
 
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mustafa.movieapp.view.ui.movies.movielist.MovieListViewModel
+import com.mustafa.movieapp.view.ui.movies.moviesearch.MovieSearchViewModel
 
 
-abstract class RecyclerViewPaginator(
-        recyclerView: RecyclerView,
-        private val hasNext : () -> Boolean = {false}
+class RecyclerViewPaginator(
+    val viewModel: ViewModel,
+    recyclerView: RecyclerView,
+    private val hasNext: () -> Boolean = { false }
 ) : RecyclerView.OnScrollListener() {
     private var previousTotal = 0
     private var loading = true
-    private var current_page = 1
 
     init {
         recyclerView.addOnScrollListener(this)
@@ -30,7 +33,7 @@ abstract class RecyclerViewPaginator(
             else -> return
         }
 
-        if(!hasNext()) return
+        if (!hasNext()) return
 
         if (loading && totalItemCount > previousTotal) {
             loading = false
@@ -38,18 +41,21 @@ abstract class RecyclerViewPaginator(
         }
         val visibleThreshold = 5
         if (!loading && totalItemCount - visibleItemCount
-                <= firstVisibleItem + visibleThreshold) {
-            current_page++
-            onLoadMore(current_page)
+            <= firstVisibleItem + visibleThreshold
+        ) {
+            when(viewModel) {
+                is MovieListViewModel -> viewModel.loadMore()
+                is MovieSearchViewModel -> viewModel.loadMore()
+            }
             loading = true
         }
     }
 
-    abstract fun onLoadMore(currentPage: Int)
+//    abstract fun onLoadMore(currentPage: Int)
 
-    fun resetCurrentPage() {
-        current_page = 1
-        previousTotal = 0
-        loading = true
-    }
+//    fun resetCurrentPage() {
+//        current_page = 1
+//        previousTotal = 0
+//        loading = true
+//    }
 }

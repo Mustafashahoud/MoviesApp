@@ -11,6 +11,8 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <include layout="@layout/toolbar_search" />
+
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_main_fragment_tv"
                 android:layout_width="match_parent"

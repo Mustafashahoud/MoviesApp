@@ -8,9 +8,21 @@ import com.mustafa.movieapp.extension.visible
 import com.mustafa.movieapp.models.Resource
 import com.mustafa.movieapp.models.Review
 import com.mustafa.movieapp.models.Video
+import com.mustafa.movieapp.models.entity.Movie
+import com.mustafa.movieapp.view.adapter.MovieListAdapter2
 import com.mustafa.movieapp.view.adapter.ReviewListAdapter
 import com.mustafa.movieapp.view.adapter.VideoListAdapter
 
+
+@BindingAdapter("adapterMovieList")
+fun bindAdapterMovieList(view: RecyclerView, resource: Resource<List<Movie>>?) {
+  view.bindResource(resource) {
+    if (resource != null) {
+      val adapter = view.adapter as? MovieListAdapter2
+      adapter?.submitList(resource.data)
+    }
+  }
+}
 
 
 @BindingAdapter("adapterVideoList")

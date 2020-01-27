@@ -82,16 +82,16 @@ class TvListFragment : Fragment(), Injectable {
         adapter.setHasStableIds(true)
         recycler_view_main_fragment_tv.adapter = adapter
         recycler_view_main_fragment_tv.layoutManager = GridLayoutManager(context, 2)
-        val paginator = object : RecyclerViewPaginator(
-            recyclerView = recycler_view_main_fragment_tv,
-            hasNext = { viewModel.tvListLiveData.value?.hasNextPage!! }
-        ) {
-            override fun onLoadMore(currentPage: Int) {
-                loadMoreTvs(currentPage)
-            }
-        }
-
-        paginator.resetCurrentPage()
+//        val paginator = object : RecyclerViewPaginator(
+//            recyclerView = recycler_view_main_fragment_tv,
+//            hasNext = { viewModel.tvListLiveData.value?.hasNextPage!! }
+//        ) {
+//            override fun onLoadMore(currentPage: Int) {
+//                loadMoreTvs(currentPage)
+//            }
+//        }
+//
+//        paginator.resetCurrentPage()
     }
 
     private fun loadMoreTvs(page: Int) {

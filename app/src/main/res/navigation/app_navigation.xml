@@ -3,23 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/app_navigation"
-    app:startDestination="@id/fragment_movies">
+    app:startDestination="@id/moviesFragment">
 
     <fragment
-        android:id="@+id/fragment_movies"
+        android:id="@+id/moviesFragment"
         android:name="com.mustafa.movieapp.view.ui.movies.movielist.MovieListFragment"
-        android:label="fragment_movies"
+        android:label="moviesFragment"
         tools:layout="@layout/fragment_movies">
         <action
-            android:id="@+id/action_movies_to_movieDetail"
+            android:id="@+id/action_moviesFragment_to_movieDetail"
             app:destination="@id/movieDetail" />
+        <action
+            android:id="@+id/action_moviesFragment_to_movieSearchFragment"
+            app:destination="@id/searchFragment" />
 
     </fragment>
 
     <fragment
         android:id="@+id/movieDetail"
         android:name="com.mustafa.movieapp.view.ui.movies.moviedetail.MovieDetailFragment"
-        android:label="fragmentMovieDetail"
+        android:label="movieDetail"
         tools:layout="@layout/fragment_movie_detail">
         <argument
             android:name="movie"
@@ -27,9 +30,9 @@
 
     </fragment>
     <fragment
-        android:id="@+id/celebrities"
+        android:id="@+id/celebritiesFragment"
         android:name="com.mustafa.movieapp.view.ui.person.CelebritiesListFragment"
-        android:label="celebrities"
+        android:label="celebritiesFragment"
         tools:layout="@layout/fragment_celebrities">
         <action
             android:id="@+id/action_celebrities_to_celebrity"
@@ -49,9 +52,9 @@
     </fragment>
 
     <fragment
-        android:id="@+id/tvsList"
+        android:id="@+id/tvsFragment"
         android:name="com.mustafa.movieapp.view.ui.tv.TvListFragment"
-        android:label="tvs"
+        android:label="tvsFragment"
         tools:layout="@layout/fragment_tvs">
         <action
             android:id="@+id/action_tvs_to_tvDetail"
@@ -73,6 +76,34 @@
             app:argType="com.mustafa.movieapp.models.entity.Tv" />
     </fragment>
 
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.mustafa.movieapp.view.ui.movies.moviesearch.SearchFragment"
+        android:label="movieSearchFragment"
+        tools:layout="@layout/fragment_movies_search">
+        <action
+            android:id="@+id/action_movieSearchFragment_to_movieDetail"
+            app:destination="@id/movieDetail" />
+        <action
+            android:id="@+id/action_movieSearchFragment_to_moviesFragment"
+            app:destination="@id/moviesFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_searchFragmentResult"
+            app:destination="@id/searchFragmentResult" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragmentResult"
+        android:name="com.mustafa.movieapp.view.ui.movies.moviesearch.SearchResultFragment"
+        android:label="searchFragmentResult" >
+        <action
+            android:id="@+id/action_searchFragmentResult_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_searchFragmentResult_to_movieDetail"
+            app:destination="@id/movieDetail" />
 
-
+        <argument
+            android:name="query"
+            app:argType="string" />
+    </fragment>
 </navigation>

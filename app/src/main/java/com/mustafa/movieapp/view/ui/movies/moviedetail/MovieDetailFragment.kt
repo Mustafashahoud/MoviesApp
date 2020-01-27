@@ -67,9 +67,9 @@ class MovieDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable
 
 
     private fun initializeUI() {
-        detail_body_recyclerView_trailers.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
+        detail_body_recyclerView_trailers.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         detail_body_recyclerView_trailers.adapter = VideoListAdapter(this)
-        detail_body_recyclerView_reviews.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+        detail_body_recyclerView_reviews.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         detail_body_recyclerView_reviews.adapter = ReviewListAdapter()
         detail_body_recyclerView_reviews.isNestedScrollingEnabled = false
         detail_body_recyclerView_reviews.setHasFixedSize(true)
