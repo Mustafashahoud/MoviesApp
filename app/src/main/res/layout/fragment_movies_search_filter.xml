@@ -13,39 +13,13 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <LinearLayout
-                    android:id="@+id/search_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/search_type_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:textSize="16sp"
-                        android:text="@string/search_type"/>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_view_search_type"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        tools:orientation="horizontal"
-                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
-
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/imdb_rating"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/search_type"
                     android:layout_marginStart="5dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="12dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -119,12 +93,67 @@
                         tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/keywords"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/year"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="2dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/keyword_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textSize="16sp"
+                        android:text="@string/keywords" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view_keywords"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:orientation="horizontal"
+                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/runtime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/keywords"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="2dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/runtime_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:textSize="16sp"
+                        android:text="@string/runtime" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view_runtimes"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:orientation="horizontal"
+                        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:id="@+id/language"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/year"
+                    android:layout_below="@+id/runtime"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="2dp"
                     android:orientation="vertical">
@@ -135,7 +164,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:textSize="16sp"
-                        android:text="@string/language" />
+                        android:text="@string/year" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view_languages"
@@ -144,8 +173,6 @@
                         tools:orientation="horizontal"
                         tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
                 </LinearLayout>
-
-
 
                 <LinearLayout
                     android:id="@+id/country"
@@ -160,8 +187,8 @@
                         android:id="@+id/country_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
                         android:layout_marginStart="5dp"
+                        android:textSize="16sp"
                         android:text="@string/country" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -171,6 +198,7 @@
                         tools:orientation="horizontal"
                         tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
                 </LinearLayout>
+
             </RelativeLayout>
         </ScrollView>
 

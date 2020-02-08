@@ -17,6 +17,6 @@
         android:id="@+id/celebritiesFragment"
         android:icon="@drawable/ic_star_white_24dp"
         android:title="@string/fragment_celebrities"
-        android:state_checked="false"/>
+        android:state_checked="false"
         app:showAsAction="ifRoom" />
 </menu>

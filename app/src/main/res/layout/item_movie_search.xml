@@ -22,8 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:foreground="?attr/selectableItemBackground"
-            android:background="@color/itemsColor"
-            tools:background="@color/itemsColor">
+            android:background="@color/backgroundDarker">
 
             <ImageView
                 android:id="@+id/item_poster_post"

@@ -1,8 +1,7 @@
-package com.mustafa.movieapp.view.ui.movies.moviesearch
+package com.mustafa.movieapp.view.ui.movies.search
 
 import android.content.Context
 import android.database.Cursor
-import android.database.MatrixCursor
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import androidx.databinding.DataBindingUtil
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.databinding.SuggestionSearchItemBinding
 import com.mustafa.movieapp.models.entity.Movie
-import com.mustafa.movieapp.utils.StringUtils
 
 
 class SuggestionsAdapter(

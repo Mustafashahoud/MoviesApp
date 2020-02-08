@@ -62,4 +62,23 @@ interface TheDiscoverService {
   @GET("/3/search/people")
   fun searchPeople(@Query("query") query: String,
                    @Query("page") page: Int) : LiveData<ApiResponse<PeopleResponse>>
+
+
+  /**
+   * @param [query] a name of a person to be searched for.
+   * @param [page] Specify the page of results to query.
+   * @return [PeopleResponse] response
+   */
+  @GET("/3/discover/movie")
+  fun searchFilters(
+                    @Query("vote_average.gte") rating: Int?,
+                    @Query("sort_by") sort: String?,
+                    @Query("year") year: Int?,
+                    @Query("with_genres") with_genres: String?,
+                    @Query("with_keywords") with_keywords: String?,
+                    @Query("with_original_language") with_original_language: String?,
+                    @Query("with_runtime.gte") with_runtime: Int?,
+                    @Query("region") region: String?,
+                    @Query("page") page: Int)
+          : LiveData<ApiResponse<DiscoverMovieResponse>>
 }

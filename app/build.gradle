@@ -33,6 +33,7 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled false
         testInstrumentationRunner "com.mustafa.movieapp.runner.AndroidJunitTestRunner"
         buildConfigField "String", "TMDB_API_KEY", "\"${getProperty("local.properties", "tmdb_api_key")}\""
     }
@@ -47,6 +48,9 @@ android {
     }
     androidExtensions {
         experimental = true
+    }
+    dexOptions {
+        preDexLibraries true
     }
     sourceSets {
         androidTest.java.srcDirs += "src/test-common/java"
@@ -71,38 +75,38 @@ android {
 dependencies {
     def androidxVersion = '1.0.0'
     def accompatVersion = '1.1.0'
-    def androidFragment = '1.2.0-rc04'
-    def materialVersion = '1.2.0-alpha03'
+    def androidFragment = '1.2.1'
+    def materialVersion = '1.2.0-alpha04'
     def recyclerVersion = '1.2.0-alpha01'
     def ankoVersion = '0.10.8'
     def archCompomentVersion = '2.1.0'
     def roomVersion = '2.2.3'
-    def lifecycleVersion = '2.2.0-rc03'
-    def daggerVersion = '2.25.4'
+    def lifecycleVersion = '2.2.0'
+    def daggerVersion = '2.26'
     def retrofitVersion = '2.7.1'
     def googleJssonVersion = '2.8.6'
-    def okhttpVersion = '4.3.0'
+    def okhttpVersion = '4.3.1'
     def timberVersion = '4.7.1'
     def stethoVersion = '1.5.1'
-    def glideVersion = '4.10.0'
+    def glideVersion = '4.11.0'
     def glidePaletteVersion = '2.1.2'
     def baseAdapterVersion = '0.1.3'
     def androidTagViewVersion = '1.1.4'
     def expandableTextViewVersion = '0.1.4'
     def mockWebServerVersion = '3.9.0'
-    def mockitoKotlinVersion = '2.1.0'
+    def mockitoKotlinVersion = '2.2.0'
     def junitVersion = '4.13'
     def espressoVersion = '3.2.0'
     def androidxTestCore = '1.1.0'
     def androidxTestRules = '1.2.0'
-    def nav_version = '2.1.0'
-    def circleImageVersion = '3.0.1'
+    def nav_version = '2.2.1'
+    def circleImageVersion = '3.1.0'
     def constraintLayout = '2.0.0-beta4'
 
     // support library
     implementation "androidx.appcompat:appcompat:$accompatVersion"
-    implementation 'androidx.activity:activity:1.1.0-rc03'
-    implementation 'androidx.activity:activity-ktx:1.1.0-rc03'
+    implementation 'androidx.activity:activity:1.1.0'
+    implementation 'androidx.activity:activity-ktx:1.1.0'
     implementation "androidx.fragment:fragment:$androidFragment"
     implementation "androidx.fragment:fragment-ktx:$androidFragment"
     implementation "com.google.android.material:material:$materialVersion"
@@ -118,7 +122,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.room:room-runtime:$roomVersion"
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     kapt "androidx.room:room-compiler:$roomVersion"
     testImplementation "androidx.arch.core:core-testing:$archCompomentVersion"

@@ -14,10 +14,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentMoviesBinding
 import com.mustafa.movieapp.di.Injectable
+import com.mustafa.movieapp.extension.visible
 import com.mustafa.movieapp.models.Status
 import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.autoCleared
@@ -74,7 +76,11 @@ class MovieListFragment : Fragment(), Injectable {
 
         // Adapter
         val rvAdapter = MovieListAdapter(appExecutors, dataBindingComponent) {
-            navController().navigate(MovieListFragmentDirections.actionMoviesFragmentToMovieDetail(it))
+            navController().navigate(
+                MovieListFragmentDirections.actionMoviesFragmentToMovieDetail(
+                    it
+                )
+            )
         }
 //        recyclerView_movies.setHasFixedSize(true)
 //        adapter.setHasStableIds(true) // prevent blinking .. in Case notifyDataSetChanged()
@@ -83,8 +89,11 @@ class MovieListFragment : Fragment(), Injectable {
          * 1-  adapter.setHasStableIds(true)
          * 2-  Use notifyItemRangeInserted(start, count)
          */
+        recyclerView_movies.setHasFixedSize(true)
+        recyclerView_movies.setItemViewCacheSize(40)
         recyclerView_movies.adapter = rvAdapter
         adapter = rvAdapter
+
 
         recyclerView_movies.layoutManager = GridLayoutManager(context, 3)
 
@@ -94,7 +103,8 @@ class MovieListFragment : Fragment(), Injectable {
                 val lastPosition = layoutManager.findLastVisibleItemPosition()
                 if (lastPosition == adapter.itemCount - 1
                     && viewModel.movieListLiveData.value?.status != Status.LOADING
-                    && dy > 0 ) {
+                    && dy > 0
+                ) {
                     viewModel.loadMore()
                 } else {
                     return
@@ -134,6 +144,11 @@ class MovieListFragment : Fragment(), Injectable {
         search_icon.setOnClickListener {
             navController().navigate(MovieListFragmentDirections.actionMoviesFragmentToMovieSearchFragment())
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visible()
     }
 
     /**

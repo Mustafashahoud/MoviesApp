@@ -17,8 +17,20 @@
     <string name="see_results">SEE RESULTS</string>
     <string name="imdb_rating">IMDb Rating</string>
     <string name="genre">Genre</string>
-    <string name="year">Year</string>
-    <string name="language">Language</string>
     <string name="country">Country</string>
     <string name="search_type">Search Type</string>
+    <string name="keywords">keywords</string>
+    <string name="runtime">Runtim</string>
+    <string name="year">Year</string>
+    <string name="language">Primary Language</string>
+    <string name="edit">Edit</string>
+    <string name="results">Results</string>
+
+    <!-- Navigation Drawer menu labels -->
+    <string name="nav_home">Home</string>
+    <string name="nav_photos">Photos</string>
+    <string name="nav_movies">Movies</string>
+    <string name="nav_notifications">Notifications</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_about_us">About Us</string>
 </resources>

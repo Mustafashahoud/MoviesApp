@@ -1,9 +1,10 @@
 package com.mustafa.movieapp.di
 
-import com.mustafa.movieapp.view.ui.movies.moviesearch.SearchFragment
+import com.mustafa.movieapp.view.ui.movies.search.SearchFragment
 import com.mustafa.movieapp.view.ui.movies.moviedetail.MovieDetailFragment
 import com.mustafa.movieapp.view.ui.movies.movielist.MovieListFragment
-import com.mustafa.movieapp.view.ui.movies.moviesearch.SearchResultFragment
+import com.mustafa.movieapp.view.ui.movies.search.filter.SearchResultFilterFragment
+import com.mustafa.movieapp.view.ui.movies.search.result.SearchResultFragment
 import com.mustafa.movieapp.view.ui.person.CelebritiesListFragment
 import com.mustafa.movieapp.view.ui.person.CelebrityDetailFragment
 import com.mustafa.movieapp.view.ui.tv.TvDetailFragment
@@ -38,6 +39,11 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeSearchResultFragment(): SearchResultFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeSearchResultFilterFragment(): SearchResultFilterFragment
+
+
 
 
 

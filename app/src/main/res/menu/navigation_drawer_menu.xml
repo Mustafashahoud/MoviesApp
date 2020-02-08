@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/sort_popularity"
+        android:title="Popularity" />
+
+    <item
+        android:id="@+id/sort_release"
+        android:title="Release Date" />
+
+    <item
+        android:id="@+id/sort_vote"
+        android:title="Vote Count" />
+</menu>

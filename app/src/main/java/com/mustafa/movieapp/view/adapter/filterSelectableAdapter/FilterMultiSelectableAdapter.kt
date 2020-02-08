@@ -22,7 +22,8 @@ class FilterMultiSelectableAdapter (
     private val context: Context?,
     private val dataBindingComponent: DataBindingComponent,
     private val filterButtonSelectedOnClickCallback: ((String) -> Unit)?,
-    private val filterButtonUnSelectedOnClickCallback: ((String) -> Unit)?):
+    private val filterButtonUnSelectedOnClickCallback: ((String) -> Unit)?,
+    val adapterName: String):
     RecyclerView.Adapter<FilterMultiSelectableAdapter.SelectableViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectableViewHolder {

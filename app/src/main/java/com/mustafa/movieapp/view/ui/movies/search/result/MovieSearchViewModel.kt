@@ -1,4 +1,4 @@
-package com.mustafa.movieapp.view.ui.movies.moviesearch
+package com.mustafa.movieapp.view.ui.movies.search.result
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,7 +20,10 @@ class MovieSearchViewModel @Inject constructor(
     private val _query = MutableLiveData<String>()
     private val searchMoviePageLiveData: MutableLiveData<Int> = MutableLiveData()
     private var pageNumber = 1
+
     val queryLiveData: LiveData<String> = _query
+
+
 
     val searchMovieListLiveData: LiveData<Resource<List<Movie>>> = Transformations
         .switchMap(searchMoviePageLiveData) {
@@ -60,11 +63,11 @@ class MovieSearchViewModel @Inject constructor(
     }
 
 
-    private val _suggestionsQuery  = MutableLiveData<String>()
+    private val _suggestionsQuery = MutableLiveData<String>()
     private val suggestionsQuery: LiveData<String> = _suggestionsQuery
     val suggestions: LiveData<List<Movie>> = Transformations
         .switchMap(suggestionsQuery) {
-            if (it == null ) {
+            if (it == null) {
                 AbsentLiveData.create()
             } else {
                 discoverRepository.getSuggestions(suggestionsQuery.value!!, 1)

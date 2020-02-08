@@ -9,6 +9,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.mustafa.movieapp.models.Resource
 import com.mustafa.movieapp.models.entity.DiscoveryMovieResult
 import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.models.entity.RecentQueries
@@ -96,4 +97,6 @@ abstract class MovieDao {
             movies.sortedWith(compareBy { order.get(it.id) })
         }
     }
+
+    //: LiveData<Resource<List<Movie>>>
 }

@@ -3,6 +3,7 @@
 
 package com.mustafa.movieapp.extension
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -20,6 +21,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.mustafa.movieapp.R
 import kotlin.math.max
 
+@SuppressLint("ObsoleteSdkInt")
 fun checkIsMaterialVersion() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
 
 fun Activity.circularRevealedAtCenter(view: View) {

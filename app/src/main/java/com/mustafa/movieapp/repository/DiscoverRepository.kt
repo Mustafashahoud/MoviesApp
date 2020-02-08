@@ -2,6 +2,7 @@ package com.mustafa.movieapp.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.mustafa.movieapp.api.*
 import com.mustafa.movieapp.mappers.MoviePagingChecker
@@ -23,17 +24,20 @@ import javax.inject.Singleton
 
 @Singleton
 class DiscoverRepository @Inject constructor(
-        private val discoverService: TheDiscoverService,
-        private val movieDao: MovieDao,
-        private val db: AppDatabase,
-        private val tvDao: TvDao,
-        private val appExecutors: AppExecutors
+    private val discoverService: TheDiscoverService,
+    private val movieDao: MovieDao,
+    private val db: AppDatabase,
+    private val tvDao: TvDao,
+    private val appExecutors: AppExecutors
 ) : Repository {
 
     private val photoListRateLimit = RateLimiter<String>(1, TimeUnit.DAYS)
 
     fun loadMovies(page: Int): LiveData<Resource<List<Movie>>> {
-        return object : NetworkBoundResource<List<Movie>, DiscoverMovieResponse, MoviePagingChecker>(appExecutors) {
+        return object :
+            NetworkBoundResource<List<Movie>, DiscoverMovieResponse, MoviePagingChecker>(
+                appExecutors
+            ) {
             override fun saveCallResult(items: DiscoverMovieResponse) {
 
                 val ids = arrayListOf<Int>()
@@ -41,11 +45,13 @@ class DiscoverRepository @Inject constructor(
 
                 for (item in items.results) {
                     item.page = page
-                    item.search = false // it is discovery movie I wanna differentiate cus discovery is sorted by popularity
+                    item.search =
+                        false // it is discovery movie I wanna differentiate cus discovery is sorted by popularity
                 }
-                if (page != 1 ) {
+                if (page != 1) {
                     val prevPageNumber = page - 1
-                    val discoveryMovieResult = movieDao.getDiscoveryMovieResultByPage(prevPageNumber)
+                    val discoveryMovieResult =
+                        movieDao.getDiscoveryMovieResultByPage(prevPageNumber)
                     ids.addAll(discoveryMovieResult.ids)
                 }
 
@@ -64,12 +70,11 @@ class DiscoverRepository @Inject constructor(
 
             override fun loadFromDb(): LiveData<List<Movie>> {
                 return Transformations.switchMap(movieDao.getDiscoveryMovieResultByPageLiveData(page)) { searchData ->
-                    if (searchData == null ) {
+                    if (searchData == null) {
                         AbsentLiveData.create()
                     } else {
                         Timber.d("${photoListRateLimit.hashCode()}")
                         movieDao.loadDiscoveryMovieListOrdered(searchData.ids)
-
                     }
                 }
             }
@@ -85,7 +90,8 @@ class DiscoverRepository @Inject constructor(
     }
 
     fun loadTvs(page: Int): LiveData<Resource<List<Tv>>> {
-        return object : NetworkBoundResource<List<Tv>, DiscoverTvResponse, TvPagingChecker>(appExecutors) {
+        return object :
+            NetworkBoundResource<List<Tv>, DiscoverTvResponse, TvPagingChecker>(appExecutors) {
             override fun saveCallResult(items: DiscoverTvResponse) {
                 for (item in items.results) {
                     item.page = page
@@ -104,6 +110,7 @@ class DiscoverRepository @Inject constructor(
             override fun pageChecker(): TvPagingChecker {
                 return TvPagingChecker()
             }
+
             override fun createCall(): LiveData<ApiResponse<DiscoverTvResponse>> {
                 return discoverService.fetchDiscoverTv(page = page)
             }
@@ -112,7 +119,10 @@ class DiscoverRepository @Inject constructor(
 
 
     fun searchMovies(query: String, page: Int): LiveData<Resource<List<Movie>>> {
-        return object : NetworkBoundResource<List<Movie>, DiscoverMovieResponse, MoviePagingChecker>(appExecutors) {
+        return object :
+            NetworkBoundResource<List<Movie>, DiscoverMovieResponse, MoviePagingChecker>(
+                appExecutors
+            ) {
             override fun saveCallResult(items: DiscoverMovieResponse) {
 
                 val ids = arrayListOf<Int>()
@@ -123,7 +133,7 @@ class DiscoverRepository @Inject constructor(
                     item.search = true
                 }
 
-                if (page > 1 ) {
+                if (page > 1) {
                     val prevPageNumber = page - 1
                     val movieSearchResult = movieDao.searchMovieResult(query, prevPageNumber)
                     ids.addAll(movieSearchResult.movieIds)
@@ -131,9 +141,9 @@ class DiscoverRepository @Inject constructor(
 
                 ids.addAll(movieIds)
                 val searchMovieResult = SearchMovieResult(
-                        query = query,
-                        movieIds = ids,
-                        pageNumber = page
+                    query = query,
+                    movieIds = ids,
+                    pageNumber = page
                 )
 
                 val recentQueries = RecentQueries(query)
@@ -150,8 +160,13 @@ class DiscoverRepository @Inject constructor(
             }
 
             override fun loadFromDb(): LiveData<List<Movie>> {
-                return Transformations.switchMap(movieDao.searchMovieResultLiveData(query, page)) { searchData ->
-                    if (searchData == null ) {
+                return Transformations.switchMap(
+                    movieDao.searchMovieResultLiveData(
+                        query,
+                        page
+                    )
+                ) { searchData ->
+                    if (searchData == null) {
                         AbsentLiveData.create()
                     } else {
                         movieDao.loadSearchMovieListOrdered(searchData.movieIds)
@@ -193,9 +208,67 @@ class DiscoverRepository @Inject constructor(
     }
 
 
-    fun getRecentQueries() =  movieDao.loadRecentQueries()
+    fun getRecentQueries() = movieDao.loadRecentQueries()
     fun deleteAllRecentQueries() =
         movieDao.deleteAllRecentQueries()
 
 
+    /**
+     * Total count of filter results
+     */
+    private val totalFilteredResults = MutableLiveData<String>()
+    fun getTotalFilteredResults(): LiveData<String> = totalFilteredResults
+
+
+
+    fun queryFilteredMovies(
+        rating: Int?,
+        sort: String?,
+        year: Int?,
+        keywords: String?,
+        genres: String?,
+        language: String?,
+        runtime: Int?,
+        region: String?,
+        page: Int
+    ): LiveData<Resource<List<Movie>>> {
+
+        val results = MediatorLiveData<Resource<List<Movie>>>()
+        val response = discoverService.searchFilters(
+            rating,
+            sort,
+            year,
+            genres,
+            keywords,
+            language,
+            runtime,
+            region,
+            page
+        )
+        results.addSource(response) {
+            when (response.value) {
+                is ApiSuccessResponse -> {
+                    val moviePagingChecker = MoviePagingChecker()
+                    val successResponse =
+                        response.value as ApiSuccessResponse<DiscoverMovieResponse>
+                    results.value = Resource.success(
+                        successResponse.body.results,
+                        moviePagingChecker.hasNextPage(successResponse.body)
+                    )
+                    totalFilteredResults.value =
+                        (response.value as ApiSuccessResponse<DiscoverMovieResponse>).body.total_results.toString()
+
+                }
+                is ApiEmptyResponse -> {
+                    results.value = Resource.success(null, false)
+                    totalFilteredResults.value = "0"
+                }
+                is ApiErrorResponse -> {
+                    results.value = Resource.error("Something Wrong happened", null)
+                    totalFilteredResults.value = "0"
+                }
+            }
+        }
+        return results
+    }
 }

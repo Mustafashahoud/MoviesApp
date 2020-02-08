@@ -25,6 +25,9 @@ class MovieListAdapter(
 
         override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
             return oldItem.id == newItem.id
+                    && oldItem.page == newItem.page
+                    && oldItem.vote_count == newItem.vote_count
+                    && oldItem.vote_average == newItem.vote_average
         }
     }
 ) {

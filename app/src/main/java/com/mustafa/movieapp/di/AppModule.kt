@@ -13,6 +13,7 @@ import com.mustafa.movieapp.room.TvDao
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -48,11 +49,13 @@ class AppModule {
     }
 
 
+
     @Provides
     @Singleton
     fun provideHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(RequestInterceptor())
+            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .addNetworkInterceptor(StethoInterceptor())
             .build()
     }

@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieapp.view.ui.movies.movielist.MovieListViewModel
-import com.mustafa.movieapp.view.ui.movies.moviesearch.MovieSearchViewModel
+import com.mustafa.movieapp.view.ui.movies.search.result.MovieSearchViewModel
 
 
 class RecyclerViewPaginator(

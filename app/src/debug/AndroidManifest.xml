@@ -3,7 +3,8 @@
     package="com.mustafa.movieapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <application tools:ignore="GoogleAppIndexingWarning">
+    <application tools:ignore="GoogleAppIndexingWarning"
+        android:fullBackupContent="true">
         <activity android:name="com.mustafa.movieapp.testing.SingleFragmentActivity"/>
     </application>
 

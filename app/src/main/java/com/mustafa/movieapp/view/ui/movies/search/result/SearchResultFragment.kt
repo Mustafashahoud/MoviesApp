@@ -1,4 +1,4 @@
-package com.mustafa.movieapp.view.ui.movies.moviesearch
+package com.mustafa.movieapp.view.ui.movies.search.result
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -56,6 +56,7 @@ class SearchResultFragment : Fragment(), Injectable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initializeUI()
+
         subscribers()
 
         viewModel.setSearchMovieQueryAndPage(getQuerySafeArgs(), 1)
@@ -81,7 +82,7 @@ class SearchResultFragment : Fragment(), Injectable {
     }
 
 
-    private fun getQuerySafeArgs(): String {
+    private fun getQuerySafeArgs(): String? {
         val params =
             SearchResultFragmentArgs.fromBundle(
                 arguments!!
@@ -95,7 +96,9 @@ class SearchResultFragment : Fragment(), Injectable {
             dataBindingComponent
         ) {
             navController().navigate(
-                SearchResultFragmentDirections.actionSearchFragmentResultToMovieDetail(it)
+                SearchResultFragmentDirections.actionSearchFragmentResultToMovieDetail(
+                    it
+                )
             )
         }
 
@@ -136,6 +139,9 @@ class SearchResultFragment : Fragment(), Injectable {
             navController().navigate(SearchResultFragmentDirections.actionSearchFragmentResultToSearchFragment())
         }
     }
+
+
+
 
     /**
      * Created to be able to override in tests

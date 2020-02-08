@@ -1,4 +1,4 @@
-package com.mustafa.movieapp.view.ui.movies.moviesearch
+package com.mustafa.movieapp.view.ui.movies.search
 
 import android.app.ActionBar
 import android.app.Activity
@@ -11,8 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -37,12 +41,16 @@ import com.mustafa.movieapp.view.adapter.filterSelectableAdapter.FilterMultiSele
 import com.mustafa.movieapp.view.adapter.filterSelectableAdapter.SelectableItem
 import com.mustafa.movieapp.view.ui.common.AppExecutors
 import com.mustafa.movieapp.view.ui.common.RetryCallback
+import com.mustafa.movieapp.view.ui.movies.search.result.MovieSearchViewModel
+import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_movies.recyclerView_movies
 import kotlinx.android.synthetic.main.fragment_movies.view.*
 import kotlinx.android.synthetic.main.fragment_movies_search.*
 import kotlinx.android.synthetic.main.fragment_movies_search_filter.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
+import org.jetbrains.anko.find
 import org.jetbrains.anko.textColor
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -61,17 +69,30 @@ class SearchFragment : Fragment(), Injectable {
     var dataBindingComponent = FragmentDataBindingComponent(this)
     var binding by autoCleared<FragmentMoviesSearchBinding>()
     var adapter by autoCleared<MovieSearchListAdapter>()
+
     //    var adapter2 by autoCleared<MovieSearchListAdapter>()
 //    val columns =
 //        arrayOf("_id", "title", "poster_path", "vote_average", "genre_ids", "release_date")
+
+    companion object {
+        const val RUNTIME = "RUNTIME"
+        const val RATINGS = "RATINGS"
+        const val KEYWORDS = "KEYWORDS"
+        const val LANGUAGES = "LANGUAGES"
+        const val YEARS = "YEARS"
+        const val GENRES = "GENRES"
+        const val COUNTRIES= "COUNTRIES"
+    }
 
     private val searchTypes = listOf("Movies", "TV Shows")
 
     private val ratings = listOf("+9", "+8", "+7", "+6", "+5", "+4")
 
+    private val runtimes = listOf("1 hour or more", "2 hours or more", "3 hours or more", "4 hours or more")
+
     private val languages = listOf(
-        "English", "French", "German",
-        "Italian", "Japanese", "Spanish", "Choose..."
+        "English", "French", "German", "Spanish", "Chinese",
+        "Italian", "Russian", "Japanese"
     )
 
     private val genres = listOf(
@@ -95,12 +116,17 @@ class SearchFragment : Fragment(), Injectable {
 
     private val countries = listOf(
         "United State", "Canada", "Germany", "France", "United Kingdom",
-        "Spain", "Italy", "India", "Japan", "Choose..."
+        "Spain", "Italy", "India", "Japan"
+    )
+
+    private val keywords = listOf(
+        "Anim", "Superhero", "Bank Robbery", "Based on Novel", "Based on Play",
+        "Based on True Story", "Kidnapping", "Cult Film", "High School", "Time Travel", "Zombie"
     )
 
     private val years = listOf(
         "2020", "2019", "2018", "2017", "2016",
-        "2015", "2014", "2013", "2012", "2011", "2010", "Choose..."
+        "2015", "2014", "2013", "2012", "2011", "2010|Before"
     )
 
     private val hasAnyFilterBeenSelected = MutableLiveData<Boolean>()
@@ -122,6 +148,8 @@ class SearchFragment : Fragment(), Injectable {
             false
         )
 
+        Timber.d("Hell..Yeahh...onCreateView()")
+
         return binding.root
     }
 
@@ -129,6 +157,7 @@ class SearchFragment : Fragment(), Injectable {
         initializeUI()
         subscribers()
 
+        Timber.d("Hell..Yeahh...onViewCreated()")
         with(binding) {
             lifecycleOwner = this@SearchFragment
             searchResult = viewModel.searchMovieListLiveData
@@ -245,7 +274,10 @@ class SearchFragment : Fragment(), Injectable {
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 navController().navigate(
-                    SearchFragmentDirections.actionSearchFragmentToSearchFragmentResult(query!!))
+                    SearchFragmentDirections.actionSearchFragmentToSearchFragmentResult(
+                        query!!
+                    )
+                )
                 return true
             }
 
@@ -311,7 +343,9 @@ class SearchFragment : Fragment(), Injectable {
         list_recent_queries.setOnItemClickListener { parent, _, position, _ ->
             val query = parent.getItemAtPosition(position) as String
             navController().navigate(
-                SearchFragmentDirections.actionSearchFragmentToSearchFragmentResult(query)
+                SearchFragmentDirections.actionSearchFragmentToSearchFragmentResult(
+                    query
+                )
             )
         }
 
@@ -351,11 +385,19 @@ class SearchFragment : Fragment(), Injectable {
         val tabLayout = tabs[0] as ViewGroup
 
         tabLayout.getChildAt(0).setOnClickListener {
-            showRecentSearchesBar()
             hideFiltersLayout()
-            showListViewAndRecyclerView()
+            if (search_view.query.isEmpty() || search_view.query.isBlank()) {
+                showRecentSearchesBar()
+                showRecentQueries()
+            }
+            else {
+                hideRecentQueries()
+                recyclerView_movies.visible()
+            }
+
             search_view.requestFocus()
-            activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visible()
+            activity?.find<BottomNavigationView>(R.id.bottom_navigation)?.visible()
+            Timber.d(" ")
 
         }
         tabLayout.getChildAt(1).setOnClickListener {
@@ -363,37 +405,56 @@ class SearchFragment : Fragment(), Injectable {
             showFiltersLayout()
             hideRecentSearchesBar()
             dismissKeyboard(search_view.windowToken)
-            activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.gone()
+            activity?.find<BottomNavigationView>(R.id.bottom_navigation)?.gone()
+            Timber.d(" ")
         }
     }
 
     private fun setFilterButtons() {
 
-        val searchTypeRecyclerView =
-            activity?.findViewById<RecyclerView>(R.id.recycler_view_search_type)
-        setFilterAdapter(searchTypeRecyclerView, searchTypes)
+        val runTimeRecyclerView =
+            activity?.findViewById<RecyclerView>(R.id.recycler_view_runtimes)
+        setFilterAdapter(runTimeRecyclerView, runtimes,
+            RUNTIME
+        )
 
         val ratingRecyclerView = activity?.findViewById<RecyclerView>(R.id.recycler_view_ratings)
-        setFilterAdapter(ratingRecyclerView, ratings)
+        setFilterAdapter(ratingRecyclerView, ratings,
+            RATINGS
+        )
 
         val genreAdapter = activity?.findViewById<RecyclerView>(R.id.recycler_view_genres)
-        setFilterAdapter(genreAdapter, genres)
+        setFilterAdapter(genreAdapter, genres,
+            GENRES
+        )
 
         val yearAdapter = activity?.findViewById<RecyclerView>(R.id.recycler_view_years)
-        setFilterAdapter(yearAdapter, years)
+        setFilterAdapter(yearAdapter, years,
+            YEARS
+        )
 
-        val countryAdapter = activity?.findViewById<RecyclerView>(R.id.recycler_view_countries)
-        setFilterAdapter(countryAdapter, countries)
+        val keywordAdapter = activity?.findViewById<RecyclerView>(R.id.recycler_view_keywords)
+        setFilterAdapter(keywordAdapter, keywords,
+            KEYWORDS
+        )
 
         val languageAdapter = activity?.findViewById<RecyclerView>(R.id.recycler_view_languages)
-        setFilterAdapter(languageAdapter, languages)
+        setFilterAdapter(languageAdapter, languages,
+            LANGUAGES
+        )
+
+        val countriesAdapter = activity?.findViewById<RecyclerView>(R.id.recycler_view_countries)
+        setFilterAdapter(countriesAdapter, countries,
+            COUNTRIES
+        )
 
     }
 
 
     private fun setFilterAdapter(
         recyclerView: RecyclerView?,
-        listOfButtonFiltersTitles: List<String>
+        listOfButtonFiltersTitles: List<String>,
+        adapterName: String
     ) {
         val filters = ArrayList<String>()
 
@@ -409,7 +470,8 @@ class SearchFragment : Fragment(), Injectable {
             }, {
                 if (filters.size > 0) filters.remove(it)
                 hasAnyFilterBeenSelected.value = true
-            }
+            },
+                adapterName
             )
         mapFilterTypeToSelectedFilters[filterAdapter] = filters
         recyclerView?.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
@@ -423,16 +485,21 @@ class SearchFragment : Fragment(), Injectable {
             for (adapter in mapFilterTypeToSelectedFilters.keys) {
                 adapter.clearSelection()
             }
-            mapFilterTypeToSelectedFilters.forEach{
+            mapFilterTypeToSelectedFilters.map{
                 it.value.clear()
             }
             hasAnyFilterBeenSelected.value = true
         }
 
+        see_result.setOnClickListener {
+            val bundle = bundleOf("key" to convertAdapterKeyMapToStringKeyMap())
+            navController().navigate(R.id.action_searchFragment_to_searchFragmentResultFilter, bundle)
+        }
+
     }
 
     private fun checkIfAllFiltersEmpty(): Boolean {
-        mapFilterTypeToSelectedFilters.forEach {
+        mapFilterTypeToSelectedFilters.map {
             if (it.value.isNotEmpty()) {
                 return false
             }
@@ -492,6 +559,81 @@ class SearchFragment : Fragment(), Injectable {
                 search_view.setQuery(voiceQuery?.let { it[0] }, true)
             }
         }
+    }
+
+    /**
+     * @return
+     */
+    fun convertAdapterKeyMapToStringKeyMap(): Map<String, List<String>>{
+        val mapStringAdapterNameToSelectedFilters =  HashMap<String, List<String>>()
+        mapFilterTypeToSelectedFilters.map { it ->
+            when(it.key.adapterName) {
+                RATINGS -> mapStringAdapterNameToSelectedFilters[RATINGS] = it.value.map{
+                    it.replace("+", "")
+                }
+                RUNTIME -> mapStringAdapterNameToSelectedFilters[RUNTIME] = it.value
+                KEYWORDS -> mapStringAdapterNameToSelectedFilters[KEYWORDS] = it.value
+                LANGUAGES -> mapStringAdapterNameToSelectedFilters[LANGUAGES] = it.value
+                YEARS -> mapStringAdapterNameToSelectedFilters[YEARS] = it.value
+                GENRES -> mapStringAdapterNameToSelectedFilters[GENRES] = it.value
+                COUNTRIES -> mapStringAdapterNameToSelectedFilters[COUNTRIES] = it.value
+            }
+        }
+
+        mapFilterTypeToSelectedFilters.clear()
+
+        return mapStringAdapterNameToSelectedFilters
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.d("Hell..Yeahh...onDestroy()")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Timber.d("Hell..Yeahh...onStop()")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Timber.d("Hell..Yeahh...onResume()")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Timber.d("Hell..Yeahh...onPause()")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Timber.d("Hell..Yeahh...onDestroyView()")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Timber.d("Hell..Yeahh...onDetach()")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Timber.d("Hell..Yeahh...onStart()")
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Timber.d("Hell..Yeahh...onCreate()")
+    }
+
+    override fun onAttachFragment(childFragment: Fragment) {
+        super.onAttachFragment(childFragment)
+        Timber.d("Hell..Yeahh...onAttachFragment()")
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Timber.d("Hell..Yeahh...onAttach()")
     }
 
 //    fun setSelectableItemBackground(view: View) {

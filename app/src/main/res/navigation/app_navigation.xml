@@ -78,7 +78,7 @@
 
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.mustafa.movieapp.view.ui.movies.moviesearch.SearchFragment"
+        android:name="com.mustafa.movieapp.view.ui.movies.search.SearchFragment"
         android:label="movieSearchFragment"
         tools:layout="@layout/fragment_movies_search">
         <action
@@ -90,10 +90,13 @@
         <action
             android:id="@+id/action_searchFragment_to_searchFragmentResult"
             app:destination="@id/searchFragmentResult" />
+        <action
+            android:id="@+id/action_searchFragment_to_searchFragmentResultFilter"
+            app:destination="@id/searchFragmentResultFilter" />
     </fragment>
     <fragment
         android:id="@+id/searchFragmentResult"
-        android:name="com.mustafa.movieapp.view.ui.movies.moviesearch.SearchResultFragment"
+        android:name="com.mustafa.movieapp.view.ui.movies.search.result.SearchResultFragment"
         android:label="searchFragmentResult" >
         <action
             android:id="@+id/action_searchFragmentResult_to_searchFragment"
@@ -105,5 +108,16 @@
         <argument
             android:name="query"
             app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchFragmentResultFilter"
+        android:name="com.mustafa.movieapp.view.ui.movies.search.filter.SearchResultFilterFragment"
+        android:label="searchFragmentResultFilter"
+        tools:layout="@layout/fragment_movies_search_filter">
+
+        <action
+            android:id="@+id/action_searchFragmentResultFilter_to_movieDetail"
+            app:destination="@id/movieDetail" />
     </fragment>
 </navigation>
