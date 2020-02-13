@@ -1,7 +1,6 @@
 package com.mustafa.movieapp.room
 
 import android.util.SparseIntArray
-import androidx.collection.SparseArrayCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.room.Dao
@@ -9,7 +8,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.mustafa.movieapp.models.Resource
 import com.mustafa.movieapp.models.entity.DiscoveryMovieResult
 import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.models.entity.RecentQueries
@@ -46,7 +44,7 @@ abstract class MovieDao {
     @Query("SELECT * FROM DiscoveryMovieResult WHERE page = :pageNumber")
     abstract fun getDiscoveryMovieResultByPageLiveData(pageNumber: Int): LiveData<DiscoveryMovieResult>
 
-    @Query("SELECT * FROM Movie WHERE id in (:movieIds) AND search = 0")
+    @Query("SELECT * FROM Movie WHERE id in (:movieIds) AND search = 0 ")
     abstract fun loadDiscoveryMovieList(movieIds: List<Int>): LiveData<List<Movie>>
 
     @Update
@@ -97,6 +95,4 @@ abstract class MovieDao {
             movies.sortedWith(compareBy { order.get(it.id) })
         }
     }
-
-    //: LiveData<Resource<List<Movie>>>
 }

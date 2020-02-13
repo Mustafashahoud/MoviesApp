@@ -3,6 +3,7 @@ package com.mustafa.movieapp.models.entity
 
 import android.os.Parcelable
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.mustafa.movieapp.models.Keyword
@@ -38,6 +39,7 @@ data class Movie(
   /**
    * Empty constructor will be used in [@SuggestionsAdapter]
    */
+  @Ignore
   constructor(id: Int, title: String, poster_path: String?, vote_average: Float, release_date: String?) : this(
     id,
     0,

@@ -19,6 +19,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/filter_label"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="10dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="RelativeOverlap" />
         <ImageButton
             android:id="@+id/voiceSearch"
             android:layout_width="35dp"

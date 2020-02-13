@@ -1,6 +1,8 @@
 package com.mustafa.movieapp.view.ui.movies.movielist
 
+import android.content.Context
 import android.os.Bundle
+import android.util.SparseIntArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,12 +23,15 @@ import com.mustafa.movieapp.databinding.FragmentMoviesBinding
 import com.mustafa.movieapp.di.Injectable
 import com.mustafa.movieapp.extension.visible
 import com.mustafa.movieapp.models.Status
+import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.MovieListAdapter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
+import com.mustafa.movieapp.view.ui.common.RetryCallback
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.toolbar_search.*
+import timber.log.Timber
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")
@@ -48,7 +53,7 @@ class MovieListFragment : Fragment(), Injectable {
 
     var adapter by autoCleared<MovieListAdapter>()
 
-//    var paginator: RecyclerViewPaginator? = null
+    val movies = mutableSetOf<Movie>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,42 +66,44 @@ class MovieListFragment : Fragment(), Injectable {
             container,
             false
         )
+        Timber.d("Hell..Yeahh...onCreateView()")
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Timber.d("Hell..Yeahh...onViewCreated()")
         subscribers()
         initializeUI()
     }
 
     private fun initializeUI() {
-        //Init the toolbar
+
         intiToolbar(getString(R.string.fragment_movies))
 
-        // Adapter
-        val rvAdapter = MovieListAdapter(appExecutors, dataBindingComponent) {
+        with(binding) {
+            lifecycleOwner = this@MovieListFragment
+            searchResult = viewModel.movieListLiveData
+            callback = object : RetryCallback {
+                override fun retry() {
+                    viewModel.refresh()
+                }
+            }
+        }
+
+        adapter = MovieListAdapter(appExecutors, dataBindingComponent) {
             navController().navigate(
                 MovieListFragmentDirections.actionMoviesFragmentToMovieDetail(
                     it
                 )
             )
         }
-//        recyclerView_movies.setHasFixedSize(true)
-//        adapter.setHasStableIds(true) // prevent blinking .. in Case notifyDataSetChanged()
-        // To have a nice animation and avoid blinking in the RecyclerView:
-        /**
-         * 1-  adapter.setHasStableIds(true)
-         * 2-  Use notifyItemRangeInserted(start, count)
-         */
+
         recyclerView_movies.setHasFixedSize(true)
-        recyclerView_movies.setItemViewCacheSize(40)
-        recyclerView_movies.adapter = rvAdapter
-        adapter = rvAdapter
+        recyclerView_movies.adapter = adapter
 
 
         recyclerView_movies.layoutManager = GridLayoutManager(context, 3)
-
         recyclerView_movies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
@@ -106,8 +113,6 @@ class MovieListFragment : Fragment(), Injectable {
                     && dy > 0
                 ) {
                     viewModel.loadMore()
-                } else {
-                    return
                 }
             }
         })
@@ -120,7 +125,7 @@ class MovieListFragment : Fragment(), Injectable {
     }
 
     private fun subscribers() {
-        viewModel.getMovies().observe(viewLifecycleOwner, Observer {
+        viewModel.movieListLiveData.observe(viewLifecycleOwner, Observer {
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }
@@ -136,11 +141,6 @@ class MovieListFragment : Fragment(), Injectable {
         val title: TextView = toolbar_title
         title.text = titleIn
 
-//        filter.setOnClickListener {
-//            val intent = Intent(context, SearchActivity::class.java)
-//            startActivity(intent)
-//        }
-
         search_icon.setOnClickListener {
             navController().navigate(MovieListFragmentDirections.actionMoviesFragmentToMovieSearchFragment())
         }
@@ -155,15 +155,5 @@ class MovieListFragment : Fragment(), Injectable {
      * Created to be able to override in tests
      */
     fun navController() = findNavController()
-
-//    /**
-//     * dismiss Keyboard
-//     *
-//     * @param windowToken The token of the window that is making the request, as returned by View.getWindowToken().
-//     */
-//    private fun dismissKeyboard(windowToken: IBinder) {
-//        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-//        imm?.hideSoftInputFromWindow(windowToken, 0)
-//    }
 
 }

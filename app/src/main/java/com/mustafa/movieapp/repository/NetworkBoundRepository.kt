@@ -30,28 +30,28 @@ abstract class NetworkBoundResource<
     init {
         result.value = Resource.loading(null)
 
-        val loadedFromDB = this.loadFromDb()
-        result.addSource(loadedFromDB) { data: CacheType ->
-            result.removeSource(loadedFromDB)
+        val dbSource = this.loadFromDb()
+        result.addSource(dbSource) { data: CacheType ->
+            result.removeSource(dbSource)
             if (shouldFetch(data)) {
-                fetchFromNetwork(loadedFromDB)
+                fetchFromNetwork(dbSource)
             } else {
-                result.addSource(loadedFromDB) { newData ->
+                result.addSource(dbSource) { newData ->
                     setValue(Resource.success(newData, true))
                 }
             }
         }
     }
 
-    private fun fetchFromNetwork(loadedFromDB: LiveData<CacheType>) {
+    private fun fetchFromNetwork(dbSource: LiveData<CacheType>) {
         val apiResponse = createCall()
         // we re-attach dbSource as a new source, it will dispatch its latest value quickly
-        result.addSource(loadedFromDB) { newData: CacheType ->
-            setValue(Resource.loading(newData))
+        result.addSource(dbSource) { newData: CacheType ->
+            setValue(Resource.loading(null))
         }
         result.addSource(apiResponse) { response : ApiResponse<NetworkType> ->
             result.removeSource(apiResponse)
-            result.removeSource(loadedFromDB)
+            result.removeSource(dbSource)
             when (response) {
                is ApiSuccessResponse -> {
                     appExecutors.diskIO().execute {
@@ -77,7 +77,7 @@ abstract class NetworkBoundResource<
 
                 is ApiErrorResponse -> {
                     onFetchFailed()
-                    result.addSource(loadedFromDB) { newData ->
+                    result.addSource(dbSource) { newData ->
                         setValue(Resource.error(response.errorMessage, newData))
                     }
                 }

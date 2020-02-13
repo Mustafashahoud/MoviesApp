@@ -42,7 +42,6 @@ import com.mustafa.movieapp.view.adapter.filterSelectableAdapter.SelectableItem
 import com.mustafa.movieapp.view.ui.common.AppExecutors
 import com.mustafa.movieapp.view.ui.common.RetryCallback
 import com.mustafa.movieapp.view.ui.movies.search.result.MovieSearchViewModel
-import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.fragment_movies.recyclerView_movies
 import kotlinx.android.synthetic.main.fragment_movies.view.*
 import kotlinx.android.synthetic.main.fragment_movies_search.*
@@ -194,19 +193,7 @@ class SearchFragment : Fragment(), Injectable {
                 )
             )
         }
-//        recyclerView_movies.setHasFixedSize(true)
-//        recyclerView_movies.addItemDecoration(
-//            DividerItemDecoration(
-//                recyclerView_movies.context,
-//                DividerItemDecoration.HORIZONTAL
-//            )
-//        )
-//        adapter.setHasStableIds(true) // prevent blinking .. in Case notifyDataSetChanged()
-        // To have a nice animation and avoid blinking in the RecyclerView:
-        /**
-         * 1-  adapter.setHasStableIds(true)
-         * 2-  Use notifyItemRangeInserted(start, count)
-         */
+
         binding.root.recyclerView_movies.adapter = adapter
 
         recyclerView_movies.layoutManager = LinearLayoutManager(
@@ -386,6 +373,9 @@ class SearchFragment : Fragment(), Injectable {
 
         tabLayout.getChildAt(0).setOnClickListener {
             hideFiltersLayout()
+            search_view.visible()
+            voiceSearch.visible()
+            filter_label.gone()
             if (search_view.query.isEmpty() || search_view.query.isBlank()) {
                 showRecentSearchesBar()
                 showRecentQueries()
@@ -402,6 +392,10 @@ class SearchFragment : Fragment(), Injectable {
         }
         tabLayout.getChildAt(1).setOnClickListener {
             hideListViewAndRecyclerView()
+            search_view.gone()
+            voiceSearch.gone()
+            filter_label.text = "Filter"
+            filter_label.visible()
             showFiltersLayout()
             hideRecentSearchesBar()
             dismissKeyboard(search_view.windowToken)

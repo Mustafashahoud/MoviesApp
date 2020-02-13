@@ -10,7 +10,6 @@ import com.mustafa.movieapp.databinding.ItemMovieBinding
 import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.view.ui.common.AppExecutors
 import com.mustafa.movieapp.view.ui.common.DataBoundListAdapter
-import com.mustafa.movieapp.view.ui.common.RecyclerViewBase
 
 class MovieListAdapter(
     appExecutors: AppExecutors,
@@ -25,15 +24,11 @@ class MovieListAdapter(
 
         override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
             return oldItem.id == newItem.id
-                    && oldItem.page == newItem.page
-                    && oldItem.vote_count == newItem.vote_count
-                    && oldItem.vote_average == newItem.vote_average
         }
     }
 ) {
 
     override fun createBinding(parent: ViewGroup): ItemMovieBinding {
-
         val binding = DataBindingUtil.inflate<ItemMovieBinding>(
                 LayoutInflater.from(parent.context),
                 R.layout.item_movie,

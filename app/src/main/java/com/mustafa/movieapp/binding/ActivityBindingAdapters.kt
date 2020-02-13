@@ -24,7 +24,6 @@ class ActivityBindingAdapters @Inject constructor(val activity: Activity) {
             Glide.with(activity)
                 .load(it)
                 .listener(listener)
-                .placeholder(R.drawable.image_placeholder)
                 .into(imageView)}
     }
 }

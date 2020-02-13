@@ -65,7 +65,7 @@ class DiscoverRepository @Inject constructor(
             }
 
             override fun shouldFetch(data: List<Movie>?): Boolean {
-                return data == null || data.isEmpty() || photoListRateLimit.shouldFetch("key$page")
+                return true
             }
 
             override fun loadFromDb(): LiveData<List<Movie>> {

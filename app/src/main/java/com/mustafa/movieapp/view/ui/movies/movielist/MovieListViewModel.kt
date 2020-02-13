@@ -42,5 +42,10 @@ class MovieListViewModel @Inject constructor(
         moviePageLiveData.value = pageNumber
     }
 
-    fun getMovies() = movieListLiveData
+    fun refresh() {
+        moviePageLiveData.value?.let {
+            moviePageLiveData.value = it
+        }
+    }
+
 }

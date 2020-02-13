@@ -13,9 +13,6 @@
             name="query"
             type="LiveData&lt;String>" />
         <variable
-            name="loadingMore"
-            type="boolean" />
-        <variable
             name="searchResult"
             type="LiveData&lt;Resource&lt;List&lt;Movie>>>" />
         <variable
@@ -29,20 +26,16 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
                 <include layout="@layout/toolbar_search_iconfied" />
-
                 <LinearLayout
                     android:id="@+id/linear_layout_tabs_recent_searches"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tabs"
                         android:layout_width="match_parent"
@@ -53,7 +46,6 @@
                         app:tabIndicatorColor="@color/colorAccent"
                         app:tabMode="scrollable"
                         android:textAlignment="viewStart"
-
                         app:tabSelectedTextColor="@color/white"
                         app:tabTextColor="@color/tabTextColor">
 
