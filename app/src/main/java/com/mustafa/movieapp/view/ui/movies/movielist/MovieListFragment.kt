@@ -1,8 +1,6 @@
 package com.mustafa.movieapp.view.ui.movies.movielist
 
-import android.content.Context
 import android.os.Bundle
-import android.util.SparseIntArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -101,8 +99,6 @@ class MovieListFragment : Fragment(), Injectable {
 
         recyclerView_movies.setHasFixedSize(true)
         recyclerView_movies.adapter = adapter
-
-
         recyclerView_movies.layoutManager = GridLayoutManager(context, 3)
         recyclerView_movies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

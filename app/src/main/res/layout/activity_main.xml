@@ -26,5 +26,6 @@
         app:itemHorizontalTranslationEnabled="true"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
-        app:menu="@menu/menus" />
+        app:menu="@menu/menus"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"/>
 </LinearLayout>

@@ -73,7 +73,6 @@ class DiscoverRepository @Inject constructor(
                     if (searchData == null) {
                         AbsentLiveData.create()
                     } else {
-                        Timber.d("${photoListRateLimit.hashCode()}")
                         movieDao.loadDiscoveryMovieListOrdered(searchData.ids)
                     }
                 }
@@ -93,18 +92,42 @@ class DiscoverRepository @Inject constructor(
         return object :
             NetworkBoundResource<List<Tv>, DiscoverTvResponse, TvPagingChecker>(appExecutors) {
             override fun saveCallResult(items: DiscoverTvResponse) {
+                val ids = arrayListOf<Int>()
+                val tvIds: List<Int> = items.results.map { it.id }
+
                 for (item in items.results) {
                     item.page = page
+                    item.search =
+                        false // it is discovery movie I wanna differentiate cus discovery is sorted by popularity
                 }
-                tvDao.insertTv(tvs = items.results)
+                if (page != 1) {
+                    val prevPageNumber = page - 1
+                    val discoveryTvResult =
+                        tvDao.getDiscoveryTvResultByPage(prevPageNumber)
+                    ids.addAll(discoveryTvResult.ids)
+                }
+
+                ids.addAll(tvIds)
+                tvDao.insertTvList(tvs = items.results)
+                val discoveryTvResult = DiscoveryTvResult(
+                    ids = ids,
+                    page = page
+                )
+                tvDao.insertDiscoveryTvResult(discoveryTvResult)
             }
 
             override fun shouldFetch(data: List<Tv>?): Boolean {
-                return data == null || data.isEmpty()
+                return true
             }
 
             override fun loadFromDb(): LiveData<List<Tv>> {
-                return tvDao.getTvList(page_ = page)
+                return Transformations.switchMap(tvDao.getDiscoveryTvResultByPageLiveData(page)) { searchData ->
+                    if (searchData == null) {
+                        AbsentLiveData.create()
+                    } else {
+                        tvDao.loadDiscoveryMovieListOrdered(searchData.ids)
+                    }
+                }
             }
 
             override fun pageChecker(): TvPagingChecker {

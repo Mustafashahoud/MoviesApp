@@ -11,6 +11,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentTvsBinding
@@ -18,9 +20,9 @@ import com.mustafa.movieapp.di.Injectable
 import com.mustafa.movieapp.models.Status
 import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.autoCleared
-import com.mustafa.movieapp.view.adapter.RecyclerViewPaginator
 import com.mustafa.movieapp.view.adapter.TvListAdapter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
+import com.mustafa.movieapp.view.ui.common.RetryCallback
 import kotlinx.android.synthetic.main.fragment_tvs.*
 import kotlinx.android.synthetic.main.toolbar_search.*
 import javax.inject.Inject
@@ -29,21 +31,20 @@ import javax.inject.Inject
 @Suppress("SpellCheckingInspection")
 class TvListFragment : Fragment(), Injectable {
 
-
     @Inject
     lateinit var viewmodelFactory: ViewModelProvider.Factory
 
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    var dataBindingComponent = FragmentDataBindingComponent(this)
+    private val dataBindingComponent = FragmentDataBindingComponent(this)
 
     private val viewModel by viewModels<TvListViewModel> {
         viewmodelFactory
     }
-    var binding by autoCleared<FragmentTvsBinding>()
+    private var binding by autoCleared<FragmentTvsBinding>()
 
-    var adapter by autoCleared<TvListAdapter>()
+    private var adapter by autoCleared<TvListAdapter>()
 
 
     override fun onCreateView(
@@ -62,49 +63,55 @@ class TvListFragment : Fragment(), Injectable {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.lifecycleOwner = this
+        with(binding) {
+            lifecycleOwner = this@TvListFragment
+            searchResult = viewModel.tvListLiveData
+            callback = object : RetryCallback {
+                override fun retry() {
+                    viewModel.refresh()
+                }
+            }
+        }
 
         initializeUI()
         subscribers()
-        loadMoreTvs(page = 1)
 
     }
 
     private fun initializeUI() {
         intiToolbar(getString(R.string.fragment_tvs))
-        adapter = TvListAdapter(dataBindingComponent) {
-            findNavController().navigate(
+        adapter = TvListAdapter(dataBindingComponent, appExecutors) {
+            navController().navigate(
                 TvListFragmentDirections.actionTvsToTvDetail(
                     it
                 )
             )
         }
-        adapter.setHasStableIds(true)
+//        adapter.setHasStableIds(true)
         recycler_view_main_fragment_tv.adapter = adapter
-        recycler_view_main_fragment_tv.layoutManager = GridLayoutManager(context, 2)
-//        val paginator = object : RecyclerViewPaginator(
-//            recyclerView = recycler_view_main_fragment_tv,
-//            hasNext = { viewModel.tvListLiveData.value?.hasNextPage!! }
-//        ) {
-//            override fun onLoadMore(currentPage: Int) {
-//                loadMoreTvs(currentPage)
-//            }
-//        }
-//
-//        paginator.resetCurrentPage()
-    }
+        recycler_view_main_fragment_tv.layoutManager = GridLayoutManager(context, 3)
+        recycler_view_main_fragment_tv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastPosition = layoutManager.findLastVisibleItemPosition()
+                if (lastPosition == adapter.itemCount - 1
+                    && viewModel.tvListLiveData.value?.status != Status.LOADING
+                    && dy > 0
+                ) {
+                    viewModel.loadMore()
+                }
+            }
+        })
 
-    private fun loadMoreTvs(page: Int) {
-        viewModel.setTvPage(page)
+//        search_icon.setOnClickListener {
+//            navController().navigate(TvListFragmentDirections.actionMoviesFragmentToMovieSearchFragment())
+//        }
     }
 
     private fun subscribers() {
         viewModel.tvListLiveData.observe(viewLifecycleOwner, Observer {
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
-                progressBar.visibility = View.INVISIBLE
-            } else if (Status.LOADING == it.status) {
-                progressBar.visibility = View.VISIBLE
             }
         })
     }

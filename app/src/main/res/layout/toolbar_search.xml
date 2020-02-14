@@ -17,7 +17,7 @@
             android:ellipsize="end"
             android:gravity="start"
             android:layout_centerVertical="true"
-            android:text="Celebrities" />
+            tools:ignore="RelativeOverlap" />
 
         <ImageButton
             android:id="@+id/search_icon"

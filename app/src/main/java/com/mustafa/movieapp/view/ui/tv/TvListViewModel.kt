@@ -12,6 +12,9 @@ import javax.inject.Inject
 @OpenForTesting
 class TvListViewModel @Inject
 constructor(private val discoverRepository: DiscoverRepository) : ViewModel() {
+
+    private var pageNumber = 1
+
     private var tvPageLiveData: MutableLiveData<Int> = MutableLiveData()
     val tvListLiveData: LiveData<Resource<List<Tv>>> = Transformations
             .switchMap(tvPageLiveData) {
@@ -22,6 +25,21 @@ constructor(private val discoverRepository: DiscoverRepository) : ViewModel() {
                 }
             }
     fun setTvPage(page: Int) {
-        tvPageLiveData.postValue(page)
+        tvPageLiveData.value = page
+    }
+
+    init {
+        tvPageLiveData.value = 1
+    }
+
+    fun loadMore() {
+        pageNumber++
+        tvPageLiveData.value = pageNumber
+    }
+
+    fun refresh() {
+        tvPageLiveData.value?.let {
+            tvPageLiveData.value = it
+        }
     }
 }

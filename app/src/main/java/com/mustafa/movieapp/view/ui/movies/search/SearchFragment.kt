@@ -1,5 +1,6 @@
 package com.mustafa.movieapp.view.ui.movies.search
 
+import android.annotation.SuppressLint
 import android.app.ActionBar
 import android.app.Activity
 import android.content.Context
@@ -352,6 +353,7 @@ class SearchFragment : Fragment(), Injectable {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initTabLayout() {
 
         val layoutTab1 = ((tabs.getChildAt(0)) as LinearLayout).getChildAt(0) as LinearLayout
@@ -394,7 +396,7 @@ class SearchFragment : Fragment(), Injectable {
             hideListViewAndRecyclerView()
             search_view.gone()
             voiceSearch.gone()
-            filter_label.text = "Filter"
+            filter_label.text = "Filters"
             filter_label.visible()
             showFiltersLayout()
             hideRecentSearchesBar()

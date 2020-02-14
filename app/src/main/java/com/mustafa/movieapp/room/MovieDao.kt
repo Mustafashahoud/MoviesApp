@@ -8,10 +8,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.mustafa.movieapp.models.entity.DiscoveryMovieResult
-import com.mustafa.movieapp.models.entity.Movie
-import com.mustafa.movieapp.models.entity.RecentQueries
-import com.mustafa.movieapp.models.entity.SearchMovieResult
+import com.mustafa.movieapp.models.entity.*
 import java.util.*
 
 @Dao
@@ -19,6 +16,7 @@ abstract class MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertMovieList(movies: List<Movie>)
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertSearchMovieResult(result: SearchMovieResult)

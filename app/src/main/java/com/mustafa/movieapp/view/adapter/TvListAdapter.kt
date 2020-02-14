@@ -21,8 +21,20 @@ import com.mustafa.movieapp.view.ui.common.RecyclerViewBase
 
 class TvListAdapter(
         private val dataBindingComponent: DataBindingComponent,
+        private val appExecutors: AppExecutors,
         private val tvOnClickCallback: ((Tv) -> Unit)?
-) : RecyclerViewBase<Tv, ItemTvBinding>() {
+) : DataBoundListAdapter<Tv, ItemTvBinding>(
+    appExecutors = appExecutors,
+    diffCallback = object : DiffUtil.ItemCallback<Tv>() {
+        override fun areItemsTheSame(oldItem: Tv, newItem: Tv): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Tv, newItem: Tv): Boolean {
+            return oldItem.id == newItem.id
+        }
+    }
+) {
     override fun createBinding(parent: ViewGroup): ItemTvBinding {
         val binding = DataBindingUtil.inflate<ItemTvBinding>(
                 LayoutInflater.from(parent.context),
