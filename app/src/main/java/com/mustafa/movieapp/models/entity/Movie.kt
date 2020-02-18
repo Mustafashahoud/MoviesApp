@@ -22,7 +22,7 @@ data class Movie(
   var reviews: List<Review>? = ArrayList(),
   val poster_path: String?,
   val adult: Boolean,
-  val overview: String,
+  val overview: String?,
   val release_date: String?,
   var genre_ids: List<Int>,
   val original_title: String,

@@ -29,7 +29,7 @@
             <include layout="@layout/toolbar_search" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_movies"
+                android:id="@+id/recyclerView_list_movies"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:listitem="@layout/item_movie" />

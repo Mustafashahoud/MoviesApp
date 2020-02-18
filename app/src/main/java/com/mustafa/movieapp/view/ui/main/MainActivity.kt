@@ -3,11 +3,11 @@ package com.mustafa.movieapp.view.ui.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieapp.R
+import com.mustafa.movieapp.view.ui.common.OnReselectedNavBottomViewItem
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -23,19 +23,33 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
   @Inject
   lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
-
-//  private var currentNavController: LiveData<NavController>? = null
-
-  private lateinit var navController: NavController
+  var onReselectedNavBottomViewItem: OnReselectedNavBottomViewItem? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    navController = Navigation.findNavController(this, R.id.nav_host_container)
+    val navController = Navigation.findNavController(this, R.id.nav_host_container)
 
     bottom_navigation.setupWithNavController(navController)
+    bottom_navigation.setOnNavigationItemReselectedListener {
+      onReselectedNavBottomViewItem?.onReselectedNavBottomViewItem(it)
+    }
+
   }
+
+  private fun animateBottmNavView() {
+
+  }
+
+
+
+
+
+
+  override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
+
+}
 //    if (savedInstanceState == null) {
 //      setupBottomNavigationBar()
 //    } // Else, need to wait for onRestoreInstanceState
@@ -78,7 +92,3 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 //  override fun onSupportNavigateUp(): Boolean {
 //    return currentNavController?.value?.navigateUp() ?: false
 //  }
-
-  override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
-
-}

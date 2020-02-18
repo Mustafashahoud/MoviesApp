@@ -11,7 +11,7 @@
 
     <variable
       name="viewModel"
-      type="com.mustafa.movieapp.view.ui.tv.TvDetailViewModel" />
+      type="com.mustafa.movieapp.view.ui.tv.tvdetail.TvDetailViewModel" />
   </data>
 
   <LinearLayout

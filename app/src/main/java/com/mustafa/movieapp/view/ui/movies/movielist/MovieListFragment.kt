@@ -1,7 +1,9 @@
 package com.mustafa.movieapp.view.ui.movies.movielist
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -26,7 +28,9 @@ import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.MovieListAdapter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
+import com.mustafa.movieapp.view.ui.common.OnReselectedNavBottomViewItem
 import com.mustafa.movieapp.view.ui.common.RetryCallback
+import com.mustafa.movieapp.view.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.toolbar_search.*
 import timber.log.Timber
@@ -34,7 +38,7 @@ import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")
 @OpenForTesting
-class MovieListFragment : Fragment(), Injectable {
+class MovieListFragment : Fragment(), Injectable, OnReselectedNavBottomViewItem{
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -71,6 +75,7 @@ class MovieListFragment : Fragment(), Injectable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Timber.d("Hell..Yeahh...onViewCreated()")
+        (activity as MainActivity).onReselectedNavBottomViewItem = this
         subscribers()
         initializeUI()
     }
@@ -97,10 +102,10 @@ class MovieListFragment : Fragment(), Injectable {
             )
         }
 
-        recyclerView_movies.setHasFixedSize(true)
-        recyclerView_movies.adapter = adapter
-        recyclerView_movies.layoutManager = GridLayoutManager(context, 3)
-        recyclerView_movies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        recyclerView_list_movies.setHasFixedSize(true)
+        recyclerView_list_movies.adapter = adapter
+        recyclerView_list_movies.layoutManager = GridLayoutManager(context, 3)
+        recyclerView_list_movies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val lastPosition = layoutManager.findLastVisibleItemPosition()
@@ -112,12 +117,6 @@ class MovieListFragment : Fragment(), Injectable {
                 }
             }
         })
-
-//        paginator = RecyclerViewPaginator(
-//            viewModel = viewModel,
-//            recyclerView = recyclerView_movies,
-//            hasNext = { viewModel.movieListLiveData.value?.hasNextPage!! }
-//        )
     }
 
     private fun subscribers() {
@@ -138,18 +137,68 @@ class MovieListFragment : Fragment(), Injectable {
         title.text = titleIn
 
         search_icon.setOnClickListener {
-            navController().navigate(MovieListFragmentDirections.actionMoviesFragmentToMovieSearchFragment())
+            navController().navigate(MovieListFragmentDirections
+                .actionMoviesFragmentToMovieSearchFragment())
         }
     }
 
     override fun onStart() {
         super.onStart()
+        Timber.d("Hell..Yeahh...onStart()")
         activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visible()
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.d("Hell..Yeahh...onDestroy()")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Timber.d("Hell..Yeahh...onStop()")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Timber.d("Hell..Yeahh...onResume()")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Timber.d("Hell..Yeahh...onPause()")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Timber.d("Hell..Yeahh...onDestroyView()")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Timber.d("Hell..Yeahh...onDetach()")
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Timber.d("Hell..Yeahh...onCreate()")
+    }
+
+    override fun onAttachFragment(childFragment: Fragment) {
+        super.onAttachFragment(childFragment)
+        Timber.d("Hell..Yeahh...onAttachFragment()")
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Timber.d("Hell..Yeahh...onAttach()")
     }
 
     /**
      * Created to be able to override in tests
      */
     fun navController() = findNavController()
+
+    override fun onReselectedNavBottomViewItem(item: MenuItem) {
+        if(item.itemId == R.id.moviesFragment) recyclerView_list_movies.smoothScrollToPosition(0)
+    }
 
 }

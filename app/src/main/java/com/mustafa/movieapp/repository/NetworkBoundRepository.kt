@@ -46,7 +46,7 @@ abstract class NetworkBoundResource<
     private fun fetchFromNetwork(dbSource: LiveData<CacheType>) {
         val apiResponse = createCall()
         // we re-attach dbSource as a new source, it will dispatch its latest value quickly
-        result.addSource(dbSource) { newData: CacheType ->
+        result.addSource(dbSource) {
             setValue(Resource.loading(null))
         }
         result.addSource(apiResponse) { response : ApiResponse<NetworkType> ->

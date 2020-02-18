@@ -15,7 +15,7 @@
             app:destination="@id/movieDetail" />
         <action
             android:id="@+id/action_moviesFragment_to_movieSearchFragment"
-            app:destination="@id/searchFragment" />
+            app:destination="@id/movieSearchFragment" />
 
     </fragment>
 
@@ -53,7 +53,7 @@
 
     <fragment
         android:id="@+id/tvsFragment"
-        android:name="com.mustafa.movieapp.view.ui.tv.TvListFragment"
+        android:name="com.mustafa.movieapp.view.ui.tv.tvlist.TvListFragment"
         android:label="tvsFragment"
         tools:layout="@layout/fragment_tvs">
         <action
@@ -63,12 +63,15 @@
         <argument
             android:name="tvId"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_tvsFragment_to_tvSearchFragment"
+            app:destination="@id/tvSearchFragment" />
 
 
     </fragment>
     <fragment
         android:id="@+id/tvDetail"
-        android:name="com.mustafa.movieapp.view.ui.tv.TvDetailFragment"
+        android:name="com.mustafa.movieapp.view.ui.tv.tvdetail.TvDetailFragment"
         android:label="tvDetail"
         tools:layout="@layout/fragment_tv_detail">
         <argument
@@ -77,10 +80,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.mustafa.movieapp.view.ui.movies.search.SearchFragment"
+        android:id="@+id/movieSearchFragment"
+        android:name="com.mustafa.movieapp.view.ui.search.MovieSearchFragment"
         android:label="movieSearchFragment"
-        tools:layout="@layout/fragment_movies_search">
+        tools:layout="@layout/fragment_movie_search">
         <action
             android:id="@+id/action_movieSearchFragment_to_movieDetail"
             app:destination="@id/movieDetail" />
@@ -88,21 +91,59 @@
             android:id="@+id/action_movieSearchFragment_to_moviesFragment"
             app:destination="@id/moviesFragment" />
         <action
-            android:id="@+id/action_searchFragment_to_searchFragmentResult"
-            app:destination="@id/searchFragmentResult" />
+            android:id="@+id/action_movieSearchFragment_to_movieSearchFragmentResult"
+            app:destination="@id/movieSearchFragmentResult" />
         <action
-            android:id="@+id/action_searchFragment_to_searchFragmentResultFilter"
+            android:id="@+id/action_movieSearchFragment_to_movieSearchFragmentResultFilter"
             app:destination="@id/searchFragmentResultFilter" />
     </fragment>
     <fragment
-        android:id="@+id/searchFragmentResult"
-        android:name="com.mustafa.movieapp.view.ui.movies.search.result.SearchResultFragment"
+        android:id="@+id/movieSearchFragmentResult"
+        android:name="com.mustafa.movieapp.view.ui.search.result.MovieSearchResultFragment"
         android:label="searchFragmentResult" >
         <action
-            android:id="@+id/action_searchFragmentResult_to_searchFragment"
-            app:destination="@id/searchFragment" />
+            android:id="@+id/action_movieSearchFragmentResult_to_searchFragment"
+            app:destination="@id/movieSearchFragment" />
         <action
-            android:id="@+id/action_searchFragmentResult_to_movieDetail"
+            android:id="@+id/action_movieSearchFragmentResult_to_movieDetail"
+            app:destination="@id/movieDetail" />
+
+        <argument
+            android:name="query"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tvSearchFragment"
+        android:name="com.mustafa.movieapp.view.ui.search.TvSearchFragment"
+        android:label="tvSearchFragment"
+        tools:layout="@layout/fragment_movie_search">
+        <action
+            android:id="@+id/action_tvSearchFragment_to_tvDetail"
+            app:destination="@id/tvDetail" />
+
+        <action
+            android:id="@+id/action_tvSearchFragment_to_tvsFragment"
+            app:destination="@id/tvsFragment" />
+
+        <action
+            android:id="@+id/action_tvSearchFragment_to_tvSearchFragmentResult"
+            app:destination="@id/tvSearchFragmentResult" />
+        <action
+            android:id="@+id/action_tvSearchFragment_to_tvSearchFragmentResultFilter"
+            app:destination="@id/searchFragmentResultFilter" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/tvSearchFragmentResult"
+        android:name="com.mustafa.movieapp.view.ui.search.result.TvSearchResultFragment"
+        android:label="tvSearchFragmentResult" >
+        <action
+            android:id="@+id/action_tvSearchFragmentResult_to_searchFragment"
+            app:destination="@id/movieSearchFragment" />
+        <action
+            android:id="@+id/action_tvSearchFragmentResult_to_movieDetail"
             app:destination="@id/movieDetail" />
 
         <argument
@@ -112,7 +153,7 @@
 
     <fragment
         android:id="@+id/searchFragmentResultFilter"
-        android:name="com.mustafa.movieapp.view.ui.movies.search.filter.SearchResultFilterFragment"
+        android:name="com.mustafa.movieapp.view.ui.search.filter.SearchResultFilterFragment"
         android:label="searchFragmentResultFilter"
         tools:layout="@layout/fragment_movies_search_filter">
 

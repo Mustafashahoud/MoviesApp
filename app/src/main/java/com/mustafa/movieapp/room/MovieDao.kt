@@ -9,7 +9,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.mustafa.movieapp.models.entity.*
-import java.util.*
 
 @Dao
 abstract class MovieDao {
@@ -25,16 +24,17 @@ abstract class MovieDao {
     abstract fun insertDiscoveryMovieResult(result: DiscoveryMovieResult)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertRecentQuery(insertRecentQuery: RecentQueries)
+    abstract fun insertMovieRecentQuery(insertMovieRecentQuery: MovieRecentQueries)
+
+
 
     @Query(
-        "SELECT * FROM RecentQueries " +
-            "GROUP BY query" +
-            " ORDER BY id DESC LIMIT 20 ")
-    abstract fun loadRecentQueries(): LiveData<List<RecentQueries>>
+        "SELECT * FROM MovieRecentQueries GROUP BY `query` ORDER BY id DESC LIMIT 30 ")
+    abstract fun loadMovieRecentQueries(): LiveData<List<MovieRecentQueries>>
 
-    @Query("DELETE FROM RecentQueries")
-    abstract fun deleteAllRecentQueries()
+    @Query("DELETE FROM MovieRecentQueries")
+    abstract fun deleteAllMovieRecentQueries()
+
 
     @Query("SELECT * FROM DiscoveryMovieResult WHERE page = :pageNumber")
     abstract fun getDiscoveryMovieResultByPage(pageNumber: Int): DiscoveryMovieResult
@@ -66,6 +66,13 @@ abstract class MovieDao {
         pageNumber: Int
     ): LiveData<SearchMovieResult>
 
+    @Query("SELECT * FROM Movie WHERE title LIKE '%' || :query || '%' LIMIT 20" )
+    abstract fun searchMovieSuggestionResultLiveData(
+        query: String
+    ): LiveData<List<Movie>>
+
+
+
     @Query("SELECT * FROM SearchMovieResult WHERE `query` = :query AND pageNumber = :pageNumber ")
     abstract fun searchMovieResult(query: String, pageNumber: Int): SearchMovieResult
 
@@ -93,4 +100,10 @@ abstract class MovieDao {
             movies.sortedWith(compareBy { order.get(it.id) })
         }
     }
+
+    @Query("SELECT * FROM Movie JOIN movieSuggestionsFts ON Movie.id == movieSuggestionsFts.id WHERE movieSuggestionsFts.title MATCH :text LIMIT 40" )
+    abstract fun loadMovieSuggestions(text: String): LiveData<List<Movie>>
 }
+
+
+

@@ -1,14 +1,16 @@
 package com.mustafa.movieapp.di
 
-import com.mustafa.movieapp.view.ui.movies.search.SearchFragment
+import com.mustafa.movieapp.view.ui.search.MovieSearchFragment
 import com.mustafa.movieapp.view.ui.movies.moviedetail.MovieDetailFragment
 import com.mustafa.movieapp.view.ui.movies.movielist.MovieListFragment
-import com.mustafa.movieapp.view.ui.movies.search.filter.SearchResultFilterFragment
-import com.mustafa.movieapp.view.ui.movies.search.result.SearchResultFragment
+import com.mustafa.movieapp.view.ui.search.filter.SearchResultFilterFragment
+import com.mustafa.movieapp.view.ui.search.result.MovieSearchResultFragment
+import com.mustafa.movieapp.view.ui.search.result.TvSearchResultFragment
 import com.mustafa.movieapp.view.ui.person.CelebritiesListFragment
 import com.mustafa.movieapp.view.ui.person.CelebrityDetailFragment
-import com.mustafa.movieapp.view.ui.tv.TvDetailFragment
-import com.mustafa.movieapp.view.ui.tv.TvListFragment
+import com.mustafa.movieapp.view.ui.search.TvSearchFragment
+import com.mustafa.movieapp.view.ui.tv.tvdetail.TvDetailFragment
+import com.mustafa.movieapp.view.ui.tv.tvlist.TvListFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -35,16 +37,17 @@ abstract class FragmentBuildersModule {
     abstract fun contributeCelebrityDetailFragment(): CelebrityDetailFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeMoviesSearchFragment(): SearchFragment
+    abstract fun contributeMoviesSearchFragment(): MovieSearchFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeSearchResultFragment(): SearchResultFragment
+    abstract fun contributeTvSearchFragment(): TvSearchFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeSearchResultFragment(): MovieSearchResultFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeTvSearchResultFragment(): TvSearchResultFragment
 
     @ContributesAndroidInjector
     abstract fun contributeSearchResultFilterFragment(): SearchResultFilterFragment
-
-
-
-
-
 }

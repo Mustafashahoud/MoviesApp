@@ -83,7 +83,7 @@ fun bindMovieGenre(view: TextView, movie: Movie) {
 @SuppressLint("SetTextI18n")
 @BindingAdapter("bindAirDate")
 fun bindAirDate(view: TextView, tv: Tv) {
-    view.text = "First Air Date: ${tv.first_air_date}"
+    tv.first_air_date?.let {view.text = "First Air Date: ${tv.first_air_date}" }
 }
 
 @SuppressLint("SetTextI18n")

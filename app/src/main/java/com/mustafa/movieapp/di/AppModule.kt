@@ -3,6 +3,7 @@ package com.mustafa.movieapp.di
 import android.app.Application
 import androidx.annotation.NonNull
 import androidx.room.Room
+import androidx.room.migration.Migration
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.mustafa.movieapp.api.*
 import com.mustafa.movieapp.api.RequestInterceptor

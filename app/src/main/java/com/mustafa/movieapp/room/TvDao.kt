@@ -9,9 +9,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.mustafa.movieapp.models.entity.DiscoveryTvResult
-import com.mustafa.movieapp.models.entity.Movie
-import com.mustafa.movieapp.models.entity.Tv
+import com.mustafa.movieapp.models.entity.*
 
 @Dao
 abstract class TvDao {
@@ -20,6 +18,12 @@ abstract class TvDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   abstract fun insertTvList(tvs: List<Tv>)
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  abstract fun insertTvRecentQuery(insertTvRecentQuery: TvRecentQueries)
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  abstract fun insertSearchTvResult(result: SearchTvResult)
 
   @Update
   abstract fun updateTv(tv: Tv)
@@ -39,10 +43,16 @@ abstract class TvDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   abstract fun insertDiscoveryTvResult(result: DiscoveryTvResult)
 
+  @Query("SELECT * FROM SearchTvResult WHERE `query` = :query AND pageNumber = :pageNumber ")
+  abstract fun searchTvResultLiveData(
+    query: String,
+    pageNumber: Int
+  ): LiveData<SearchTvResult>
+
   @Query("SELECT * FROM Tv WHERE id in (:tvIds) AND search = 0 ")
   abstract fun loadDiscoveryTvList(tvIds: List<Int>): LiveData<List<Tv>>
 
-  fun loadDiscoveryMovieListOrdered(tvIds: List<Int>): LiveData<List<Tv>> {
+  fun loadDiscoveryTvListOrdered(tvIds: List<Int>): LiveData<List<Tv>> {
     val order = SparseIntArray() // SparseArrayCompat can be used
     tvIds.withIndex().forEach {
       order.put(it.value, it.index)
@@ -52,6 +62,31 @@ abstract class TvDao {
       tvs.sortedWith(compareBy { order.get(it.id) })
     }
   }
+
+
+  @Query("SELECT * FROM Tv WHERE name LIKE :query || '%' OR name LIKE '%' || :query || '%' LIMIT 20" )
+  abstract fun searchTvSuggestionResultLiveData(
+    query: String
+  ): LiveData<List<Tv>>
+
+  @Query(
+    "SELECT * FROM TvRecentQueries GROUP BY `query` ORDER BY id DESC LIMIT 30 ")
+  abstract fun loadTvRecentQueries(): LiveData<List<TvRecentQueries>>
+
+  @Query("DELETE FROM TvRecentQueries")
+  abstract fun deleteAllTvRecentQueries()
+
+
+
+  @Query("SELECT * FROM SearchTvResult WHERE `query` = :query AND pageNumber = :pageNumber ")
+  abstract fun searchTvResult(query: String, pageNumber: Int): SearchTvResult
+
+  @Query("SELECT * FROM Tv WHERE id in (:tvIds) AND search = 1 AND poster_path <> '' ")
+  abstract fun loadSearchTvList(tvIds: List<Int>): LiveData<List<Tv>>
+
+  @Query("SELECT * FROM Tv JOIN tvSuggestionsFts ON Tv.id == tvSuggestionsFts.id WHERE tvSuggestionsFts.name MATCH :text LIMIT 40" )
+  abstract fun loadTvSuggestions(text: String): LiveData<List<Tv>>
+
 
 
 }

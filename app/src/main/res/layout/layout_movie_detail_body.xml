@@ -26,7 +26,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="23dp"
-      android:text="Trailers"
+      android:text="@string/trailers"
       android:textColor="@color/white"
       android:textSize="20sp"
       android:textStyle="bold"
@@ -47,7 +47,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="23dp"
-      android:text="Summary"
+      android:text="@string/summary"
       android:textColor="@color/white"
       android:textSize="20sp"
       android:textStyle="bold" />
@@ -57,7 +57,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="12dp"
-      android:text="@{movie.overview}"
+      android:text='@{movie.overview == null ? "" : movie.overview}'
       android:textColor="@color/white"
       android:textSize="14sp"
       tools:text="Summary" />
@@ -87,7 +87,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="23dp"
-      android:text="Reviews"
+      android:text="@string/reviews"
       android:textColor="@color/white"
       android:textSize="20sp"
       android:textStyle="bold"

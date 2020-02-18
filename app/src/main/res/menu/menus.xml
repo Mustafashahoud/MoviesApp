@@ -3,20 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/moviesFragment"
-        android:icon="@drawable/ic_movie_filter_white_24dp"
-        android:state_checked="true"
-        android:title="@string/fragment_movies"
-        app:showAsAction="ifRoom" />
+        android:icon="@drawable/ic_movie_nav"
+        android:title="@string/fragment_movies" />
     <item
         android:id="@+id/tvsFragment"
-        android:icon="@drawable/ic_live_tv_white_24dp"
-        android:title="@string/fragment_tvs"
-        android:state_checked="false"
-        app:showAsAction="ifRoom" />
+        android:icon="@drawable/ic_tv_nav"
+        android:title="@string/fragment_tvs" />
     <item
         android:id="@+id/celebritiesFragment"
-        android:icon="@drawable/ic_star_white_24dp"
-        android:title="@string/fragment_celebrities"
-        android:state_checked="false"
-        app:showAsAction="ifRoom" />
+        android:icon="@drawable/ic_star_nav"
+        android:title="@string/fragment_celebrities" />
 </menu>

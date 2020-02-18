@@ -20,12 +20,11 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
+        android:layout_gravity="start"
         android:background="@color/colorPrimary"
-        app:itemBackground="@color/colorPrimary"
-        app:itemHorizontalTranslationEnabled="true"
+        android:foreground="?attr/selectableItemBackground"
         app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
-        app:menu="@menu/menus"
-        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"/>
+        app:itemTextColor="@drawable/nav_item_color_state"
+        app:menu="@menu/menus" />
 </LinearLayout>

@@ -5,12 +5,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.mustafa.movieapp.factory.AppViewModelFactory
 import com.mustafa.movieapp.view.ui.movies.moviedetail.MovieDetailViewModel
 import com.mustafa.movieapp.view.ui.person.PersonDetailViewModel
-import com.mustafa.movieapp.view.ui.tv.TvDetailViewModel
+import com.mustafa.movieapp.view.ui.tv.tvdetail.TvDetailViewModel
 import com.mustafa.movieapp.view.ui.movies.movielist.MovieListViewModel
-import com.mustafa.movieapp.view.ui.movies.search.filter.MovieSearchFilterViewModel
-import com.mustafa.movieapp.view.ui.movies.search.result.MovieSearchViewModel
+import com.mustafa.movieapp.view.ui.search.filter.MovieSearchFilterViewModel
+import com.mustafa.movieapp.view.ui.search.MovieSearchViewModel
 import com.mustafa.movieapp.view.ui.person.CelebritiesListViewModel
-import com.mustafa.movieapp.view.ui.tv.TvListViewModel
+import com.mustafa.movieapp.view.ui.search.TvSearchViewModel
+import com.mustafa.movieapp.view.ui.tv.tvlist.TvListViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -55,6 +56,10 @@ abstract class ViewModelModule {
   @ViewModelKey(MovieSearchViewModel::class)
   abstract fun bindMovieSearchViewModel(movieSearchViewModel: MovieSearchViewModel): ViewModel
 
+  @Binds
+  @IntoMap
+  @ViewModelKey(TvSearchViewModel::class)
+  abstract fun bindTvSearchViewModel(tvSearchViewModel: TvSearchViewModel): ViewModel
 
   @Binds
   @IntoMap

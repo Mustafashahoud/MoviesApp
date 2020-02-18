@@ -20,7 +20,7 @@ import com.mustafa.movieapp.repository.TvRepository
 import com.mustafa.movieapp.room.TvDao
 import com.mustafa.movieapp.utils.MockTestUtil
 import com.mustafa.movieapp.utils.MockTestUtil.Companion.mockTv
-import com.mustafa.movieapp.view.ui.tv.TvDetailViewModel
+import com.mustafa.movieapp.view.ui.tv.tvdetail.TvDetailViewModel
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -44,7 +44,8 @@ class TvDetailViewModelTest {
   @Before
   fun init() {
     repository = TvRepository(service, tvDao)
-    viewModel = TvDetailViewModel(repository)
+    viewModel =
+        TvDetailViewModel(repository)
   }
 
   @Test

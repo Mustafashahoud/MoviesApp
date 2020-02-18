@@ -17,8 +17,12 @@ import com.mustafa.movieapp.utils.VideoListConverter
   (SearchMovieResult::class),
   (DiscoveryMovieResult::class),
   (DiscoveryTvResult::class),
-  (RecentQueries::class)],
-  version = 19, exportSchema = false)
+  (MovieRecentQueries::class),
+  (SearchTvResult::class),
+  (TvRecentQueries::class),
+  (MovieSuggestionsFts::class),
+  (TvSuggestionsFts::class)],
+  version = 23, exportSchema = false)
 @TypeConverters(value = [(StringListConverter::class), (IntegerListConverter::class),
   (KeywordListConverter::class), (VideoListConverter::class), (ReviewListConverter::class)])
 abstract class AppDatabase : RoomDatabase() {

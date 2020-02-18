@@ -33,7 +33,7 @@
                 android:scaleType="fitCenter"
                 android:layout_marginStart="5dp"
                 app:imageUrl="@{movie.poster_path}"
-                tools:src="@drawable/ic_star_white_24dp"
+                tools:src="@drawable/ic_star_nav"
                 tools:ignore="ContentDescription" />
 
             <LinearLayout

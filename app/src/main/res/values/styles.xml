@@ -58,11 +58,11 @@
 
 
     <style name="SelectableItemTheme" parent="ThemeOverlay.MaterialComponents">
-        <item name="colorControlHighlight">@android:color/white</item>
+        <item name="colorControlHighlight">@color/white</item>
         <item name="android:textAlignment">viewStart</item>
     </style>
 
-    <style name="SelectableFilterTheme" parent="ThemeOverlay.MaterialComponents">
+    <style name="SelectableFilterTheme" parent="">
         <item name="colorControlHighlight">@color/colorPrimary</item>
         <item name="colorOnPrimary">@color/colorPrimary</item>
         <item name="colorOnSecondary">@color/colorPrimary</item>

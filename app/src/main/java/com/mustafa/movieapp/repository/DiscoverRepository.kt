@@ -1,9 +1,6 @@
 package com.mustafa.movieapp.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import com.mustafa.movieapp.api.*
 import com.mustafa.movieapp.mappers.MoviePagingChecker
 import com.mustafa.movieapp.mappers.TvPagingChecker
@@ -17,7 +14,6 @@ import com.mustafa.movieapp.room.TvDao
 import com.mustafa.movieapp.utils.AbsentLiveData
 import com.mustafa.movieapp.utils.RateLimiter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -125,7 +121,7 @@ class DiscoverRepository @Inject constructor(
                     if (searchData == null) {
                         AbsentLiveData.create()
                     } else {
-                        tvDao.loadDiscoveryMovieListOrdered(searchData.ids)
+                        tvDao.loadDiscoveryTvListOrdered(searchData.ids)
                     }
                 }
             }
@@ -169,12 +165,12 @@ class DiscoverRepository @Inject constructor(
                     pageNumber = page
                 )
 
-                val recentQueries = RecentQueries(query)
+                val recentQueries = MovieRecentQueries(query)
 
                 db.runInTransaction {
                     movieDao.insertMovieList(items.results)
                     movieDao.insertSearchMovieResult(searchMovieResult)
-                    movieDao.insertRecentQuery(recentQueries)
+                    movieDao.insertMovieRecentQuery(recentQueries)
                 }
             }
 
@@ -207,8 +203,74 @@ class DiscoverRepository @Inject constructor(
         }.asLiveData()
     }
 
-    fun getSuggestions(query: String, page: Int): LiveData<List<Movie>> {
 
+    fun searchTvs(query: String, page: Int): LiveData<Resource<List<Tv>>> {
+        return object :
+            NetworkBoundResource<List<Tv>, DiscoverTvResponse, TvPagingChecker>(
+                appExecutors
+            ) {
+            override fun saveCallResult(items: DiscoverTvResponse) {
+
+                val ids = arrayListOf<Int>()
+                val tvIds: List<Int> = items.results.map { it.id }
+
+                for (item in items.results) {
+                    item.page = page
+                    item.search = true
+                }
+
+                if (page > 1) {
+                    val prevPageNumber = page - 1
+                    val tvSearchResult = tvDao.searchTvResult(query, prevPageNumber)
+                    ids.addAll(tvSearchResult.tvIds)
+                }
+
+                ids.addAll(tvIds)
+                val searchMovieResult = SearchTvResult(
+                    query = query,
+                    tvIds = ids,
+                    pageNumber = page
+                )
+
+                val recentQueries = TvRecentQueries(query)
+
+                db.runInTransaction {
+                    tvDao.insertTvList(items.results)
+                    tvDao.insertSearchTvResult(searchMovieResult)
+                    tvDao.insertTvRecentQuery(recentQueries)
+                }
+            }
+
+            override fun shouldFetch(data: List<Tv>?): Boolean {
+                return data == null || data.isEmpty()
+            }
+
+            override fun loadFromDb(): LiveData<List<Tv>> {
+                return Transformations.switchMap(
+                    tvDao.searchTvResultLiveData(
+                        query,
+                        page
+                    )
+                ) { searchData ->
+                    if (searchData == null) {
+                        AbsentLiveData.create()
+                    } else {
+                        tvDao.loadSearchTvList(searchData.tvIds)
+                    }
+                }
+            }
+
+            override fun pageChecker(): TvPagingChecker {
+                return TvPagingChecker()
+            }
+
+            override fun createCall(): LiveData<ApiResponse<DiscoverTvResponse>> {
+                return discoverService.searchTvs(query, page = page)
+            }
+        }.asLiveData()
+    }
+
+    fun getMovieSuggestions(query: String, page: Int): LiveData<List<Movie>> {
         val results = MediatorLiveData<List<Movie>>()
         val response = discoverService.searchMovies(query, page)
         results.addSource(response) {
@@ -216,12 +278,10 @@ class DiscoverRepository @Inject constructor(
                 is ApiSuccessResponse -> {
                     results.value =
                         (response.value as ApiSuccessResponse<DiscoverMovieResponse>).body.results
-
                 }
                 is ApiEmptyResponse -> {
                     results.value = null
                 }
-
                 is ApiErrorResponse -> {
                     results.value = null
                 }
@@ -231,9 +291,39 @@ class DiscoverRepository @Inject constructor(
     }
 
 
-    fun getRecentQueries() = movieDao.loadRecentQueries()
-    fun deleteAllRecentQueries() =
-        movieDao.deleteAllRecentQueries()
+    fun getMovieSuggestionsFromRoom(query: String?): LiveData<List<Movie>> {
+        val movieQuery = MutableLiveData<String>()
+        movieQuery.value = query
+        return Transformations.switchMap(movieQuery){
+            if (it.isNullOrBlank()) {
+                AbsentLiveData.create()
+            } else {
+                movieDao.loadMovieSuggestions(it)
+            }
+        }
+
+    }
+
+    fun getTvSuggestionsFromRoom(query: String): LiveData<List<Tv>>{
+        val tvQuery = MutableLiveData<String>()
+        tvQuery.value = query
+        return Transformations.switchMap(tvQuery){
+            if (it.isNullOrBlank()) {
+                AbsentLiveData.create()
+            } else {
+                tvDao.loadTvSuggestions(it)
+            }
+        }
+    }
+
+
+    fun getMovieRecentQueries() = movieDao.loadMovieRecentQueries()
+    fun deleteAllMovieRecentQueries() =
+        movieDao.deleteAllMovieRecentQueries()
+
+    fun getTvRecentQueries() = tvDao.loadTvRecentQueries()
+    fun deleteAllTvRecentQueries() =
+        tvDao.deleteAllTvRecentQueries()
 
 
     /**
@@ -257,7 +347,7 @@ class DiscoverRepository @Inject constructor(
     ): LiveData<Resource<List<Movie>>> {
 
         val results = MediatorLiveData<Resource<List<Movie>>>()
-        val response = discoverService.searchFilters(
+        val response = discoverService.searchMovieFilters(
             rating,
             sort,
             year,

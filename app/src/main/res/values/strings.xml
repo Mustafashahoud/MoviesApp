@@ -9,7 +9,8 @@
     <string name="unknown_error">Unknown Error</string>
     <string name="empty_search_result">No results for <b>%s</b></string>
     <string name="recent">Recent</string>
-    <string name="filter_movies">Filter &amp; Find Movies</string>
+    <string name="filter_movies">Filter Your Movies</string>
+    <string name="filter_tvs">Filter Your Series</string>
     <string name="recent_searches">Recent Searches</string>
     <string name="clear">CLEAR</string>
     <string name="dialog_message">Clear recent searches and pages?</string>
@@ -20,17 +21,19 @@
     <string name="country">Country</string>
     <string name="search_type">Search Type</string>
     <string name="keywords">keywords</string>
-    <string name="runtime">Runtim</string>
+    <string name="runtime">Runtime</string>
     <string name="year">Year</string>
     <string name="language">Primary Language</string>
     <string name="edit">Edit</string>
     <string name="results">Results</string>
 
     <!-- Navigation Drawer menu labels -->
-    <string name="nav_home">Home</string>
-    <string name="nav_photos">Photos</string>
     <string name="nav_movies">Movies</string>
-    <string name="nav_notifications">Notifications</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_about_us">About Us</string>
+    <string name="movie_list_fragment_name">MovieListFragment</string>
+    <string name="tv_list_fragment_name">TvListFragment</string>
+    <string name="summary">Summary</string>
+    <string name="reviews">Reviews</string>
+    <string name="trailers">Trailers</string>
 </resources>
