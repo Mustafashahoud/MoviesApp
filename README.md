@@ -8,7 +8,7 @@ A Movie Application uses [TheMovie API](https://www.themoviedb.org) based on Kot
 ## Libraries & Spec
 - 100% Kotlin based, [anko](https://github.com/Kotlin/anko)
 - MVVM Architecture
-- Architecture Components (Lifecycle, LiveData, ViewModel, Room Persistence, Navigation, Room with FTS4)
+- Architecture Components (Lifecycle, LiveData, ViewModel, Navigation, Room with FTS4)
 - DataBinding
 - Material Design & Animations
 - Ripple animation, Shared element transition
