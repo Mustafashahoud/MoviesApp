@@ -2,7 +2,6 @@ package com.mustafa.movieapp.view.ui.tv.tvlist
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -25,16 +24,14 @@ import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.TvListAdapter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
-import com.mustafa.movieapp.view.ui.common.OnReselectedNavBottomViewItem
 import com.mustafa.movieapp.view.ui.common.RetryCallback
-import com.mustafa.movieapp.view.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_tvs.*
 import kotlinx.android.synthetic.main.toolbar_search.*
 import javax.inject.Inject
 
 @OpenForTesting
 @Suppress("SpellCheckingInspection")
-class TvListFragment : Fragment(), Injectable, OnReselectedNavBottomViewItem {
+class TvListFragment : Fragment(), Injectable  {
 
     @Inject
     lateinit var viewmodelFactory: ViewModelProvider.Factory
@@ -68,7 +65,6 @@ class TvListFragment : Fragment(), Injectable, OnReselectedNavBottomViewItem {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        (activity as MainActivity).onReselectedNavBottomViewItem = this
         with(binding) {
             lifecycleOwner = this@TvListFragment
             searchResult = viewModel.tvListLiveData
@@ -109,7 +105,6 @@ class TvListFragment : Fragment(), Injectable, OnReselectedNavBottomViewItem {
             }
         })
 
-        naviagtionBottomBar()
         search_icon.setOnClickListener {
             navController().navigate(
                 TvListFragmentDirections.actionTvsFragmentToTvSearchFragment()
@@ -135,18 +130,9 @@ class TvListFragment : Fragment(), Injectable, OnReselectedNavBottomViewItem {
         activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visible()
     }
 
-    fun naviagtionBottomBar() {
-        val bottomNavigationView: BottomNavigationView? = activity?.findViewById(R.id.bottom_navigation)!!
-        bottomNavigationView?.setOnNavigationItemReselectedListener {
-            recyclerView_list_tvs.smoothScrollToPosition(0)
-        }
-    }
 
     fun intiToolbar(title: String) {
         toolbar_title.text = title
     }
 
-    override fun onReselectedNavBottomViewItem(item: MenuItem) {
-        if (item.itemId == R.id.tvsFragment) recyclerView_list_tvs.smoothScrollToPosition(0)
-    }
 }

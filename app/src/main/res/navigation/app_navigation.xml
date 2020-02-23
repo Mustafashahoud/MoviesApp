@@ -89,7 +89,11 @@
             app:destination="@id/movieDetail" />
         <action
             android:id="@+id/action_movieSearchFragment_to_moviesFragment"
-            app:destination="@id/moviesFragment" />
+            app:popUpTo="@id/moviesFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_exit_anim"/>
         <action
             android:id="@+id/action_movieSearchFragment_to_movieSearchFragmentResult"
             app:destination="@id/movieSearchFragmentResult" />
@@ -102,8 +106,8 @@
         android:name="com.mustafa.movieapp.view.ui.search.result.MovieSearchResultFragment"
         android:label="searchFragmentResult" >
         <action
-            android:id="@+id/action_movieSearchFragmentResult_to_searchFragment"
-            app:destination="@id/movieSearchFragment" />
+            android:id="@+id/action_movieSearchFragmentResult_to_movieSearchFragment"
+            app:popUpTo="@id/movieSearchFragment" />
         <action
             android:id="@+id/action_movieSearchFragmentResult_to_movieDetail"
             app:destination="@id/movieDetail" />
@@ -124,7 +128,7 @@
 
         <action
             android:id="@+id/action_tvSearchFragment_to_tvsFragment"
-            app:destination="@id/tvsFragment" />
+            app:popUpTo="@id/tvsFragment" />
 
         <action
             android:id="@+id/action_tvSearchFragment_to_tvSearchFragmentResult"
@@ -140,11 +144,11 @@
         android:name="com.mustafa.movieapp.view.ui.search.result.TvSearchResultFragment"
         android:label="tvSearchFragmentResult" >
         <action
-            android:id="@+id/action_tvSearchFragmentResult_to_searchFragment"
-            app:destination="@id/movieSearchFragment" />
+            android:id="@+id/action_tvSearchFragmentResult_to_tvSearchFragment"
+            app:popUpTo="@id/tvSearchFragment" />
         <action
-            android:id="@+id/action_tvSearchFragmentResult_to_movieDetail"
-            app:destination="@id/movieDetail" />
+            android:id="@+id/action_tvSearchFragmentResult_to_tvDetail"
+            app:destination="@id/tvDetail" />
 
         <argument
             android:name="query"

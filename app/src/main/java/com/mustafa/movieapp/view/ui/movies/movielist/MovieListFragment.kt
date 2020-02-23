@@ -3,7 +3,6 @@ package com.mustafa.movieapp.view.ui.movies.movielist
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -28,9 +27,7 @@ import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.MovieListAdapter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
-import com.mustafa.movieapp.view.ui.common.OnReselectedNavBottomViewItem
 import com.mustafa.movieapp.view.ui.common.RetryCallback
-import com.mustafa.movieapp.view.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.toolbar_search.*
 import timber.log.Timber
@@ -38,7 +35,7 @@ import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")
 @OpenForTesting
-class MovieListFragment : Fragment(), Injectable, OnReselectedNavBottomViewItem{
+class MovieListFragment : Fragment(), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -75,7 +72,6 @@ class MovieListFragment : Fragment(), Injectable, OnReselectedNavBottomViewItem{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Timber.d("Hell..Yeahh...onViewCreated()")
-        (activity as MainActivity).onReselectedNavBottomViewItem = this
         subscribers()
         initializeUI()
     }
@@ -196,9 +192,5 @@ class MovieListFragment : Fragment(), Injectable, OnReselectedNavBottomViewItem{
      * Created to be able to override in tests
      */
     fun navController() = findNavController()
-
-    override fun onReselectedNavBottomViewItem(item: MenuItem) {
-        if(item.itemId == R.id.moviesFragment) recyclerView_list_movies.smoothScrollToPosition(0)
-    }
 
 }

@@ -13,6 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -75,4 +78,18 @@ private fun Fragment.getStatusBarSize(): Int {
   return if (idStatusBarHeight > 0) {
     resources.getDimensionPixelSize(idStatusBarHeight)
   } else 0
+}
+
+
+fun FragmentManager.getCurrentNavigationFragment(): Fragment? =
+  primaryNavigationFragment?.childFragmentManager?.fragments?.first()
+
+/**
+ * true if the findFirstCompletelyVisibleItemPosition is Zero
+ */
+fun Fragment.isRecyclerViewScrollPositionZero(id: Int): Boolean? =
+  (activity?.findViewById<RecyclerView>(id)?.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition() == 0
+
+fun Fragment.setSmoothScrollToZero(resId: Int) {
+  activity?.findViewById<RecyclerView>(resId)?.smoothScrollToPosition(0)
 }
