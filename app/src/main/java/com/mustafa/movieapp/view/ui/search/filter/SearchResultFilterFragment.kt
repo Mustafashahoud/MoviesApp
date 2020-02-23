@@ -51,7 +51,8 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
     var binding by autoCleared<FragmentSearchResultFilterBinding>()
     var adapter by autoCleared<MovieSearchListAdapter>()
 
-    var filtersMap: HashMap<String, ArrayList<String>>? = null
+    private var filtersMap: HashMap<String, ArrayList<String>>? = null
+    private var filtersData: FilterData? = null
 
     companion object {
         const val popularity = "popularity.desc"
@@ -60,7 +61,6 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
         const val sort_by_popularity= "Popularity"
         const val sort_by_vote_count = "Vote Count"
         const val sort_by_release_date = "Release Date"
-
     }
 
     override fun onCreateView(
@@ -83,20 +83,6 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
         Timber.d("Hell..Yeahh...onViewCreated()")
         initializeUI()
         subscribers()
-        filtersMap = getFilterMap()
-
-        viewModel.resetFilterValues()
-        viewModel.loadFilteredMovies(
-            getRatingFilters(),
-            popularity,
-            getYearsAsIntegers(),
-            getGenresAsSeparatedString(),
-            getKeywordsAsSeparatedString()!!,
-            getISOLanguageFilter(),
-            getRunTimeFilter(),
-            getISORegionFilter(),
-            1
-            )
 
         renderSortByTextView(sort_by_popularity)
 
@@ -104,6 +90,33 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
             lifecycleOwner = this@SearchResultFilterFragment
             totalFilterResult = viewModel.totalFilterResult
         }
+
+        if (filtersData == null){
+            filtersMap = getFilterMap()
+            filtersData = FilterData(
+                getRatingFilters(),
+                getYearsAsIntegers(),
+                getGenresAsSeparatedString(),
+                getKeywordsAsSeparatedString(),
+                getISOLanguageFilter(),
+                getRunTimeFilter(),
+                getISORegionFilter()
+            )
+            filtersData?.let {
+                viewModel.loadFilteredMovies(
+                    it.rating,
+                    popularity,
+                    it.year,
+                    it.genres,
+                    it.keywords,
+                    it.language,
+                    it.runtime,
+                    it.region,
+                    1
+                )
+            }
+        }
+
     }
 
     private fun subscribers() {
@@ -112,8 +125,6 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
                 adapter.submitList(it.data)
             }
         })
-
-
         viewModel.totalFilterResult.observe(viewLifecycleOwner, Observer {
 //            binding.
         })
@@ -309,19 +320,18 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
     fun navController() = findNavController()
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         return when (item?.itemId) {
-
             R.id.sort_popularity -> {
                 if (sort_by_text_view.text == sort_by_popularity) return false
                 viewModel.resetFilterValues()
                 viewModel.loadFilteredMovies(
-                    getRatingFilters(),
+                    filtersData?.rating,
                     popularity,
-                    getYearsAsIntegers(),
-                    getGenresAsSeparatedString(),
-                    getKeywordsAsSeparatedString()!!,
-                    getISOLanguageFilter(),
-                    getRunTimeFilter(),
-                    getISORegionFilter(),
+                    filtersData?.year,
+                    filtersData?.genres,
+                    filtersData?.keywords,
+                    filtersData?.language,
+                    filtersData?.runtime,
+                    filtersData?.region,
                     1
                 )
                 renderSortByTextView(sort_by_popularity)
@@ -331,14 +341,14 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
                 if (sort_by_text_view.text == sort_by_vote_count) return false
                 viewModel.resetFilterValues()
                 viewModel.loadFilteredMovies(
-                    getRatingFilters(),
+                    filtersData?.rating,
                     vote,
-                    getYearsAsIntegers(),
-                    getGenresAsSeparatedString(),
-                    getKeywordsAsSeparatedString()!!,
-                    getISOLanguageFilter(),
-                    getRunTimeFilter(),
-                    getISORegionFilter(),
+                    filtersData?.year,
+                    filtersData?.genres,
+                    filtersData?.keywords,
+                    filtersData?.language,
+                    filtersData?.runtime,
+                    filtersData?.region,
                     1
                 )
                 renderSortByTextView(sort_by_vote_count)
@@ -348,14 +358,14 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
                 if (sort_by_text_view.text == sort_by_release_date) return false
                 viewModel.resetFilterValues()
                 viewModel.loadFilteredMovies(
-                    getRatingFilters(),
+                    filtersData?.rating,
                     release,
-                    getYearsAsIntegers(),
-                    getGenresAsSeparatedString(),
-                    getKeywordsAsSeparatedString()!!,
-                    getISOLanguageFilter(),
-                    getRunTimeFilter(),
-                    getISORegionFilter(),
+                    filtersData?.year,
+                    filtersData?.genres,
+                    filtersData?.keywords,
+                    filtersData?.language,
+                    filtersData?.runtime,
+                    filtersData?.region,
                     1
                 )
                 renderSortByTextView(sort_by_release_date)
@@ -364,4 +374,18 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
             else -> false
         }
     }
+
+
+
+    data class FilterData(
+        var rating: Int? = null,
+        var year: Int? = null,
+        var genres: String? = null,
+        var keywords: String? = null,
+        var language: String? = null,
+        var runtime: Int? = null,
+        var region: String? = null
+    )
 }
+
+

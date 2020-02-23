@@ -255,7 +255,7 @@ class DiscoverRepository @Inject constructor(
                     if (searchData == null) {
                         AbsentLiveData.create()
                     } else {
-                        tvDao.loadSearchTvList(searchData.tvIds)
+                        tvDao.loadSearchTvListOrdered(searchData.tvIds)
                     }
                 }
             }
@@ -294,7 +294,7 @@ class DiscoverRepository @Inject constructor(
     fun getMovieSuggestionsFromRoom(query: String?): LiveData<List<Movie>> {
         val movieQuery = MutableLiveData<String>()
         movieQuery.value = query
-        return Transformations.switchMap(movieQuery){
+        return Transformations.switchMap(movieQuery) {
             if (it.isNullOrBlank()) {
                 AbsentLiveData.create()
             } else {
@@ -304,10 +304,10 @@ class DiscoverRepository @Inject constructor(
 
     }
 
-    fun getTvSuggestionsFromRoom(query: String): LiveData<List<Tv>>{
+    fun getTvSuggestionsFromRoom(query: String): LiveData<List<Tv>> {
         val tvQuery = MutableLiveData<String>()
         tvQuery.value = query
-        return Transformations.switchMap(tvQuery){
+        return Transformations.switchMap(tvQuery) {
             if (it.isNullOrBlank()) {
                 AbsentLiveData.create()
             } else {
@@ -330,11 +330,62 @@ class DiscoverRepository @Inject constructor(
      * Total count of filter results
      */
     private val totalFilteredResults = MutableLiveData<String>()
+
     fun getTotalFilteredResults(): LiveData<String> = totalFilteredResults
 
 
+//    fun queryFilteredMovies(
+//        rating: Int?,
+//        sort: String?,
+//        year: Int?,
+//        keywords: String?,
+//        genres: String?,
+//        language: String?,
+//        runtime: Int?,
+//        region: String?,
+//        page: Int
+//    ): LiveData<Resource<List<Movie>>> {
+//
+//        val results = MediatorLiveData<Resource<List<Movie>>>()
+//        val response = discoverService.searchMovieFilters(
+//            rating,
+//            sort,
+//            year,
+//            genres,
+//            keywords,
+//            language,
+//            runtime,
+//            region,
+//            page
+//        )
+//        results.addSource(response) {
+//            when (response.value) {
+//                is ApiSuccessResponse -> {
+//                    val moviePagingChecker = MoviePagingChecker()
+//                    val successResponse =
+//                        response.value as ApiSuccessResponse<DiscoverMovieResponse>
+//                    results.value = Resource.success(
+//                        successResponse.body.results,
+//                        moviePagingChecker.hasNextPage(successResponse.body)
+//                    )
+//                    totalFilteredResults.value =
+//                        (response.value as ApiSuccessResponse<DiscoverMovieResponse>).body.total_results.toString()
+//
+//                }
+//                is ApiEmptyResponse -> {
+//                    results.value = Resource.success(null, false)
+//                    totalFilteredResults.value = "0"
+//                }
+//                is ApiErrorResponse -> {
+//                    results.value = Resource.error("Something Wrong happened", null)
+//                    totalFilteredResults.value = "0"
+//                }
+//            }
+//        }
+//        return results
+//    }
 
-    fun queryFilteredMovies(
+    fun loadFilteredMovies(
         rating: Int?,
         sort: String?,
         year: Int?,
@@ -345,43 +396,67 @@ class DiscoverRepository @Inject constructor(
         region: String?,
         page: Int
     ): LiveData<Resource<List<Movie>>> {
-
-        val results = MediatorLiveData<Resource<List<Movie>>>()
-        val response = discoverService.searchMovieFilters(
-            rating,
-            sort,
-            year,
-            genres,
-            keywords,
-            language,
-            runtime,
-            region,
-            page
-        )
-        results.addSource(response) {
-            when (response.value) {
-                is ApiSuccessResponse -> {
-                    val moviePagingChecker = MoviePagingChecker()
-                    val successResponse =
-                        response.value as ApiSuccessResponse<DiscoverMovieResponse>
-                    results.value = Resource.success(
-                        successResponse.body.results,
-                        moviePagingChecker.hasNextPage(successResponse.body)
-                    )
-                    totalFilteredResults.value =
-                        (response.value as ApiSuccessResponse<DiscoverMovieResponse>).body.total_results.toString()
-
+        return object :
+            NetworkBoundResource<List<Movie>, DiscoverMovieResponse, MoviePagingChecker>(
+                appExecutors
+            ) {
+            override fun saveCallResult(items: DiscoverMovieResponse) {
+                val ids = arrayListOf<Int>()
+                val movieIds: List<Int> = items.results.map { it.id }
+                for (item in items.results) {
+                    item.page = page
+                    item.filter = true
+                    item.search =
+                        false // it is discovery movie I wanna differentiate cus discovery is sorted by popularity
                 }
-                is ApiEmptyResponse -> {
-                    results.value = Resource.success(null, false)
-                    totalFilteredResults.value = "0"
+                if (page != 1) {
+                    val prevPageNumber = page - 1
+                    val filterMovieResult =
+                        movieDao.getFilteredMovieResultByPage(prevPageNumber)
+                    items.total_results
+                    ids.addAll(filterMovieResult.ids)
                 }
-                is ApiErrorResponse -> {
-                    results.value = Resource.error("Something Wrong happened", null)
-                    totalFilteredResults.value = "0"
+
+                ids.addAll(movieIds)
+                movieDao.insertMovieList(movies = items.results)
+                val filteredMovieResult = FilteredMovieResult(
+                    ids = ids,
+                    page = page
+                )
+                movieDao.insertFilteredMovieResult(filteredMovieResult)
+            }
+
+            override fun shouldFetch(data: List<Movie>?): Boolean {
+                return true
+            }
+
+            override fun loadFromDb(): LiveData<List<Movie>> {
+                return Transformations.switchMap(movieDao.getFilteredMovieResultByPageLiveData(page)) { searchData ->
+                    if (searchData == null) {
+                        AbsentLiveData.create()
+                    } else {
+                        movieDao.loadFilteredMovieListOrdered(searchData.ids)
+                    }
                 }
             }
-        }
-        return results
+
+            override fun pageChecker(): MoviePagingChecker {
+                return MoviePagingChecker()
+            }
+
+            override fun createCall(): LiveData<ApiResponse<DiscoverMovieResponse>> {
+                return discoverService.searchMovieFilters(
+                    rating,
+                    sort,
+                    year,
+                    genres,
+                    keywords,
+                    language,
+                    runtime,
+                    region,
+                    page
+                )
+            }
+        }.asLiveData()
     }
 }

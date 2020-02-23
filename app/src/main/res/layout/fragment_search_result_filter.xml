@@ -7,109 +7,103 @@
         <variable
             name="totalFilterResult"
             type="LiveData&lt;String>" />
-
     </data>
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundDarker">
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/backgroundDarker">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp">
-                <TextView
-                    android:id="@+id/filters_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toStartOf="@id/edit_filters"
-                    android:layout_alignParentStart="true"
-                    android:textColor="@color/white"
-                    android:layout_marginStart="10dp"
-                    tools:text="Mustafa" />
-                <TextView
-                    android:id="@+id/edit_filters"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:textSize="20sp"
-                    android:padding="5dp"
-                    android:clickable="true"
-                    android:background= "@color/colorPrimary"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:text="@string/edit"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:focusable="true" />
-
-            </RelativeLayout>
-
-            <include layout="@layout/snippet_separator"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
-                android:layout_height="60dp">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="10dp"
-                    android:orientation="vertical">
-                    <LinearLayout
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:text="@{totalFilterResult}"
-                            android:textColor="@color/white"
-                            tools:text="956,564" />
-
-                        <TextView
-                            android:layout_width="75dp"
-                            android:layout_marginStart="5dp"
-                            android:layout_height="wrap_content"
-                            android:text="@string/results"
-                            android:textColor="@color/white" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/sort_by_text_view"
-                        android:layout_width="150dp"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/preview"
-                        tools:text="Sorted by Popularity"/>
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/sort_by_icon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="10dp"
-                    android:background="?attr/actionBarItemBackground"
-                    android:foreground="?attr/actionBarItemBackground"
-                    android:src="@drawable/ic_filter"
-                    tools:ignore="ContentDescription" />
-            </RelativeLayout>
-
-            <include layout="@layout/snippet_separator"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/filtered_movies_recycler_view"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/item_movie_search"/>
+                android:background="@color/backgroundDarker">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp">
+                    <TextView
+                        android:id="@+id/filters_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@id/edit_filters"
+                        android:layout_alignParentStart="true"
+                        android:textColor="@color/white"
+                        android:layout_marginStart="10dp"
+                        tools:text="Mustafa" />
+                    <TextView
+                        android:id="@+id/edit_filters"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:textSize="20sp"
+                        android:padding="5dp"
+                        android:clickable="true"
+                        android:background= "@color/colorPrimary"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:text="@string/edit"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:focusable="true" />
+                </RelativeLayout>
+                <include layout="@layout/snippet_separator"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+                    android:layout_height="60dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="10dp"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="30dp"
+                                android:text="@{totalFilterResult}"
+                                android:textColor="@color/white"
+                                tools:text="956,564" />
+                            <TextView
+                                android:layout_width="75dp"
+                                android:layout_marginStart="5dp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/results"
+                                android:textColor="@color/white" />
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/sort_by_text_view"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/preview"
+                            tools:text="Sorted by Popularity"/>
+                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/sort_by_icon"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="10dp"
+                        android:background="?attr/actionBarItemBackground"
+                        android:foreground="?attr/actionBarItemBackground"
+                        android:src="@drawable/ic_filter"
+                        tools:ignore="ContentDescription" />
+                </RelativeLayout>
+                <include layout="@layout/snippet_separator"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/filtered_movies_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:listitem="@layout/item_movie_search"/>
+            </LinearLayout>
 
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
-
 </layout>
