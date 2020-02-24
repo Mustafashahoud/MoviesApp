@@ -33,7 +33,8 @@ data class Movie(
   val vote_count: Int,
   val video: Boolean,
   val vote_average: Float,
-  var search: Boolean?
+  var search: Boolean?,
+  var filter: Boolean?
 ) : Parcelable {
 
   /**
@@ -59,6 +60,7 @@ data class Movie(
     0,
     false,
     vote_average,
+    false,
     false
   )
 }

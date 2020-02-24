@@ -87,6 +87,15 @@ abstract class TvDao {
   @Query("SELECT * FROM Tv JOIN tvSuggestionsFts ON Tv.id == tvSuggestionsFts.id WHERE tvSuggestionsFts.name MATCH :text LIMIT 40" )
   abstract fun loadTvSuggestions(text: String): LiveData<List<Tv>>
 
-
+  fun loadSearchTvListOrdered(tvIds: List<Int>): LiveData<List<Tv>> {
+    val order = SparseIntArray() // SparseArrayCompat can be used
+    tvIds.withIndex().forEach {
+      order.put(it.value, it.index)
+    }
+    return Transformations.map(
+      loadSearchTvList(tvIds)) { tvs ->
+      tvs.sortedWith(compareBy { order.get(it.id) })
+    }
+  }
 
 }

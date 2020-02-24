@@ -43,9 +43,9 @@ import com.mustafa.movieapp.view.adapter.filterSelectableAdapter.FilterMultiSele
 import com.mustafa.movieapp.view.adapter.filterSelectableAdapter.SelectableItem
 import com.mustafa.movieapp.view.ui.common.AppExecutors
 import com.mustafa.movieapp.view.ui.common.RetryCallback
-import kotlinx.android.synthetic.main.fragment_movies_search_filter.*
 import kotlinx.android.synthetic.main.fragment_movie_search.*
 import kotlinx.android.synthetic.main.fragment_movie_search.view.*
+import kotlinx.android.synthetic.main.fragment_movies_search_filter.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
 import org.jetbrains.anko.find
 import org.jetbrains.anko.textColor
@@ -316,16 +316,6 @@ class MovieSearchFragment : Fragment(), Injectable {
         imm?.hideSoftInputFromWindow(windowToken, 0)
     }
 
-    /**
-     * dismiss Keyboard
-     *
-     * @param view The token of the window that is making the request, as returned by View.getWindowToken().
-     */
-//    private fun showKeyboard(view: View) {
-//        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-//        imm?.showSoftInput(view, 0)
-//    }
-
 
     private fun setupRecentQueries() {
         viewModel.getMovieRecentQueries().observe(viewLifecycleOwner, Observer { it ->
@@ -392,7 +382,6 @@ class MovieSearchFragment : Fragment(), Injectable {
             hideFiltersLayout()
             search_view.visible()
             voiceSearch.visible()
-            search_view.requestFocusFromTouch()
             showKeyboard()
             filter_label.gone()
             if (search_view.query.isEmpty() || search_view.query.isBlank()) {
@@ -402,7 +391,6 @@ class MovieSearchFragment : Fragment(), Injectable {
                 hideRecentQueries()
                 recyclerView_movie_suggestion.visible()
             }
-
         }
         tabLayout.getChildAt(1).setOnClickListener {
             hideListViewAndRecyclerView()
@@ -413,7 +401,6 @@ class MovieSearchFragment : Fragment(), Injectable {
             showFiltersLayout()
             hideRecentSearchesBar()
             dismissKeyboard(search_view.windowToken)
-            Timber.d(" ")
         }
     }
 
@@ -604,16 +591,6 @@ class MovieSearchFragment : Fragment(), Injectable {
 
         return mapStringAdapterNameToSelectedFilters
     }
-
-    private fun getSearchType(): String? {
-//        val type =
-//            MovieSearchFragmentArgs.fromBundle(
-//                arguments!!
-//            )
-//        return type.key
- return  ""
-    }
-
 
     override fun onDestroy() {
         super.onDestroy()

@@ -16,6 +16,7 @@ import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentTvSearchResultBinding
 import com.mustafa.movieapp.di.Injectable
+import com.mustafa.movieapp.extension.hideKeyboard
 import com.mustafa.movieapp.models.Status
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.TvSearchListAdapter
@@ -51,7 +52,6 @@ class TvSearchResultFragment : Fragment(), Injectable {
             container,
             false
         )
-
         return binding.root
     }
 
@@ -96,17 +96,12 @@ class TvSearchResultFragment : Fragment(), Injectable {
             appExecutors,
             dataBindingComponent
         ) {
-//            navController().navigate(
-//                TvSearchResultFragment
-//            )
+            navController().navigate(
+                TvSearchResultFragmentDirections.actionTvSearchFragmentResultToTvDetail(it)
+            )
         }
 
-//        adapter.setHasStableIds(true) // prevent blinking .. in Case notifyDataSetChanged()
-        // To have a nice animation and avoid blinking in the RecyclerView:
-        /**
-         * 1-  adapter.setHasStableIds(true)
-         * 2-  Use notifyItemRangeInserted(start, count)
-         */
+        hideKeyboard()
         binding.root.recyclerView_search_result_tvs.adapter = adapter
 
         recyclerView_search_result_tvs.layoutManager = LinearLayoutManager(context)
@@ -127,11 +122,11 @@ class TvSearchResultFragment : Fragment(), Injectable {
         })
 
         search_view.setOnSearchClickListener {
-            navController().navigate(TvSearchResultFragmentDirections.actionTvSearchFragmentResultToSearchFragment())
+            navController().navigate(TvSearchResultFragmentDirections.actionTvSearchFragmentResultToTvSearchFragment())
         }
 
         arrow_back.setOnClickListener {
-            navController().navigate(TvSearchResultFragmentDirections.actionTvSearchFragmentResultToSearchFragment())
+            navController().navigate(TvSearchResultFragmentDirections.actionTvSearchFragmentResultToTvSearchFragment())
         }
     }
     /**

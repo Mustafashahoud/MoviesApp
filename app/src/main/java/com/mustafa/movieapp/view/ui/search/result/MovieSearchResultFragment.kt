@@ -1,5 +1,6 @@
 package com.mustafa.movieapp.view.ui.search.result
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentMovieSearchResultBinding
 import com.mustafa.movieapp.di.Injectable
+import com.mustafa.movieapp.extension.hideKeyboard
 import com.mustafa.movieapp.models.Status
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.MovieSearchListAdapter
@@ -25,6 +27,7 @@ import com.mustafa.movieapp.view.ui.search.MovieSearchViewModel
 import kotlinx.android.synthetic.main.fragment_movie_search_result.*
 import kotlinx.android.synthetic.main.fragment_movie_search_result.view.*
 import kotlinx.android.synthetic.main.toolbar_search_result.*
+import timber.log.Timber
 import javax.inject.Inject
 
 class MovieSearchResultFragment : Fragment(), Injectable {
@@ -52,11 +55,14 @@ class MovieSearchResultFragment : Fragment(), Injectable {
             false
         )
 
+        Timber.d("Hell..Yeahh...onCreateView()")
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initializeUI()
+        Timber.d("Hell..Yeahh...onViewCreated()")
 
         subscribers()
 
@@ -103,6 +109,7 @@ class MovieSearchResultFragment : Fragment(), Injectable {
             )
         }
 
+        hideKeyboard()
         binding.root.recyclerView_search_result_movies.adapter = adapter
 
         recyclerView_search_result_movies.layoutManager = LinearLayoutManager(context)
@@ -124,13 +131,65 @@ class MovieSearchResultFragment : Fragment(), Injectable {
         })
 
         search_view.setOnSearchClickListener {
-            navController().navigate(MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToSearchFragment())
+            navController().navigate(MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieSearchFragment())
         }
 
         arrow_back.setOnClickListener {
-            navController().navigate(MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToSearchFragment())
+            navController().navigate(MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieSearchFragment())
         }
     }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.d("Hell..Yeahh...onDestroy()")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Timber.d("Hell..Yeahh...onStop()")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Timber.d("Hell..Yeahh...onResume()")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Timber.d("Hell..Yeahh...onPause()")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Timber.d("Hell..Yeahh...onDestroyView()")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        Timber.d("Hell..Yeahh...onDetach()")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Timber.d("Hell..Yeahh...onStart()")
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Timber.d("Hell..Yeahh...onCreate()")
+    }
+
+    override fun onAttachFragment(childFragment: Fragment) {
+        super.onAttachFragment(childFragment)
+        Timber.d("Hell..Yeahh...onAttachFragment()")
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Timber.d("Hell..Yeahh...onAttach()")
+    }
+
 
     /**
      * Created to be able to override in tests

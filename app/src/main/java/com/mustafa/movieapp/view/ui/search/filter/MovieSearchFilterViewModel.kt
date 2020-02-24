@@ -34,7 +34,7 @@ class MovieSearchFilterViewModel @Inject constructor(
             if (it == null) {
                 AbsentLiveData.create()
             } else {
-                discoverRepository.queryFilteredMovies(
+                discoverRepository.loadFilteredMovies(
                     rating,
                     sort,
                     year,

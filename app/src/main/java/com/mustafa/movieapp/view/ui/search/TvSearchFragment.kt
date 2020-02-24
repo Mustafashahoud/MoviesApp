@@ -386,7 +386,8 @@ class TvSearchFragment : Fragment(), Injectable {
 
         val tabLayout = tabs[0] as ViewGroup
 
-        tabLayout.getChildAt(0).setOnClickListener {
+        val recentTab: View = tabLayout.getChildAt(0)
+        recentTab.setOnClickListener {
             hideFiltersLayout()
             search_view.visible()
             voiceSearch.visible()
@@ -401,7 +402,8 @@ class TvSearchFragment : Fragment(), Injectable {
 
             showKeyboard(search_view)
         }
-        tabLayout.getChildAt(1).setOnClickListener {
+        val filterTab = tabLayout.getChildAt(1)
+        filterTab.setOnClickListener {
             hideListViewAndRecyclerView()
             search_view.gone()
             voiceSearch.gone()
@@ -410,7 +412,6 @@ class TvSearchFragment : Fragment(), Injectable {
             showFiltersLayout()
             hideRecentSearchesBar()
             dismissKeyboard(search_view.windowToken)
-            Timber.d(" ")
         }
     }
 

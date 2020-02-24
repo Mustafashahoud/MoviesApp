@@ -5,23 +5,16 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.extension.getCurrentNavigationFragment
 import com.mustafa.movieapp.extension.isRecyclerViewScrollPositionZero
 import com.mustafa.movieapp.extension.setSmoothScrollToZero
-import com.mustafa.movieapp.view.ui.common.OnBackPressedMovieListFragment
-import com.mustafa.movieapp.view.ui.common.OnBackPressedTvListFragment
-import com.mustafa.movieapp.view.ui.common.OnReselectedNavBottomViewItem
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_main.*
-import timber.log.Timber
 import javax.inject.Inject
 
 
