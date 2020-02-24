@@ -36,8 +36,8 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
     bottom_navigation.setupWithNavController(navController)
     bottom_navigation.setOnNavigationItemReselectedListener {
       when(it.itemId) {
-        R.id.moviesFragment -> supportFragmentManager.getCurrentNavigationFragment()?.setSmoothScrollToZero(R.id.recyclerView_list_movies)
-        R.id.tvsFragment -> supportFragmentManager.getCurrentNavigationFragment()?.setSmoothScrollToZero(R.id.recyclerView_list_tvs)
+        R.id.moviesFragmentTab -> supportFragmentManager.getCurrentNavigationFragment()?.setSmoothScrollToZero(R.id.recyclerView_list_movies)
+        R.id.tvsFragmentTab -> supportFragmentManager.getCurrentNavigationFragment()?.setSmoothScrollToZero(R.id.recyclerView_list_tvs)
       }
     }
   }
