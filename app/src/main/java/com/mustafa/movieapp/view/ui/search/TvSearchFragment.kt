@@ -336,7 +336,7 @@ class TvSearchFragment : Fragment(), Injectable {
     }
 
     private fun setListViewOfRecentQueries(queries: List<String?>) {
-        val arrayAdapter = ArrayAdapter<String>(context!!, R.layout.recent_query_item, queries)
+        val arrayAdapter = ArrayAdapter<String>(requireContext() , R.layout.recent_query_item, queries)
         showRecentQueries()
         listView_tv_recent_queries.setHeaderDividersEnabled(true)
         listView_tv_recent_queries.setFooterDividersEnabled(true)
@@ -351,7 +351,7 @@ class TvSearchFragment : Fragment(), Injectable {
         }
 
         clear_recent_queries.setOnClickListener {
-            val builder = AlertDialog.Builder(context!!, R.style.AlertDialogTheme)
+            val builder = AlertDialog.Builder(requireContext() , R.style.AlertDialogTheme)
             builder.setMessage(R.string.dialog_message)
                 .setPositiveButton(R.string.clear) { _, _ ->
                     viewModel.deleteAllTvRecentQueries()

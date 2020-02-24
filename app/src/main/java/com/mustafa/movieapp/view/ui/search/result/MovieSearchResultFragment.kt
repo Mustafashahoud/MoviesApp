@@ -92,7 +92,7 @@ class MovieSearchResultFragment : Fragment(), Injectable {
     private fun getQuerySafeArgs(): String? {
         val params =
             MovieSearchResultFragmentArgs.fromBundle(
-                arguments!!
+                requireArguments()
             )
         return params.query
     }

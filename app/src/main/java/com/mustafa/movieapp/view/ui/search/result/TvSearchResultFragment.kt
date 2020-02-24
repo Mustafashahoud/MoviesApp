@@ -86,7 +86,7 @@ class TvSearchResultFragment : Fragment(), Injectable {
     private fun getQuerySafeArgs(): String? {
         val params =
             TvSearchResultFragmentArgs.fromBundle(
-                arguments!!
+                requireArguments()
             )
         return params.query
     }

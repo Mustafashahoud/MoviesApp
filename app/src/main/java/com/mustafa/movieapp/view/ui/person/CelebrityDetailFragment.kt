@@ -1,14 +1,10 @@
 
 package com.mustafa.movieapp.view.ui.person
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -16,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.databinding.FragmentCelebrityDetailBinding
 import com.mustafa.movieapp.di.Injectable
-import com.mustafa.movieapp.extension.checkIsMaterialVersion
 import com.mustafa.movieapp.models.entity.Person
 import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.autoCleared
@@ -72,7 +67,7 @@ class CelebrityDetailFragment : Fragment(), Injectable {
   private fun getPersonFromIntent(): Person {
     val params =
         CelebrityDetailFragmentArgs.fromBundle(
-            arguments!!
+            requireArguments()
         )
     return params.person
   }

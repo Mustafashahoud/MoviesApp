@@ -78,7 +78,7 @@ class MovieDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable
     private fun getMovieSafeArgs(): Movie {
         val params =
             MovieDetailFragmentArgs.fromBundle(
-                arguments!!
+                requireArguments()
             )
         return params.movie
     }

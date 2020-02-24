@@ -82,7 +82,7 @@ class TvDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
 
   private fun getTvFromIntent(): Tv {
     return TvDetailFragmentArgs.fromBundle(
-        arguments!!
+      requireArguments()
     ).tv
   }
 
