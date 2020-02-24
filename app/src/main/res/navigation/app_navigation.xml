@@ -59,10 +59,6 @@
         <action
             android:id="@+id/action_tvs_to_tvDetail"
             app:destination="@id/tvDetail" />
-
-        <argument
-            android:name="tvId"
-            app:argType="integer" />
         <action
             android:id="@+id/action_tvsFragment_to_tvSearchFragment"
             app:destination="@id/tvSearchFragment" />
