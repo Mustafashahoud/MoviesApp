@@ -17,7 +17,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:3.5.3"
+        classpath 'com.android.tools.build:gradle:3.6.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jacoco:org.jacoco.core:$jacocoVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.2.1"
