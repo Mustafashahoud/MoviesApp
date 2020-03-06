@@ -139,9 +139,7 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
             dataBindingComponent
         ) {
             navController().navigate(
-                SearchResultFilterFragmentDirections.actionSearchFragmentResultFilterToMovieDetail(
-                    it
-                )
+                SearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieDetail(it)
             )
         }
 

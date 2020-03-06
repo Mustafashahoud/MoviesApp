@@ -36,4 +36,9 @@
     <string name="summary">Summary</string>
     <string name="reviews">Reviews</string>
     <string name="trailers">Trailers</string>
+
+    <!-- Dialog filter types -->
+    <string name="popularity">Popularity</string>
+    <string name="release_date">Release Date</string>
+    <string name="vote_count">Vote Count</string>
 </resources>
