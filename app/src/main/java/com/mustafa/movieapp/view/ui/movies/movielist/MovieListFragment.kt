@@ -134,7 +134,7 @@ class MovieListFragment : Fragment(), Injectable {
 
         search_icon.setOnClickListener {
             navController().navigate(MovieListFragmentDirections
-                .actionMoviesFragmentToMovieSearchFragment())
+                .actionMoviesFragmentToMovieSearchFragment(false))
         }
     }
 

@@ -50,6 +50,10 @@
         <action
             android:id="@+id/action_movieSearchFragment_to_movieSearchFragmentResultFilter"
             app:destination="@id/movieSearchFragmentResultFilter" />
+        <argument
+            android:name="isEdit"
+            app:argType="boolean"
+            android:defaultValue="true"/>
     </fragment>
     <fragment
         android:id="@+id/movieSearchFragmentResult"
@@ -76,5 +80,8 @@
         <action
             android:id="@+id/action_movieSearchFragmentResultFilter_to_movieDetail"
             app:destination="@id/movieDetail" />
+        <action
+            android:id="@+id/action_movieSearchFragmentResultFilter_to_movieSearchFragment"
+            app:popUpTo="@id/movieSearchFragment" />
     </fragment>
 </navigation>

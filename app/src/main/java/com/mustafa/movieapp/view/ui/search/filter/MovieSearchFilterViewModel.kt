@@ -89,4 +89,10 @@ class MovieSearchFilterViewModel @Inject constructor(
 
     val totalFilterResult = discoverRepository.getTotalFilteredResults()
 
+    fun refresh() {
+        searchMovieFilterPageLiveData.value?.let {
+            searchMovieFilterPageLiveData.value = it
+        }
+    }
+
 }

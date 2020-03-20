@@ -1,10 +1,10 @@
 package com.mustafa.movieapp.view.ui.search.filter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.PopupMenu
+import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,7 +12,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentSearchResultFilterBinding
@@ -26,6 +25,7 @@ import com.mustafa.movieapp.utils.StringUtils.Companion.mapRunTime
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.MovieSearchListAdapter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
+import com.mustafa.movieapp.view.ui.common.RetryCallback
 import com.mustafa.movieapp.view.ui.search.MovieSearchFragment.Companion.COUNTRIES
 import com.mustafa.movieapp.view.ui.search.MovieSearchFragment.Companion.GENRES
 import com.mustafa.movieapp.view.ui.search.MovieSearchFragment.Companion.KEYWORDS
@@ -35,7 +35,6 @@ import com.mustafa.movieapp.view.ui.search.MovieSearchFragment.Companion.RUNTIME
 import com.mustafa.movieapp.view.ui.search.MovieSearchFragment.Companion.YEARS
 import kotlinx.android.synthetic.main.fragment_search_result_filter.*
 import kotlinx.android.synthetic.main.fragment_search_result_filter.view.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemClickListener {
@@ -50,11 +49,8 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
     var dataBindingComponent = FragmentDataBindingComponent(this)
     var binding by autoCleared<FragmentSearchResultFilterBinding>()
     var adapter by autoCleared<MovieSearchListAdapter>()
-
     var filtersMap: HashMap<String, ArrayList<String>>? = null
     private var filtersData: FilterData? = null
-
-
 
     companion object {
         const val popularity = "popularity.desc"
@@ -63,7 +59,6 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
         const val sort_by_popularity= "Popularity"
         const val sort_by_vote_count = "Vote Count"
         const val sort_by_release_date = "Release Date"
-
     }
 
     override fun onCreateView(
@@ -77,22 +72,13 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
             container,
             false
         )
-        Timber.d("Hell..Yeahh...onCreateView()")
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Timber.d("Hell..Yeahh...onViewCreated()")
         initializeUI()
         subscribers()
         renderSortByTextView(sort_by_popularity)
-
-        with(binding) {
-            lifecycleOwner = this@SearchResultFilterFragment
-            totalFilterResult = viewModel.totalFilterResult
-        }
-
         if (filtersData == null){
             filtersMap = getFilterMap()
             filtersData = FilterData(
@@ -118,6 +104,20 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
                 )
             }
         }
+
+        with(binding) {
+            lifecycleOwner = this@SearchResultFilterFragment
+            totalFilterResult = viewModel.totalFilterResult
+            filterResult = viewModel.searchMovieListFilterLiveData
+            selectedFilters = setSelectedFilters()
+            callback = object : RetryCallback {
+                override fun retry() {
+                    viewModel.refresh()
+                }
+            }
+        }
+
+
     }
 
     private fun subscribers() {
@@ -125,11 +125,6 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }
-        })
-
-
-        viewModel.totalFilterResult.observe(viewLifecycleOwner, Observer {
-//            binding.
         })
     }
 
@@ -157,21 +152,24 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
             false
         )
 
-        filtered_movies_recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val lastPosition = layoutManager.findLastVisibleItemPosition()
-                if (lastPosition == adapter.itemCount - 1
-                    && viewModel.searchMovieListFilterLiveData.value?.status != Status.LOADING
-                    && dy > 0
-                ) {
-                    if (viewModel.searchMovieListFilterLiveData.value?.hasNextPage!!) {
+        nestedScrollView.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener{
+            override fun onScrollChange(
+                v: NestedScrollView?,
+                scrollX: Int,
+                scrollY: Int,
+                oldScrollX: Int,
+                oldScrollY: Int
+            ) {
+                if(v?.getChildAt(v.childCount - 1) != null) {
+                    if ((scrollY >= (v.getChildAt(v.childCount - 1).measuredHeight - v.measuredHeight))
+                        && scrollY > oldScrollY
+                        && viewModel.searchMovieListFilterLiveData.value?.status != Status.LOADING) {
                         viewModel.loadMoreFilters()
                     }
                 }
             }
-        })
 
+        })
 
         sort_by_icon.setOnClickListener{
             PopupMenu(context, it).apply {
@@ -179,6 +177,11 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
                 inflate(R.menu.navigation_drawer_menu)
                 show()
             }
+        }
+
+        edit_filters.setOnClickListener {
+            navController().navigate(
+                SearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieSearchFragment())
         }
     }
 
@@ -212,10 +215,10 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
 
     private fun getGenresAsSeparatedString(): String? {
         getMovieGenresAsSeparatedString(filtersMap?.get(GENRES)).let {
-            if (it.isNotEmpty()) {
-               return it
+            return if (it.isNotEmpty()) {
+                it
             } else {
-                return null
+                null
             }
         }
     }
@@ -264,57 +267,6 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
         sort_by_text_view.text = "Sort by $sortType"
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Timber.d("Hell..Yeahh...onDestroy()")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Timber.d("Hell..Yeahh...onStop()")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Timber.d("Hell..Yeahh...onResume()")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Timber.d("Hell..Yeahh...onPause()")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Timber.d("Hell..Yeahh...onDestroyView()")
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        Timber.d("Hell..Yeahh...onDetach()")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Timber.d("Hell..Yeahh...onStart()")
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Timber.d("Hell..Yeahh...onCreate()")
-    }
-
-    override fun onAttachFragment(childFragment: Fragment) {
-        super.onAttachFragment(childFragment)
-        Timber.d("Hell..Yeahh...onAttachFragment()")
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Timber.d("Hell..Yeahh...onAttach()")
-    }
-
-
     /**
      * Created to be able to override in tests
      */
@@ -338,7 +290,7 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
                 renderSortByTextView(sort_by_popularity)
                 true
             }
-            R.id.sort_vote-> {
+            R.id.sort_vote -> {
                 if (sort_by_text_view.text == sort_by_vote_count) return false
                 viewModel.resetFilterValues()
                 viewModel.loadFilteredMovies(
@@ -355,7 +307,7 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
                 renderSortByTextView(sort_by_vote_count)
                 true
             }
-            R.id.sort_release-> {
+            R.id.sort_release -> {
                 if (sort_by_text_view.text == sort_by_release_date) return false
                 viewModel.loadFilteredMovies(
                     filtersData?.rating,
@@ -372,6 +324,25 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
                 true
             }
             else -> false
+        }
+    }
+
+    private fun setSelectedFilters(): String {
+        val stringBuilder = StringBuilder()
+        val selectedFiltersList = ArrayList<String>()
+        filtersMap?.values?.map {
+            stringBuilder.append(it.joinToString())
+            selectedFiltersList.add(it.joinToString())
+        }
+        return if (stringBuilder.isEmpty()) "No Filters were applied"
+        else {
+            val selectedFilters = ArrayList<String>()
+            for (filter in selectedFiltersList) {
+                if (filter.isNotBlank() || filter.isNotEmpty()) {
+                    selectedFilters.add(filter)
+                }
+            }
+            selectedFilters.joinToString()
         }
     }
 

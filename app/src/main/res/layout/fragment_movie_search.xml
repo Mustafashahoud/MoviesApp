@@ -2,157 +2,165 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <import type="com.mustafa.movieapp.models.entity.Movie" />
+
         <import type="androidx.lifecycle.LiveData" />
-        <import type="com.mustafa.movieapp.models.Resource"/>
-        <import type="com.mustafa.movieapp.models.Status"/>
+
+        <import type="com.mustafa.movieapp.models.Resource" />
+
+        <import type="com.mustafa.movieapp.models.Status" />
+
         <import type="java.util.List" />
 
         <variable
             name="query"
             type="LiveData&lt;String>" />
+
         <variable
             name="searchResult"
             type="LiveData&lt;Resource&lt;List&lt;Movie>>>" />
+
         <variable
             name="callback"
             type="com.mustafa.movieapp.view.ui.common.RetryCallback" />
 
     </data>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/search_layout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/search_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
+            <include layout="@layout/toolbar_search_iconfied" />
+
             <LinearLayout
+                android:id="@+id/linear_layout_tabs_recent_searches"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <include layout="@layout/toolbar_search_iconfied" />
-                <LinearLayout
-                    android:id="@+id/linear_layout_tabs_recent_searches"
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabs"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <com.google.android.material.tabs.TabLayout
-                        android:id="@+id/tabs"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:theme="@style/SelectableItemTheme"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:background="@color/tabItemsColor"
-                        app:tabIndicatorColor="@color/colorAccent"
-                        app:tabMode="scrollable"
-                        android:textAlignment="viewStart"
-                        app:tabSelectedTextColor="@color/white"
-                        app:tabTextColor="@color/tabTextColor">
+                    android:layout_height="50dp"
+                    android:background="@color/tabItemsColor"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:textAlignment="viewStart"
+                    android:theme="@style/SelectableItemTheme"
+                    app:tabIndicatorColor="@color/colorAccent"
+                    app:tabMode="scrollable"
+                    app:tabSelectedTextColor="@color/white"
+                    app:tabTextColor="@color/tabTextColor">
 
-                        <com.google.android.material.tabs.TabItem
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
-
-                            android:text="@string/recent" />
-                        <com.google.android.material.tabs.TabItem
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/filter_movies" />
-                    </com.google.android.material.tabs.TabLayout>
-
-                    <FrameLayout
-                        android:id="@+id/recent_queries_bar"
-                        android:layout_width="match_parent"
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@color/tabItemsColor">
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
 
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            tools:ignore="UselessParent">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/recent_searches"
-                                android:layout_centerVertical="true"
-                                tools:text="Recent Searches"
-                                android:layout_marginStart="15dp" />
+                        android:text="@string/recent" />
 
-                            <TextView
-                                android:id="@+id/clear_recent_queries"
-                                android:foreground="?attr/selectableItemBackground"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/clear"
-                                android:textColor="@color/blueClearColor"
-                                android:padding="10dp"
-                                android:layout_alignParentEnd="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginEnd="15dp"
-                                android:textStyle="bold"
-                                tools:ignore="RelativeOverlap" />
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/filter_movies" />
+                </com.google.android.material.tabs.TabLayout>
 
-                        </RelativeLayout>
-                    </FrameLayout>
-                </LinearLayout>
-
-                <FrameLayout
+                <RelativeLayout
+                    android:id="@+id/recent_queries_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="50dp"
+                    android:background="@color/tabItemsColor">
 
-                    <include
-                        layout="@layout/fragment_movies_search_filter"
-                        android:id="@+id/filters"
-                        android:visibility="invisible"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="15dp"
+                        android:text="@string/recent_searches"
+                        tools:text="Recent Searches" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerView_movie_suggestion"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:visibility="invisible"
-                        tools:listitem="@layout/item_movie_search" />
+                    <TextView
+                        android:id="@+id/clear_recent_queries"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="15dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="10dp"
+                        android:text="@string/clear"
+                        android:textColor="@color/blueClearColor"
+                        android:textStyle="bold"
+                        tools:ignore="RelativeOverlap" />
 
-                    <ListView
-                        android:id="@+id/listView_recent_queries"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        tools:listitem="@layout/recent_query_item"/>
-
-                </FrameLayout>
-
+                </RelativeLayout>
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{@string/empty_search_result(query)}"
-                android:id="@+id/no_results_text"
-                app:visibleGone="@{searchResult.status == Status.SUCCESS &amp;&amp; searchResult.data.size == 0}"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteY="247dp"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent" />
-            <include
-                layout="@layout/loading_state"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                app:callback="@{() -> callback.retry()}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:resource="@{(Resource) searchResult}" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <include
+                    android:id="@+id/filters"
+                    layout="@layout/fragment_movies_search_filter"
+                    android:visibility="invisible" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_movie_suggestion"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible"
+                    tools:listitem="@layout/item_movie_search" />
+
+                <ListView
+                    android:id="@+id/listView_recent_queries"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible"
+                    tools:listitem="@layout/recent_query_item" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/no_results_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/empty_search_result(query)}"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:visibleGone="@{searchResult.status == Status.SUCCESS &amp;&amp; searchResult.data.size == 0}"
+            tools:layout_editor_absoluteY="247dp" />
+
+        <include
+            layout="@layout/loading_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:callback="@{() -> callback.retry()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:resource="@{(Resource) searchResult}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

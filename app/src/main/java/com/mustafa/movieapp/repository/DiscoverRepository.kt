@@ -333,58 +333,6 @@ class DiscoverRepository @Inject constructor(
 
     fun getTotalFilteredResults(): LiveData<String> = totalFilteredResults
 
-
-//    fun queryFilteredMovies(
-//        rating: Int?,
-//        sort: String?,
-//        year: Int?,
-//        keywords: String?,
-//        genres: String?,
-//        language: String?,
-//        runtime: Int?,
-//        region: String?,
-//        page: Int
-//    ): LiveData<Resource<List<Movie>>> {
-//
-//        val results = MediatorLiveData<Resource<List<Movie>>>()
-//        val response = discoverService.searchMovieFilters(
-//            rating,
-//            sort,
-//            year,
-//            genres,
-//            keywords,
-//            language,
-//            runtime,
-//            region,
-//            page
-//        )
-//        results.addSource(response) {
-//            when (response.value) {
-//                is ApiSuccessResponse -> {
-//                    val moviePagingChecker = MoviePagingChecker()
-//                    val successResponse =
-//                        response.value as ApiSuccessResponse<DiscoverMovieResponse>
-//                    results.value = Resource.success(
-//                        successResponse.body.results,
-//                        moviePagingChecker.hasNextPage(successResponse.body)
-//                    )
-//                    totalFilteredResults.value =
-//                        (response.value as ApiSuccessResponse<DiscoverMovieResponse>).body.total_results.toString()
-//
-//                }
-//                is ApiEmptyResponse -> {
-//                    results.value = Resource.success(null, false)
-//                    totalFilteredResults.value = "0"
-//                }
-//                is ApiErrorResponse -> {
-//                    results.value = Resource.error("Something Wrong happened", null)
-//                    totalFilteredResults.value = "0"
-//                }
-//            }
-//        }
-//        return results
-//    }
-
     fun loadFilteredMovies(
         rating: Int?,
         sort: String?,
@@ -413,9 +361,11 @@ class DiscoverRepository @Inject constructor(
                     val prevPageNumber = page - 1
                     val filterMovieResult =
                         movieDao.getFilteredMovieResultByPage(prevPageNumber)
-                    items.total_results
                     ids.addAll(filterMovieResult.ids)
                 }
+
+                if (totalFilteredResults.value != items.total_results.toString())
+                    totalFilteredResults.postValue(items.total_results.toString())
 
                 ids.addAll(movieIds)
                 movieDao.insertMovieList(movies = items.results)

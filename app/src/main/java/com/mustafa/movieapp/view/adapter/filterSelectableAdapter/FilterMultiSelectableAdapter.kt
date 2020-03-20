@@ -17,35 +17,24 @@ import com.mustafa.movieapp.models.entity.Movie
 import kotlinx.android.synthetic.main.filter_button_item.view.*
 
 
-class FilterMultiSelectableAdapter (
+class FilterMultiSelectableAdapter(
     private var items: List<SelectableItem>,
     private val context: Context?,
     private val dataBindingComponent: DataBindingComponent,
     private val filterButtonSelectedOnClickCallback: ((String) -> Unit)?,
     private val filterButtonUnSelectedOnClickCallback: ((String) -> Unit)?,
-    val adapterName: String):
+    val adapterName: String
+) :
     RecyclerView.Adapter<FilterMultiSelectableAdapter.SelectableViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectableViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.filter_button_item, parent, false)
-
-        val binding = DataBindingUtil.inflate<FilterButtonItemBinding>(
-            LayoutInflater.from(parent.context),
-            R.layout.filter_button_item,
-            parent,
-            false,
-            dataBindingComponent
-        )
-//        binding.root.setOnClickListener {
-//            binding.buttonTitle?.let{
-//                filterButtonOnClickCallback?.invoke(it)
-//            }
-//        }
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.filter_button_item, parent, false)
         return SelectableViewHolder(view)
     }
 
     override fun getItemCount(): Int {
-       return items.size
+        return items.size
     }
 
     override fun onBindViewHolder(holder: SelectableViewHolder, position: Int) {
@@ -77,27 +66,44 @@ class FilterMultiSelectableAdapter (
                 else getUnSelectedButtonColor(context)
             )
             holder.button.setTextColor(
-                if(selectableItem.isSelected)
+                if (selectableItem.isSelected)
                     getSelectedButtonTextColor(context)
                 else getUnSelectedButtonTextColor(context)
             )
         }
     }
+
     class SelectableViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var button: Button = view.button_filter
     }
 
     fun clearSelection() {
-        for (item in items){
+        for (item in items) {
             item.isSelected = false
         }
         notifyDataSetChanged()
     }
 
-    private fun getSelectedButtonColor(context: Context?) = context?.resources?.getColor(R.color.colorAccent, context.theme)!!
-    private fun getUnSelectedButtonColor(context: Context?) = context?.resources?.getColor(R.color.colorPrimaryDark, context.theme)!!
-    private fun getSelectedButtonTextColor(context: Context?) = context?.resources?.getColor(R.color.colorPrimaryDark, context.theme)!!
-    private fun getUnSelectedButtonTextColor(context: Context?) = context?.resources?.getColor(R.color.white, context.theme)!!
+    fun selectItems(itemsToSelect: List<String>) {
+        for (itemToSelect in itemsToSelect) {
+            for (item in items) {
+                if (item.title == itemToSelect) {
+                    item.isSelected = true
+                }
+            }
+        }
+        notifyDataSetChanged()
+    }
 
+    private fun getSelectedButtonColor(context: Context?) =
+        context?.resources?.getColor(R.color.colorAccent, context.theme)!!
 
+    private fun getUnSelectedButtonColor(context: Context?) =
+        context?.resources?.getColor(R.color.colorPrimaryDark, context.theme)!!
+
+    private fun getSelectedButtonTextColor(context: Context?) =
+        context?.resources?.getColor(R.color.colorPrimaryDark, context.theme)!!
+
+    private fun getUnSelectedButtonTextColor(context: Context?) =
+        context?.resources?.getColor(R.color.white, context.theme)!!
 }

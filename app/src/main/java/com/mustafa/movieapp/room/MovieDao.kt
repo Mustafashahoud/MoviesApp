@@ -116,6 +116,7 @@ abstract class MovieDao {
         }
     }
 
-    @Query("SELECT * FROM Movie JOIN movieSuggestionsFts ON Movie.id == movieSuggestionsFts.id WHERE movieSuggestionsFts.title MATCH :text LIMIT 40" )
+
+    @Query("SELECT * FROM Movie JOIN movieSuggestionsFts ON Movie.id == movieSuggestionsFts.id WHERE movieSuggestionsFts.title MATCH '%' || :text || '%' LIMIT 20" )
     abstract fun loadMovieSuggestions(text: String): LiveData<List<Movie>>
 }

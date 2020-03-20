@@ -29,13 +29,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.tabs.TabLayout
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentMovieSearchBinding
 import com.mustafa.movieapp.di.Injectable
 import com.mustafa.movieapp.extension.gone
 import com.mustafa.movieapp.extension.inVisible
-import com.mustafa.movieapp.extension.showKeyboard
 import com.mustafa.movieapp.extension.visible
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.MovieSearchListAdapter
@@ -49,12 +49,10 @@ import kotlinx.android.synthetic.main.fragment_movies_search_filter.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
 import org.jetbrains.anko.find
 import org.jetbrains.anko.textColor
-import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-
 
 class MovieSearchFragment : Fragment(), Injectable {
 
@@ -68,6 +66,10 @@ class MovieSearchFragment : Fragment(), Injectable {
     var dataBindingComponent = FragmentDataBindingComponent(this)
     var binding by autoCleared<FragmentMovieSearchBinding>()
     var movieAdapter by autoCleared<MovieSearchListAdapter>()
+    var isComingFromEdit = false
+
+    var recentTab : TabLayout.Tab? = null
+    var filterTab : TabLayout.Tab? = null
 
     //    var adapter2 by autoCleared<MovieSearchListAdapter>()
 //    val columns =
@@ -128,9 +130,15 @@ class MovieSearchFragment : Fragment(), Injectable {
     )
 
     private val hasAnyFilterBeenSelected = MutableLiveData<Boolean>()
+    private val hasAnyTabHasBeenPressed = MutableLiveData<Boolean>()
 
     private val mapFilterTypeToSelectedFilters =
         HashMap<FilterMultiSelectableAdapter, ArrayList<String>>()
+
+    private var mapFilterTypeToSelectedFiltersToBeEdited =
+        HashMap<FilterMultiSelectableAdapter, ArrayList<String>>()
+
+    private var filtersToReSelect = ArrayList<String>()
 
 //    private lateinit var mSearchViewAdapter: SuggestionsAdapter
 
@@ -147,8 +155,6 @@ class MovieSearchFragment : Fragment(), Injectable {
             false
         )
 
-        Timber.d("Hell..Yeahh...onCreateView()")
-
         return binding.root
     }
 
@@ -156,7 +162,6 @@ class MovieSearchFragment : Fragment(), Injectable {
         initializeUI()
         subscribers()
 
-        Timber.d("Hell..Yeahh...onViewCreated()")
         with(binding) {
             searchResult = viewModel.searchMovieListLiveData
             query = viewModel.queryMovieLiveData
@@ -166,6 +171,19 @@ class MovieSearchFragment : Fragment(), Injectable {
                 }
             }
             lifecycleOwner = this@MovieSearchFragment
+        }
+
+
+        if (isComingFromEdit) {
+            filterTab = tabs.getTabAt(1)
+            filterTab?.select()
+            renderViewsWhenFiltersTabSelected()
+//            reSetSelectedFilters()
+        } else {
+            recentTab = tabs.getTabAt(0)
+            recentTab?.select()
+            renderViewsWhenRecentTabSelected()
+            search_view.onActionViewExpanded()
         }
     }
 
@@ -183,8 +201,8 @@ class MovieSearchFragment : Fragment(), Injectable {
 
         initClearAndSeeResultBar()
 
-        setupRecentQueries()
-
+        if (tabs.getTabAt(0)?.isSelected!!)
+            setupRecentQueries()
 
         // Adapter
         movieAdapter = MovieSearchListAdapter(
@@ -204,7 +222,6 @@ class MovieSearchFragment : Fragment(), Injectable {
     }
 
     private fun subscribers() {
-
         hasAnyFilterBeenSelected.observe(viewLifecycleOwner, Observer {
             if (it != null && it == true) {
                 if (!checkIfAllFiltersEmpty()) {
@@ -225,8 +242,6 @@ class MovieSearchFragment : Fragment(), Injectable {
      */
     private fun initToolbar() {
 
-        search_view.onActionViewExpanded()
-
         voiceSearch.setOnClickListener {
             val voiceIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             voiceIntent.putExtra(
@@ -243,7 +258,6 @@ class MovieSearchFragment : Fragment(), Injectable {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-
         }
 
 //        val searchViewEditText =
@@ -253,7 +267,6 @@ class MovieSearchFragment : Fragment(), Injectable {
             search_view.clearFocus()
             navController().navigate(MovieSearchFragmentDirections.actionMovieSearchFragmentToMoviesFragment())
         }
-
 
         search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
@@ -269,32 +282,20 @@ class MovieSearchFragment : Fragment(), Injectable {
             override fun onQueryTextChange(newText: String?): Boolean {
                 viewModel.setMovieSuggestionsQuery(newText!!)
                 viewModel.movieSuggestions.observe(viewLifecycleOwner, Observer {
-                    if (!it.isNullOrEmpty()) {
+                    if (!it.isNullOrEmpty() && tabs.getTabAt(0)?.isSelected!!) {
                         showSuggestionViewAndHideRecentSearches()
                     }
                     movieAdapter.submitList(it)
 
-                    if (newText.isEmpty() || newText.isBlank()) {
+                    if ((newText.isEmpty() || newText.isBlank()) &&  tabs.getTabAt(0)?.isSelected!!) {
                         hideSuggestionViewAndShowRecentSearches()
                         movieAdapter.submitList(null)
-                        viewModel.movieSuggestions.removeObservers(viewLifecycleOwner)
+//                        viewModel.movieSuggestions.removeObservers(viewLifecycleOwner)
                     }
                 })
                 return true
             }
         })
-    }
-
-    private fun showSuggestionViewAndHideRecentSearches() {
-        recyclerView_movie_suggestion.visible()
-        hideRecentQueries()
-        hideRecentSearchesBar()
-    }
-
-    private fun hideSuggestionViewAndShowRecentSearches() {
-        showRecentSearchesBar()
-        showRecentQueries()
-        recyclerView_movie_suggestion.inVisible()
     }
 
     private fun setSearchViewHint() {
@@ -317,6 +318,9 @@ class MovieSearchFragment : Fragment(), Injectable {
     }
 
 
+    /**
+     *
+     */
     private fun setupRecentQueries() {
         viewModel.getMovieRecentQueries().observe(viewLifecycleOwner, Observer { it ->
             if (!it.isNullOrEmpty()) {
@@ -324,12 +328,15 @@ class MovieSearchFragment : Fragment(), Injectable {
                 setListViewOfRecentQueries(queries)
             }
         })
-
     }
 
+    /**
+     *
+     */
     private fun setListViewOfRecentQueries(queries: List<String?>) {
-        val arrayAdapter = ArrayAdapter<String>(requireContext(), R.layout.recent_query_item, queries)
-        showRecentQueries()
+        val arrayAdapter =
+            ArrayAdapter<String>(requireContext(), R.layout.recent_query_item, queries)
+        if (tabs.getTabAt(0)?.isSelected!!) showRecentQueries()
         listView_recent_queries.setHeaderDividersEnabled(true)
         listView_recent_queries.setFooterDividersEnabled(true)
         listView_recent_queries.adapter = arrayAdapter
@@ -377,37 +384,60 @@ class MovieSearchFragment : Fragment(), Injectable {
         layoutTab2.layoutParams = layoutParams2
 
         val tabLayout = tabs[0] as ViewGroup
-
         tabLayout.getChildAt(0).setOnClickListener {
-            hideFiltersLayout()
-            search_view.visible()
-            voiceSearch.visible()
-            showKeyboard()
-            filter_label.gone()
-            if (search_view.query.isEmpty() || search_view.query.isBlank()) {
-                showRecentSearchesBar()
-                showRecentQueries()
-            } else {
-                hideRecentQueries()
-                recyclerView_movie_suggestion.visible()
-            }
+            renderViewsWhenRecentTabSelected()
+            isComingFromEdit = false
+            hasAnyTabHasBeenPressed.value = true
         }
         tabLayout.getChildAt(1).setOnClickListener {
-            hideListViewAndRecyclerView()
-            search_view.gone()
-            voiceSearch.gone()
-            filter_label.text = "Filters"
-            filter_label.visible()
-            showFiltersLayout()
-            hideRecentSearchesBar()
-            dismissKeyboard(search_view.windowToken)
+            renderViewsWhenFiltersTabSelected()
+            isComingFromEdit = true
+            hasAnyTabHasBeenPressed.value = true
+
+//            search_view.onActionViewExpanded()
         }
+    }
+
+    /**
+     *
+     */
+    private fun renderViewsWhenRecentTabSelected() {
+        search_view.requestFocus()
+        hideFiltersLayout()
+        search_view.visible()
+        voiceSearch.visible()
+//        showKeyboard()
+        filter_label.gone()
+        if (search_view.query.isEmpty() || search_view.query.isBlank()) {
+            showRecentSearchesBar()
+            showRecentQueries()
+        } else {
+            hideRecentQueries()
+            recyclerView_movie_suggestion.visible()
+        }
+    }
+
+    /**
+     *
+     */
+    private fun renderViewsWhenFiltersTabSelected() {
+        hideListViewAndRecyclerView()
+        search_view.gone()
+        voiceSearch.gone()
+        filter_label.text = getString(R.string.filters)
+        filter_label.visible()
+        showFiltersLayout()
+        hideRecentSearchesBar()
+        dismissKeyboard(search_view.windowToken)
     }
 
     private fun hideNavigationBottomView() {
         activity?.find<BottomNavigationView>(R.id.bottom_navigation)?.gone()
     }
 
+    /**
+     *
+     */
     private fun setFilterButtons() {
 
         val runTimeRecyclerView =
@@ -455,6 +485,9 @@ class MovieSearchFragment : Fragment(), Injectable {
 
     }
 
+    /**
+     *
+     */
     private fun setFilterAdapter(
         recyclerView: RecyclerView?,
         listOfButtonFiltersTitles: List<String>,
@@ -464,19 +497,27 @@ class MovieSearchFragment : Fragment(), Injectable {
 
         val selectableItemList = ArrayList<SelectableItem>()
         for (item in listOfButtonFiltersTitles) {
-            val selectableItem = SelectableItem(item, false)
+            val itemState = filtersToReSelect.contains(item)
+            val selectableItem = SelectableItem(item, itemState)
             selectableItemList.add(selectableItem)
         }
+
         val filterAdapter =
             FilterMultiSelectableAdapter(selectableItemList, context, dataBindingComponent, {
                 filters.add(it)
                 hasAnyFilterBeenSelected.value = true
             }, {
                 if (filters.size > 0) filters.remove(it)
+                if (filtersToReSelect.contains(it)) filtersToReSelect.remove(it)
                 hasAnyFilterBeenSelected.value = true
             },
                 adapterName
             )
+
+        // in case we are coming back from edit button, we need to re-check the filters that have been checked before
+        selectableItemList.map { selectableItem ->
+            if (selectableItem.isSelected) filters.add(selectableItem.title)
+        }
         mapFilterTypeToSelectedFilters[filterAdapter] = filters
         recyclerView?.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
         recyclerView?.adapter = filterAdapter
@@ -492,17 +533,33 @@ class MovieSearchFragment : Fragment(), Injectable {
             mapFilterTypeToSelectedFilters.map {
                 it.value.clear()
             }
+            filtersToReSelect.clear()
             hasAnyFilterBeenSelected.value = true
         }
 
         see_result.setOnClickListener {
-            val bundle = bundleOf("key" to convertAdapterKeyMapToStringKeyMap())
+            populateFiltersToBeEditedMap()
+            val stringKeyMap = convertAdapterKeyMapToStringKeyMap()
+//            if (mapFilterTypeToSelectedFiltersToBeEdited.isEmpty())
+//                mapFilterTypeToSelectedFiltersToBeEdited = mapFilterTypeToSelectedFilters
+            stringKeyMap.map { entry ->
+                entry.value.map {
+                    if (it.isNotBlank() || it.isNotEmpty())
+                        filtersToReSelect.add(it)
+                }
+            }
+            val bundle = bundleOf("key" to stringKeyMap)
             navController().navigate(
-                 R.id.action_movieSearchFragment_to_movieSearchFragmentResultFilter,
+                R.id.action_movieSearchFragment_to_movieSearchFragmentResultFilter,
                 bundle
             )
         }
+    }
 
+    private fun populateFiltersToBeEditedMap() {
+        mapFilterTypeToSelectedFilters.map {
+            mapFilterTypeToSelectedFiltersToBeEdited[it.key] = it.value
+        }
     }
 
     private fun checkIfAllFiltersEmpty(): Boolean {
@@ -538,18 +595,24 @@ class MovieSearchFragment : Fragment(), Injectable {
 
     }
 
-    private fun showListViewAndRecyclerView() {
-        listView_recent_queries.visible()
-        recyclerView_movie_suggestion.visible()
-    }
-
-
     private fun hideRecentQueries() {
         listView_recent_queries.inVisible()
     }
 
     private fun showRecentQueries() {
         listView_recent_queries.visible()
+    }
+
+    private fun showSuggestionViewAndHideRecentSearches() {
+        recyclerView_movie_suggestion.visible()
+        hideRecentQueries()
+        hideRecentSearchesBar()
+    }
+
+    private fun hideSuggestionViewAndShowRecentSearches() {
+        showRecentSearchesBar()
+        showRecentQueries()
+        recyclerView_movie_suggestion.inVisible()
     }
 
     /**
@@ -571,7 +634,7 @@ class MovieSearchFragment : Fragment(), Injectable {
     /**
      * @return
      */
-    fun convertAdapterKeyMapToStringKeyMap(): Map<String, List<String>> {
+    private fun convertAdapterKeyMapToStringKeyMap(): Map<String, List<String>> {
         val mapStringAdapterNameToSelectedFilters = HashMap<String, List<String>>()
         mapFilterTypeToSelectedFilters.map { it ->
             when (it.key.adapterName) {
@@ -592,55 +655,33 @@ class MovieSearchFragment : Fragment(), Injectable {
         return mapStringAdapterNameToSelectedFilters
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Timber.d("Hell..Yeahh...onDestroy()")
+//    private fun isComingFromFiltersFragment(): Boolean {
+//        val params =
+//            MovieSearchFragmentArgs.fromBundle(
+//                requireArguments()
+//            )
+//        return params.isEdit
+//    }
+
+    private fun reSetSelectedFilters2() {
+        for (anyThing in filtersToReSelect) {
+            if (anyThing.isNotEmpty()) {
+
+            }
+        }
     }
 
-    override fun onStop() {
-        super.onStop()
-        Timber.d("Hell..Yeahh...onStop()")
-    }
+//    private fun reSetSelectedFilters() {
+//        mapFilterTypeToSelectedFiltersToBeEdited.map {
+//            if (it.value.isNotEmpty()) {
+//                it.key.selectItems(it.value)
+//            }
+//        }
+//        mapFilterTypeToSelectedFiltersToBeEdited.clear()
+//    }
+}
 
-    override fun onResume() {
-        super.onResume()
-        Timber.d("Hell..Yeahh...onResume()")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Timber.d("Hell..Yeahh...onPause()")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Timber.d("Hell..Yeahh...onDestroyView()")
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        Timber.d("Hell..Yeahh...onDetach()")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Timber.d("Hell..Yeahh...onStart()")
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Timber.d("Hell..Yeahh...onCreate()")
-    }
-
-    override fun onAttachFragment(childFragment: Fragment) {
-        super.onAttachFragment(childFragment)
-        Timber.d("Hell..Yeahh...onAttachFragment()")
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Timber.d("Hell..Yeahh...onAttach()")
-    }
+//    private fun set
 
 //    fun setSelectableItemBackground(view: View) {
 //        val typedValue = TypedValue()
@@ -734,4 +775,3 @@ class MovieSearchFragment : Fragment(), Injectable {
 //    }
 
 
-}
