@@ -84,7 +84,7 @@ abstract class TvDao {
   @Query("SELECT * FROM Tv WHERE id in (:tvIds) AND search = 1 AND poster_path <> '' ")
   abstract fun loadSearchTvList(tvIds: List<Int>): LiveData<List<Tv>>
 
-  @Query("SELECT * FROM Tv JOIN tvSuggestionsFts ON Tv.id == tvSuggestionsFts.id WHERE tvSuggestionsFts.name MATCH :text LIMIT 40" )
+  @Query("SELECT * FROM Tv JOIN tvSuggestionsFts ON Tv.id == tvSuggestionsFts.id WHERE tvSuggestionsFts.name MATCH '%' || :text || '%' LIMIT 20" )
   abstract fun loadTvSuggestions(text: String): LiveData<List<Tv>>
 
   fun loadSearchTvListOrdered(tvIds: List<Int>): LiveData<List<Tv>> {
@@ -97,5 +97,4 @@ abstract class TvDao {
       tvs.sortedWith(compareBy { order.get(it.id) })
     }
   }
-
 }

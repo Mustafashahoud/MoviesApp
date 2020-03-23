@@ -20,7 +20,6 @@ import kotlinx.android.synthetic.main.filter_button_item.view.*
 class FilterMultiSelectableAdapter(
     private var items: List<SelectableItem>,
     private val context: Context?,
-    private val dataBindingComponent: DataBindingComponent,
     private val filterButtonSelectedOnClickCallback: ((String) -> Unit)?,
     private val filterButtonUnSelectedOnClickCallback: ((String) -> Unit)?,
     val adapterName: String

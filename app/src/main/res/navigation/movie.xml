@@ -33,7 +33,7 @@
         android:id="@+id/movieSearchFragment"
         android:name="com.mustafa.movieapp.view.ui.search.MovieSearchFragment"
         android:label="movieSearchFragment"
-        tools:layout="@layout/fragment_movie_search">
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_movieSearchFragment_to_movieDetail"
             app:destination="@id/movieDetail" />
@@ -73,9 +73,9 @@
 
     <fragment
         android:id="@+id/movieSearchFragmentResultFilter"
-        android:name="com.mustafa.movieapp.view.ui.search.filter.SearchResultFilterFragment"
+        android:name="com.mustafa.movieapp.view.ui.search.filter.MovieSearchResultFilterFragment"
         android:label="searchFragmentResultFilter"
-        tools:layout="@layout/fragment_movies_search_filter">
+        tools:layout="@layout/fragment_search_filter">
 
         <action
             android:id="@+id/action_movieSearchFragmentResultFilter_to_movieDetail"

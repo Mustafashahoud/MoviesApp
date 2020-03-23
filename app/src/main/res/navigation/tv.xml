@@ -33,7 +33,7 @@
         android:id="@+id/tvSearchFragment"
         android:name="com.mustafa.movieapp.view.ui.search.TvSearchFragment"
         android:label="tvSearchFragment"
-        tools:layout="@layout/fragment_movie_search">
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_tvSearchFragment_to_tvDetail"
             app:destination="@id/tvDetail" />
@@ -47,7 +47,7 @@
             app:destination="@id/tvSearchFragmentResult" />
         <action
             android:id="@+id/action_tvSearchFragment_to_tvSearchFragmentResultFilter"
-            app:destination="@id/movieSearchFragmentResultFilter" />
+            app:destination="@id/tvSearchFragmentResultFilter" />
 
     </fragment>
 
@@ -68,16 +68,19 @@
     </fragment>
 
 
-<!--    <fragment-->
-<!--        android:id="@+id/movieSearchFragmentResultFilter"-->
-<!--        android:name="com.mustafa.movieapp.view.ui.search.filter.SearchResultFilterFragment"-->
-<!--        android:label="searchFragmentResultFilter"-->
-<!--        tools:layout="@layout/fragment_movies_search_filter">-->
+    <fragment
+        android:id="@+id/tvSearchFragmentResultFilter"
+        android:name="com.mustafa.movieapp.view.ui.search.filter.TvSearchResultFilterFragment"
+        android:label="tvSearchFragmentResultFilter"
+        tools:layout="@layout/fragment_search_filter">
 
-<!--        <action-->
-<!--            android:id="@+id/action_movieSearchFragmentResultFilter_to_movieDetail"-->
-<!--            app:destination="@id/movieDetail" />-->
-<!--    </fragment>-->
+        <action
+            android:id="@+id/action_tvSearchFragmentResultFilter_to_tvDetail"
+            app:destination="@id/tvDetail" />
+        <action
+            android:id="@+id/action_tvSearchFragmentResultFilter_to_tvSearchFragment"
+            app:popUpTo="@id/tvSearchFragment" />
+    </fragment>
 
 
 </navigation>

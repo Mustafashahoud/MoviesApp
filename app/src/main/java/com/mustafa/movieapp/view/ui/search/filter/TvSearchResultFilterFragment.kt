@@ -17,6 +17,13 @@ import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentSearchResultFilterBinding
 import com.mustafa.movieapp.di.Injectable
 import com.mustafa.movieapp.models.Status
+import com.mustafa.movieapp.utils.FiltersConstants.Companion.COUNTRIES
+import com.mustafa.movieapp.utils.FiltersConstants.Companion.GENRES
+import com.mustafa.movieapp.utils.FiltersConstants.Companion.KEYWORDS
+import com.mustafa.movieapp.utils.FiltersConstants.Companion.LANGUAGES
+import com.mustafa.movieapp.utils.FiltersConstants.Companion.RATINGS
+import com.mustafa.movieapp.utils.FiltersConstants.Companion.RUNTIME
+import com.mustafa.movieapp.utils.FiltersConstants.Companion.YEARS
 import com.mustafa.movieapp.utils.StringUtils.Companion.getISOLanguage
 import com.mustafa.movieapp.utils.StringUtils.Companion.getISORegion
 import com.mustafa.movieapp.utils.StringUtils.Companion.getMovieGenresAsSeparatedString
@@ -26,18 +33,12 @@ import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.MovieSearchListAdapter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
 import com.mustafa.movieapp.view.ui.common.RetryCallback
-import com.mustafa.movieapp.view.ui.search.MovieSearchFragment.Companion.COUNTRIES
-import com.mustafa.movieapp.view.ui.search.MovieSearchFragment.Companion.GENRES
-import com.mustafa.movieapp.view.ui.search.MovieSearchFragment.Companion.KEYWORDS
-import com.mustafa.movieapp.view.ui.search.MovieSearchFragment.Companion.LANGUAGES
-import com.mustafa.movieapp.view.ui.search.MovieSearchFragment.Companion.RATINGS
-import com.mustafa.movieapp.view.ui.search.MovieSearchFragment.Companion.RUNTIME
-import com.mustafa.movieapp.view.ui.search.MovieSearchFragment.Companion.YEARS
+
 import kotlinx.android.synthetic.main.fragment_search_result_filter.*
 import kotlinx.android.synthetic.main.fragment_search_result_filter.view.*
 import javax.inject.Inject
 
-class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemClickListener {
+class TvSearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -106,7 +107,7 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
         }
 
         with(binding) {
-            lifecycleOwner = this@SearchResultFilterFragment
+            lifecycleOwner = this@TvSearchResultFilterFragment
             totalFilterResult = viewModel.totalFilterResult
             filterResult = viewModel.searchMovieListFilterLiveData
             selectedFilters = setSelectedFilters()
@@ -133,9 +134,9 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
             appExecutors,
             dataBindingComponent
         ) {
-            navController().navigate(
-                SearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieDetail(it)
-            )
+//            navController().navigate(
+//                TvSearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieDetail(it)
+//            )
         }
 
 //        adapter.setHasStableIds(true) // prevent blinking .. in Case notifyDataSetChanged()
@@ -173,15 +174,16 @@ class SearchResultFilterFragment : Fragment(), Injectable, PopupMenu.OnMenuItemC
 
         sort_by_icon.setOnClickListener{
             PopupMenu(context, it).apply {
-                setOnMenuItemClickListener(this@SearchResultFilterFragment)
+                setOnMenuItemClickListener(this@TvSearchResultFilterFragment)
                 inflate(R.menu.navigation_drawer_menu)
                 show()
             }
         }
 
         edit_filters.setOnClickListener {
-            navController().navigate(
-                SearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieSearchFragment())
+//            navController().navigate(
+//                SearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieSearchFragment()
+//            )
         }
     }
 

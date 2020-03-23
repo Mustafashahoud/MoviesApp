@@ -8,11 +8,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.databinding.FilterButtonItemBinding
-import com.mustafa.movieapp.databinding.ItemMovieBinding
-import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.view.ui.common.AppExecutors
 import com.mustafa.movieapp.view.ui.common.DataBoundListAdapter
-import com.mustafa.movieapp.view.ui.common.RecyclerViewBase
 
 class FilterButtonsAdapters(
     appExecutors: AppExecutors,

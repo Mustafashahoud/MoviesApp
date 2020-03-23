@@ -3,12 +3,13 @@ package com.mustafa.movieapp.di
 import com.mustafa.movieapp.view.ui.search.MovieSearchFragment
 import com.mustafa.movieapp.view.ui.movies.moviedetail.MovieDetailFragment
 import com.mustafa.movieapp.view.ui.movies.movielist.MovieListFragment
-import com.mustafa.movieapp.view.ui.search.filter.SearchResultFilterFragment
+import com.mustafa.movieapp.view.ui.search.filter.MovieSearchResultFilterFragment
 import com.mustafa.movieapp.view.ui.search.result.MovieSearchResultFragment
 import com.mustafa.movieapp.view.ui.search.result.TvSearchResultFragment
 import com.mustafa.movieapp.view.ui.person.CelebritiesListFragment
 import com.mustafa.movieapp.view.ui.person.CelebrityDetailFragment
 import com.mustafa.movieapp.view.ui.search.TvSearchFragment
+import com.mustafa.movieapp.view.ui.search.filter.TvSearchResultFilterFragment
 import com.mustafa.movieapp.view.ui.tv.tvdetail.TvDetailFragment
 import com.mustafa.movieapp.view.ui.tv.tvlist.TvListFragment
 import dagger.Module
@@ -49,5 +50,8 @@ abstract class FragmentBuildersModule {
     abstract fun contributeTvSearchResultFragment(): TvSearchResultFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeSearchResultFilterFragment(): SearchResultFilterFragment
+    abstract fun contributeMovieSearchResultFilterFragment(): MovieSearchResultFilterFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeTvSearchResultFilterFragment(): TvSearchResultFilterFragment
 }
