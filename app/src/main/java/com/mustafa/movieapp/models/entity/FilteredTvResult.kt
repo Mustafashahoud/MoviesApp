@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class FilteredMovieResult(
+data class FilteredTvResult(
     val ids: List<Int>,
     @PrimaryKey
     val page: Int

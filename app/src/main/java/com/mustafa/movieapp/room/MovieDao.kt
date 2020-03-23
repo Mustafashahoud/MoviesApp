@@ -52,6 +52,9 @@ abstract class MovieDao {
     @Query("SELECT * FROM Movie WHERE id in (:movieIds) AND search = 0 AND filter = 1 AND poster_path <> ''")
     abstract fun loadFilteredMovieList(movieIds: List<Int>): LiveData<List<Movie>>
 
+    @Query("SELECT * FROM Tv WHERE id in (:tvIds) AND search = 0 AND filter = 1 AND poster_path <> ''")
+    abstract fun loadFilteredTvList(tvIds: List<Int>): LiveData<List<Tv>>
+
     @Update
     abstract fun updateMovie(movie: Movie)
 
@@ -113,6 +116,17 @@ abstract class MovieDao {
         return Transformations.map(
             loadFilteredMovieList(movieIds)) { movies ->
             movies.sortedWith(compareBy { order.get(it.id) })
+        }
+    }
+
+    fun loadFilteredTvListOrdered(tvIds: List<Int>): LiveData<List<Tv>> {
+        val order = SparseIntArray() // SparseArrayCompat can be used
+        tvIds.withIndex().forEach {
+            order.put(it.value, it.index)
+        }
+        return Transformations.map(
+            loadFilteredTvList(tvIds)) { tvs ->
+            tvs.sortedWith(compareBy { order.get(it.id) })
         }
     }
 

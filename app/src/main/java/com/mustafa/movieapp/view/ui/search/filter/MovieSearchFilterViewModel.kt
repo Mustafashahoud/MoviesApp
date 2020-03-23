@@ -83,7 +83,6 @@ class MovieSearchFilterViewModel @Inject constructor(
         this.language = null
         this.runtime = null
         this.year = null
-
         this.pageFiltersNumber = 1
     }
 

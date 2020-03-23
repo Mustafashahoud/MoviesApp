@@ -28,5 +28,6 @@ data class Tv(
   val vote_count: Int,
   val name: String,
   val original_name: String,
-  var search: Boolean?
+  var search: Boolean?,
+  var filter: Boolean?
 ) : Parcelable

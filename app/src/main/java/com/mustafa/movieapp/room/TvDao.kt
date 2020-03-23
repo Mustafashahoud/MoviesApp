@@ -40,6 +40,16 @@ abstract class TvDao {
   @Query("SELECT * FROM DiscoveryTvResult WHERE page = :pageNumber")
   abstract fun getDiscoveryTvResultByPageLiveData(pageNumber: Int): LiveData<DiscoveryTvResult>
 
+  @Query("SELECT * FROM FilteredTvResult WHERE page = :pageNumber")
+  abstract fun getFilteredTvResultByPageLiveData(pageNumber: Int): LiveData<FilteredTvResult>
+
+
+  @Query("SELECT * FROM FilteredTvResult WHERE page = :pageNumber")
+  abstract fun getFilteredTvResultByPage(pageNumber: Int): FilteredTvResult
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  abstract fun insertFilteredTvResult(result: FilteredTvResult)
+
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   abstract fun insertDiscoveryTvResult(result: DiscoveryTvResult)
 

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.mustafa.movieapp.models.Resource
-import com.mustafa.movieapp.models.entity.Movie
+import com.mustafa.movieapp.models.entity.Tv
 import com.mustafa.movieapp.repository.DiscoverRepository
 import com.mustafa.movieapp.utils.AbsentLiveData
 import javax.inject.Inject
@@ -23,18 +23,17 @@ class TvSearchFilterViewModel @Inject constructor(
     private var genres: String? = null
     private var language: String? = null
     private var runtime: Int? = null
-    private var region: String? = null
     private var rating: Int? = null
     ////////////////////////
 
-    private val searchMovieFilterPageLiveData: MutableLiveData<Int> = MutableLiveData()
+    private val searchTvFilterPageLiveData: MutableLiveData<Int> = MutableLiveData()
 
-    val searchMovieListFilterLiveData: LiveData<Resource<List<Movie>>> = Transformations
-        .switchMap(searchMovieFilterPageLiveData) {
+    val searchTvListFilterLiveData: LiveData<Resource<List<Tv>>> = Transformations
+        .switchMap(searchTvFilterPageLiveData) {
             if (it == null) {
                 AbsentLiveData.create()
             } else {
-                discoverRepository.loadFilteredMovies(
+                discoverRepository.loadFilteredTvs(
                     rating,
                     sort,
                     year,
@@ -42,13 +41,12 @@ class TvSearchFilterViewModel @Inject constructor(
                     genres,
                     language,
                     runtime,
-                    region,
                     it
                 )
             }
         }
 
-    fun loadFilteredMovies(
+    fun loadFilteredTvs(
         rating: Int?,
         sort: String?,
         year: Int?,
@@ -65,19 +63,17 @@ class TvSearchFilterViewModel @Inject constructor(
         this.keyword = keywords
         this.runtime = runtime
         this.genres = genres
-        this.region = region
         this.rating = rating
-        searchMovieFilterPageLiveData.value = page
+        searchTvFilterPageLiveData.value = page
     }
 
     fun loadMoreFilters() {
         pageFiltersNumber++
-        searchMovieFilterPageLiveData.value = pageFiltersNumber
+        searchTvFilterPageLiveData.value = pageFiltersNumber
     }
 
     fun resetFilterValues() {
         this.rating = null
-        this.region = null
         this.genres = null
         this.keyword = null
         this.language = null
@@ -87,11 +83,11 @@ class TvSearchFilterViewModel @Inject constructor(
         this.pageFiltersNumber = 1
     }
 
-    val totalFilterResult = discoverRepository.getTotalFilteredResults()
+    val totalTvFilterResult = discoverRepository. getTotalTvFilteredResults()
 
     fun refresh() {
-        searchMovieFilterPageLiveData.value?.let {
-            searchMovieFilterPageLiveData.value = it
+        searchTvFilterPageLiveData.value?.let {
+            searchTvFilterPageLiveData.value = it
         }
     }
 

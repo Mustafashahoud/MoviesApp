@@ -20,8 +20,8 @@
             type="String" />
 
         <variable
-            name="filterResult"
-            type="LiveData&lt;Resource&lt;List&lt;Movie>>>" />
+            name="resource"
+            type="Resource" />
 
         <variable
             name="callback"
@@ -149,7 +149,7 @@
                 <include layout="@layout/snippet_separator" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/filtered_movies_recycler_view"
+                    android:id="@+id/filtered_items_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
@@ -168,7 +168,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             app:callback="@{() -> callback.retry()}"
-            app:resource="@{(Resource) filterResult}" />
+            app:resource="@{(Resource) resource}" />
 
     </RelativeLayout>
 
