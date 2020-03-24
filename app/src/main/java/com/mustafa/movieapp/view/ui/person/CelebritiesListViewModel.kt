@@ -14,7 +14,9 @@ import javax.inject.Inject
 class CelebritiesListViewModel @Inject
 constructor(private val peopleRepository: PeopleRepository) : ViewModel() {
 
+    private var pageNumber = 1
     private var peoplePageLiveData: MutableLiveData<Int> = MutableLiveData()
+
     val peopleLiveData: LiveData<Resource<List<Person>>> = Transformations
             .switchMap(peoplePageLiveData) {
                 if (it == null) {
@@ -23,9 +25,22 @@ constructor(private val peopleRepository: PeopleRepository) : ViewModel() {
                     peopleRepository.loadPeople(it)
                 }
             }
+    init {
+        peoplePageLiveData.value = 1
+    }
 
     fun setPeoplePage(page: Int) {
         peoplePageLiveData.postValue(page)
+    }
+    fun loadMore() {
+        pageNumber++
+        peoplePageLiveData.value = pageNumber
+    }
+
+    fun refresh() {
+        peoplePageLiveData.value?.let {
+            peoplePageLiveData.value = it
+        }
     }
 
 }

@@ -11,18 +11,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentCelebritiesBinding
 import com.mustafa.movieapp.di.Injectable
-import com.mustafa.movieapp.extension.gone
-import com.mustafa.movieapp.extension.visible
 import com.mustafa.movieapp.models.Status
 import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.PeopleAdapter
-import com.mustafa.movieapp.view.adapter.RecyclerViewPaginator
 import com.mustafa.movieapp.view.ui.common.AppExecutors
+import com.mustafa.movieapp.view.ui.common.RetryCallback
 import kotlinx.android.synthetic.main.fragment_celebrities.*
 import kotlinx.android.synthetic.main.toolbar_search.*
 import javax.inject.Inject
@@ -58,8 +58,16 @@ class CelebritiesListFragment : Fragment(), Injectable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeUI()
+        with(binding) {
+            lifecycleOwner = this@CelebritiesListFragment
+            searchResult = viewModel.peopleLiveData
+            callback = object : RetryCallback {
+                override fun retry() {
+                    viewModel.refresh()
+                }
+            }
+        }
         subscribers()
-        loadMoreStars(page = 1)
     }
 
 
@@ -72,24 +80,21 @@ class CelebritiesListFragment : Fragment(), Injectable {
                 )
             )
         }
+        recyclerView_list_celebrities.adapter = adapter
 
-//    if (!adapter.hasObservers()) {
-//      adapter.setHasStableIds(true)
-//    }
-
-        adapter.setHasStableIds(true)
-        recycler_view_main_fragment_star.adapter = adapter
-
-        recycler_view_main_fragment_star.layoutManager = GridLayoutManager(context, 2)
-//        val paginator = object : RecyclerViewPaginator(
-//                recyclerView = recycler_view_main_fragment_star,
-//                hasNext = { viewModel.peopleLiveData.value?.hasNextPage!! }
-//        ) {
-//            override fun onLoadMore(currentPage: Int) {
-//                loadMoreStars(currentPage)
-//            }
-//        }
-//        paginator.resetCurrentPage()
+        recyclerView_list_celebrities.layoutManager = GridLayoutManager(context, 3)
+        recyclerView_list_celebrities.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val lastPosition = layoutManager.findLastVisibleItemPosition()
+                if (lastPosition == adapter.itemCount - 1
+                    && viewModel.peopleLiveData.value?.status != Status.LOADING
+                    && dy > 0
+                ) {
+                    viewModel.loadMore()
+                }
+            }
+        })
     }
 
 
@@ -97,27 +102,13 @@ class CelebritiesListFragment : Fragment(), Injectable {
         viewModel.peopleLiveData.observe(viewLifecycleOwner, Observer {
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
-                progressBar.visibility = View.INVISIBLE
-            } else if (Status.LOADING == it.status) {
-                progressBar.visibility = View.VISIBLE
             }
         })
     }
 
-    private fun loadMoreStars(page: Int) {
-        viewModel.setPeoplePage(page)
-    }
 
 
     fun intiToolbar(title: String) {
-//        search_view.setOnSearchClickListener {
-//            toolbar_main.toolbar_title.gone()
-//        }
-//
-//        search_view.setOnCloseListener {
-//            toolbar_main.toolbar_title.visible()
-//            false
-//        }
         toolbar_title.text = title
     }
 
