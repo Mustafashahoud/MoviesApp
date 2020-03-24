@@ -23,7 +23,8 @@ import kotlinx.android.synthetic.main.fragment_search_result_filter.*
 import kotlinx.android.synthetic.main.fragment_search_result_filter.view.*
 import javax.inject.Inject
 
-class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectable, PopupMenu.OnMenuItemClickListener {
+class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectable,
+    PopupMenu.OnMenuItemClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -61,7 +62,6 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
         with(binding) {
             lifecycleOwner = this@MovieSearchResultFilterFragment
             totalFilterResult = viewModel.totalFilterResult
-            resource = viewModel.searchMovieListFilterLiveData.value
             selectedFilters = setSelectedFilters()
             callback = object : RetryCallback {
                 override fun retry() {
@@ -73,6 +73,7 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
 
     override fun observeSubscribers() {
         viewModel.searchMovieListFilterLiveData.observe(viewLifecycleOwner, Observer {
+            binding.resource = viewModel.searchMovieListFilterLiveData.value
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }
@@ -85,7 +86,9 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
             dataBindingComponent
         ) {
             navController().navigate(
-                MovieSearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieDetail(it)
+                MovieSearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieDetail(
+                    it
+                )
             )
         }
 
@@ -108,7 +111,8 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
 
     override fun navigateFromSearchResultFilterFragmentToSearchFragment() {
         navController().navigate(
-            MovieSearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieSearchFragment())
+            MovieSearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieSearchFragment()
+        )
     }
 
     override fun resetAndLoadFiltersSortedBy(order: String) {

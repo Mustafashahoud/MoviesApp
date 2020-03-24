@@ -22,7 +22,8 @@ import kotlinx.android.synthetic.main.fragment_search_result_filter.*
 import kotlinx.android.synthetic.main.fragment_search_result_filter.view.*
 import javax.inject.Inject
 
-class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectable, androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener {
+class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectable,
+    androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -60,7 +61,6 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
         with(binding) {
             lifecycleOwner = this@TvSearchResultFilterFragment
             totalFilterResult = viewModel.totalTvFilterResult
-            resource = viewModel.searchTvListFilterLiveData.value
             selectedFilters = setSelectedFilters()
             callback = object : RetryCallback {
                 override fun retry() {
@@ -72,6 +72,7 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
 
     override fun observeSubscribers() {
         viewModel.searchTvListFilterLiveData.observe(viewLifecycleOwner, Observer {
+            binding.resource = viewModel.searchTvListFilterLiveData.value
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }
@@ -84,7 +85,9 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
             dataBindingComponent
         ) {
             navController().navigate(
-                TvSearchResultFilterFragmentDirections.actionTvSearchFragmentResultFilterToTvDetail(it)
+                TvSearchResultFilterFragmentDirections.actionTvSearchFragmentResultFilterToTvDetail(
+                    it
+                )
             )
         }
 
@@ -107,7 +110,8 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
 
     override fun navigateFromSearchResultFilterFragmentToSearchFragment() {
         navController().navigate(
-            TvSearchResultFilterFragmentDirections.actionTvSearchFragmentResultFilterToTvSearchFragment())
+            TvSearchResultFilterFragmentDirections.actionTvSearchFragmentResultFilterToTvSearchFragment()
+        )
     }
 
     override fun resetAndLoadFiltersSortedBy(order: String) {
