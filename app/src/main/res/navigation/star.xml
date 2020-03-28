@@ -4,25 +4,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/star"
     app:startDestination="@+id/celebritiesFragment">
+
+
     <fragment
         android:id="@+id/celebritiesFragment"
-        android:name="com.mustafa.movieapp.view.ui.person.CelebritiesListFragment"
+        android:name="com.mustafa.movieapp.view.ui.person.celebrities.CelebritiesListFragment"
         android:label="celebritiesFragment"
         tools:layout="@layout/fragment_celebrities">
         <action
             android:id="@+id/action_celebrities_to_celebrity"
             app:destination="@id/celebrityDetail" />
-
-
     </fragment>
+
+
     <fragment
         android:id="@+id/celebrityDetail"
-        android:name="com.mustafa.movieapp.view.ui.person.CelebrityDetailFragment"
+        android:name="com.mustafa.movieapp.view.ui.person.detail.CelebrityDetailFragment"
         android:label="celebrityDetail"
         tools:layout="@layout/fragment_celebrity_detail">
-
         <argument
             android:name="person"
             app:argType="com.mustafa.movieapp.models.entity.Person" />
+
+        <action
+            android:id="@+id/action_celebrityDetail_to_celebrityMovieDetail"
+            app:destination="@id/celebrityMovieDetail" />
+
+        <action
+            android:id="@+id/action_celebrityDetail_to_celebrityTvDetail"
+            app:destination="@id/celebrityTvDetail" />
     </fragment>
+
+
+    <fragment
+        android:id="@+id/celebrityMovieDetail"
+        android:name="com.mustafa.movieapp.view.ui.person.detail.MoviePersonDetailFragment"
+        android:label="celebrityMovieDetail"
+        tools:layout="@layout/fragment_movie_celebrity_detail">
+        <argument
+            android:name="movie"
+            app:argType="com.mustafa.movieapp.models.entity.MoviePerson" />
+    </fragment>
+
+
+
+    <fragment
+        android:id="@+id/celebrityTvDetail"
+        android:name="com.mustafa.movieapp.view.ui.person.detail.TvPersonDetailFragment"
+        android:label="celebrityTvDetail"
+        tools:layout="@layout/fragment_tv_celebrity_detail">
+        <argument
+            android:name="tv"
+            app:argType="com.mustafa.movieapp.models.entity.TvPerson" />
+    </fragment>
+
 </navigation>

@@ -2,15 +2,15 @@ package com.mustafa.movieapp.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.mustafa.movieapp.api.ApiResponse
 import com.mustafa.movieapp.api.PeopleService
-import com.mustafa.movieapp.mappers.PeoplePagingChecker
-import com.mustafa.movieapp.mappers.PersonDetailPagingChecker
+import com.mustafa.movieapp.mappers.*
 import com.mustafa.movieapp.models.Resource
-import com.mustafa.movieapp.models.entity.Person
-import com.mustafa.movieapp.models.network.PeopleResponse
-import com.mustafa.movieapp.models.network.PersonDetail
+import com.mustafa.movieapp.models.entity.*
+import com.mustafa.movieapp.models.network.*
 import com.mustafa.movieapp.room.PeopleDao
+import com.mustafa.movieapp.utils.AbsentLiveData
 import com.mustafa.movieapp.view.ui.common.AppExecutors
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,29 +23,52 @@ class PeopleRepository @Inject constructor(
 ) : Repository {
 
     fun loadPeople(page: Int): LiveData<Resource<List<Person>>> {
-        return object : NetworkBoundResource<
-                List<Person>,
-                PeopleResponse,
-                PeoplePagingChecker
-        >(appExecutors) {
+        return object :
+            NetworkBoundResource<List<Person>, PeopleResponse, PeoplePagingChecker>(
+                appExecutors
+            ) {
             override fun saveCallResult(items: PeopleResponse) {
+
+                val ids = arrayListOf<Int>()
+                val personIds: List<Int> = items.results.map { it.id }
+
                 for (item in items.results) {
                     item.page = page
                 }
-                peopleDao.insertPeople(items.results)
+                if (page != 1) {
+                    val prevPageNumber = page - 1
+                    val peopleResult =
+                        peopleDao.getPeopleResultByPage(prevPageNumber)
+                    ids.addAll(peopleResult.ids)
+                }
+
+                ids.addAll(personIds)
+                peopleDao.insertPeople(people = items.results)
+                val peopleResult = PeopleResult(
+                    ids = ids,
+                    page = page
+                )
+                peopleDao.insertPeopleResult(peopleResult)
             }
 
             override fun shouldFetch(data: List<Person>?): Boolean {
-                return data == null || data.isEmpty()
+                return true
             }
 
             override fun loadFromDb(): LiveData<List<Person>> {
-                return peopleDao.getPeople(page_ = page)
+                return Transformations.switchMap(peopleDao.getPeopleResultByPageLiveData(page)) { searchData ->
+                    if (searchData == null) {
+                        AbsentLiveData.create()
+                    } else {
+                        peopleDao.loadFilteredTvListOrdered(searchData.ids)
+                    }
+                }
             }
 
             override fun pageChecker(): PeoplePagingChecker {
                 return PeoplePagingChecker()
             }
+
             override fun createCall(): LiveData<ApiResponse<PeopleResponse>> {
                 return peopleService.fetchPopularPeople(page = page)
             }
@@ -80,6 +103,89 @@ class PeopleRepository @Inject constructor(
             }
             override fun createCall(): LiveData<ApiResponse<PersonDetail>> {
                 return peopleService.fetchPersonDetail(id = id)
+            }
+        }.asLiveData()
+    }
+
+
+    fun loadMoviesForPerson(personId: Int): LiveData<Resource<List<MoviePerson>>> {
+        return object :
+            NetworkBoundResource<List<MoviePerson>, MoviePersonResponse, MoviePersonPagingChecker>(
+                appExecutors
+            ) {
+            override fun saveCallResult(items: MoviePersonResponse) {
+
+                val movieIds: List<Int> = items.cast.map { it.id }
+
+                peopleDao.insertMovieForPerson(movies = items.cast)
+                val moviePersonResult = MoviePersonResult(
+                    moviesIds = movieIds,
+                    personId = personId
+                )
+                peopleDao.insertMoviePersonResult(moviePersonResult)
+            }
+
+            override fun shouldFetch(data: List<MoviePerson>?): Boolean {
+                return true
+            }
+
+            override fun loadFromDb(): LiveData<List<MoviePerson>> {
+                return Transformations.switchMap(peopleDao.getMoviePersonResultByPersonIdLiveData(personId)) { searchData ->
+                    if (searchData == null) {
+                        AbsentLiveData.create()
+                    } else {
+                        peopleDao.loadMoviesForPerson(searchData.moviesIds)
+                    }
+                }
+            }
+
+            override fun pageChecker(): MoviePersonPagingChecker {
+                return MoviePersonPagingChecker()
+            }
+
+            override fun createCall(): LiveData<ApiResponse<MoviePersonResponse>> {
+                return peopleService.fetchPersonMovies(id = personId)
+            }
+        }.asLiveData()
+    }
+
+    fun loadTvsForPerson(personId: Int): LiveData<Resource<List<TvPerson>>> {
+        return object :
+            NetworkBoundResource<List<TvPerson>, TvPersonResponse, TvPersonPagingChecker>(
+                appExecutors
+            ) {
+            override fun saveCallResult(items: TvPersonResponse) {
+
+                val movieIds: List<Int> = items.cast.map { it.id }
+
+                peopleDao.insertTvForPerson(tvs = items.cast)
+                val tvPersonResult = TvPersonResult(
+                    tvsIds = movieIds,
+                    personId = personId
+                )
+                peopleDao.insertTvPersonResult(tvPersonResult)
+            }
+
+            override fun shouldFetch(data: List<TvPerson>?): Boolean {
+                return true
+            }
+
+            override fun loadFromDb(): LiveData<List<TvPerson>> {
+                return Transformations.switchMap(peopleDao.getTvPersonResultByPersonIdLiveData(personId)) { searchData ->
+                    if (searchData == null) {
+                        AbsentLiveData.create()
+                    } else {
+                        peopleDao.loadTvsForPerson(searchData.tvsIds)
+                    }
+                }
+            }
+
+            override fun pageChecker(): TvPersonPagingChecker {
+                return TvPersonPagingChecker()
+            }
+
+            override fun createCall(): LiveData<ApiResponse<TvPersonResponse>> {
+                return peopleService.fetchPersonTvs(id = personId)
             }
         }.asLiveData()
     }

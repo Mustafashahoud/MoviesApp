@@ -1,4 +1,3 @@
-
 package com.mustafa.movieapp.view.ui.tv.tvdetail
 
 import android.content.Intent
@@ -32,69 +31,71 @@ import javax.inject.Inject
 @OpenForTesting
 class TvDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
 
-  @Inject
-  lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-  private val vm by viewModels<TvDetailViewModel>{
-    viewModelFactory
-  }
-  private var binding by autoCleared<FragmentTvDetailBinding>()
+    private val vm by viewModels<TvDetailViewModel> {
+        viewModelFactory
+    }
+    private var binding by autoCleared<FragmentTvDetailBinding>()
 
-  override fun onCreateView(
-          inflater: LayoutInflater, container: ViewGroup?,
-          savedInstanceState: Bundle?
-  ): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-    binding = DataBindingUtil.inflate (
+        binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_tv_detail,
             container,
             false
-    )
+        )
 
-    return binding.root
-  }
-
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-    vm.postTvId(getTvFromIntent().id)
-    with(binding) {
-      lifecycleOwner = this@TvDetailFragment
-      detailBody.viewModel = vm
-      tv = getTvFromIntent()
-      detailHeader.tv = getTvFromIntent()
-      detailBody.tv = getTvFromIntent()
+        return binding.root
     }
 
-    initializeUI()
-  }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        vm.postTvId(getTvFromIntent().id)
+        with(binding) {
+            lifecycleOwner = this@TvDetailFragment
+            detailBody.viewModel = vm
+            tv = getTvFromIntent()
+            detailHeader.tv = getTvFromIntent()
+            detailBody.tv = getTvFromIntent()
+        }
+
+        initializeUI()
+    }
 
 
+    private fun initializeUI() {
+        detail_body_recyclerView_trailers.layoutManager =
+            LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
+        detail_body_recyclerView_trailers.adapter = VideoListAdapter(this)
+        detail_body_recyclerView_reviews.layoutManager =
+            LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+        detail_body_recyclerView_reviews.adapter = ReviewListAdapter()
+        detail_body_recyclerView_reviews.isNestedScrollingEnabled = false
+        detail_body_recyclerView_reviews.setHasFixedSize(true)
+    }
 
-  private fun initializeUI() {
-    detail_body_recyclerView_trailers.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
-    detail_body_recyclerView_trailers.adapter = VideoListAdapter(this)
-    detail_body_recyclerView_reviews.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-    detail_body_recyclerView_reviews.adapter = ReviewListAdapter()
-    detail_body_recyclerView_reviews.isNestedScrollingEnabled = false
-    detail_body_recyclerView_reviews.setHasFixedSize(true)
-  }
+    private fun getTvFromIntent(): Tv {
+        return TvDetailFragmentArgs.fromBundle(
+            requireArguments()
+        ).tv
+    }
 
-  private fun getTvFromIntent(): Tv {
-    return TvDetailFragmentArgs.fromBundle(
-      requireArguments()
-    ).tv
-  }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home)
+            activity?.onBackPressed()
+        return false
+    }
 
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    if (item.itemId == android.R.id.home)
-      activity?.onBackPressed()
-    return false
-  }
-
-  override fun onItemClicked(video: Video) {
-    val playVideoIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Api.getYoutubeVideoPath(video.key)))
-    startActivity(playVideoIntent)
-  }
+    override fun onItemClicked(video: Video) {
+        val playVideoIntent =
+            Intent(Intent.ACTION_VIEW, Uri.parse(Api.getYoutubeVideoPath(video.key)))
+        startActivity(playVideoIntent)
+    }
 
 }

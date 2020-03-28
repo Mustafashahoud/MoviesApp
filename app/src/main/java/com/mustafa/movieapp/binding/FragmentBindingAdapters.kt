@@ -1,13 +1,17 @@
 package com.mustafa.movieapp.binding
 
 import android.graphics.drawable.Drawable
+import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestListener
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.api.Api
+import com.mustafa.movieapp.models.entity.MoviePerson
+import com.mustafa.movieapp.models.entity.TvPerson
 import com.mustafa.movieapp.testing.OpenForTesting
 import javax.inject.Inject
 
@@ -18,11 +22,34 @@ import javax.inject.Inject
 class FragmentBindingAdapters @Inject constructor(val fragment: Fragment) {
     @BindingAdapter(value = ["imageUrl", "imageRequestListener"], requireAll = false)
     fun bindImage(imageView: ImageView, url: String?, listener: RequestListener<Drawable?>?) {
-        val movieUrl  = url?.let { Api.getPosterPath(it) }
+        val movieUrl = url?.let { Api.getPosterPath(it) }
         movieUrl?.let {
             Glide.with(fragment)
                 .load(it)
                 .listener(listener)
-                .into(imageView)}
+                .into(imageView)
+        }
+    }
+}
+
+@BindingAdapter("setCharacterForTvPerson")
+fun setCharacterForTv(textView: TextView, tv: TvPerson) {
+    textView.text = tv.let {
+        if (tv.character.isNotEmpty()) "Ch.: ${tv.character}"
+        else {
+            textView.visibility = View.GONE
+            ""
+        }
+    }
+}
+
+@BindingAdapter("setCharacterForMoviePerson")
+fun setCharacterForMovie(textView: TextView, movie: MoviePerson) {
+    textView.text = movie.let {
+        if (movie.character.isNotEmpty()) "Ch.: ${movie.character}"
+        else {
+            textView.visibility = View.GONE
+            ""
+        }
     }
 }

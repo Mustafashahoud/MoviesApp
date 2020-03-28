@@ -14,9 +14,7 @@ import com.mustafa.movieapp.extension.requestGlideListener
 import com.mustafa.movieapp.extension.visible
 import com.mustafa.movieapp.models.Keyword
 import com.mustafa.movieapp.models.Resource
-import com.mustafa.movieapp.models.entity.Movie
-import com.mustafa.movieapp.models.entity.Person
-import com.mustafa.movieapp.models.entity.Tv
+import com.mustafa.movieapp.models.entity.*
 import com.mustafa.movieapp.models.network.PersonDetail
 import com.mustafa.movieapp.utils.KeywordListMapper
 import com.mustafa.movieapp.utils.StringUtils
@@ -73,6 +71,12 @@ fun bindReleaseDate(view: TextView, movie: Movie) {
     view.text = "Release Date: ${movie.release_date}"
 }
 
+@SuppressLint("SetTextI18n")
+@BindingAdapter("bindReleaseDate")
+fun bindReleaseDateForMoviePerson(view: TextView, movie: MoviePerson) {
+    view.text = "Release Date: ${movie.release_date}"
+}
+
 
 @SuppressLint("SetTextI18n")
 @BindingAdapter("bindMovieGenre")
@@ -81,9 +85,21 @@ fun bindMovieGenre(view: TextView, movie: Movie) {
 }
 
 @SuppressLint("SetTextI18n")
+@BindingAdapter("bindMovieGenreForMoviePerson")
+fun bindMovieGenreForMoviePerson(view: TextView, movie: MoviePerson) {
+    view.text = "Genre: ${StringUtils.getMovieGenresById(movie.genre_ids)}"
+}
+
+@SuppressLint("SetTextI18n")
 @BindingAdapter("bindAirDate")
 fun bindAirDate(view: TextView, tv: Tv) {
-    tv.first_air_date?.let {view.text = "First Air Date: ${tv.first_air_date}" }
+    tv.first_air_date?.let { view.text = "First Air Date: ${tv.first_air_date}" }
+}
+
+@SuppressLint("SetTextI18n")
+@BindingAdapter("bindAirDate")
+fun bindAirDateForTvPerson(view: TextView, tv: TvPerson) {
+    tv.first_air_date?.let { view.text = "First Air Date: ${tv.first_air_date}" }
 }
 
 @SuppressLint("SetTextI18n")
@@ -92,16 +108,35 @@ fun bindTvGenre(view: TextView, tv: Tv) {
     view.text = "Genre: ${StringUtils.getTvGenresById(tv.genre_ids)}"
 }
 
+@SuppressLint("SetTextI18n")
+@BindingAdapter("bindTvGenreForTvPerson")
+fun bindTvGenreForTvPerson(view: TextView, tv: TvPerson) {
+    view.text = "Genre: ${StringUtils.getTvGenresById(tv.genre_ids)}"
+}
+
 @BindingAdapter("bindBackDrop")
 fun bindBackDrop(view: ImageView, movie: Movie) {
     if (movie.backdrop_path != null) {
         Glide.with(view.context).load(Api.getBackdropPath(movie.backdrop_path))
-                .listener(view.requestGlideListener())
-                .into(view)
+            .listener(view.requestGlideListener())
+            .into(view)
     } else if (movie.poster_path != null) {
         Glide.with(view.context).load(Api.getBackdropPath(movie.poster_path))
-                .listener(view.requestGlideListener())
-                .into(view)
+            .listener(view.requestGlideListener())
+            .into(view)
+    }
+}
+
+@BindingAdapter("bindBackDropForMoviePerson")
+fun bindBackDropForMoviePerson(view: ImageView, movie: MoviePerson) {
+    if (movie.backdrop_path != null) {
+        Glide.with(view.context).load(Api.getBackdropPath(movie.backdrop_path))
+            .listener(view.requestGlideListener())
+            .into(view)
+    } else if (movie.poster_path != null) {
+        Glide.with(view.context).load(Api.getBackdropPath(movie.poster_path))
+            .listener(view.requestGlideListener())
+            .into(view)
     }
 }
 
@@ -109,12 +144,25 @@ fun bindBackDrop(view: ImageView, movie: Movie) {
 fun bindBackDrop(view: ImageView, tv: Tv) {
     if (tv.backdrop_path != null) {
         Glide.with(view.context).load(Api.getBackdropPath(tv.backdrop_path))
-                .listener(view.requestGlideListener())
-                .into(view)
+            .listener(view.requestGlideListener())
+            .into(view)
     } else {
         Glide.with(view.context).load(tv.poster_path?.let { Api.getBackdropPath(it) })
-                .listener(view.requestGlideListener())
-                .into(view)
+            .listener(view.requestGlideListener())
+            .into(view)
+    }
+}
+
+@BindingAdapter("bindBackDropForTvPerson")
+fun bindBackDropForTvPerson(view: ImageView, movie: TvPerson) {
+    if (movie.backdrop_path != null) {
+        Glide.with(view.context).load(Api.getBackdropPath(movie.backdrop_path))
+            .listener(view.requestGlideListener())
+            .into(view)
+    } else if (movie.poster_path != null) {
+        Glide.with(view.context).load(Api.getBackdropPath(movie.poster_path))
+            .listener(view.requestGlideListener())
+            .into(view)
     }
 }
 
@@ -122,7 +170,28 @@ fun bindBackDrop(view: ImageView, tv: Tv) {
 fun bindBackDrop(view: ImageView, person: Person) {
     if (person.profile_path != null) {
         Glide.with(view.context).load(Api.getBackdropPath(person.profile_path))
-                .apply(RequestOptions().circleCrop())
-                .into(view)
+            .apply(RequestOptions().circleCrop())
+            .into(view)
+    }
+    @BindingAdapter("setCharacterForTvPerson")
+    fun setCharacterForTv(textView: TextView, tv: TvPerson) {
+        textView.text = tv.let {
+            if (tv.character.isNotEmpty()) "Ch.: ${tv.character}"
+            else {
+//                textView.visibility = View.GONE
+                ""
+            }
+        }
+    }
+
+    @BindingAdapter("setCharacterForMoviePerson")
+    fun setCharacterForMovie(textView: TextView, movie: MoviePerson) {
+        textView.text = movie.let {
+            if (movie.character.isNotEmpty()) "Ch.: ${movie.character}"
+            else {
+//                textView.visibility = View.GONE
+                ""
+            }
+        }
     }
 }

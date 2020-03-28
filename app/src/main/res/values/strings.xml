@@ -42,4 +42,6 @@
     <string name="release_date">Release Date</string>
     <string name="vote_count">Vote Count</string>
     <string name="filters">Filters</string>
+    <string name="tv_shows_and_series">TV Shows and Series</string>
+    <string name="movies">Movies</string>
 </resources>

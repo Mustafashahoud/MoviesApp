@@ -1,4 +1,4 @@
-package com.mustafa.movieapp.view.ui.person
+package com.mustafa.movieapp.view.ui.person.celebrities
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -25,11 +25,11 @@ import com.mustafa.movieapp.view.ui.common.AppExecutors
 import com.mustafa.movieapp.view.ui.common.RetryCallback
 import kotlinx.android.synthetic.main.fragment_celebrities.*
 import kotlinx.android.synthetic.main.toolbar_search.*
+import timber.log.Timber
 import javax.inject.Inject
 
 @OpenForTesting
 class CelebritiesListFragment : Fragment(), Injectable {
-
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -46,12 +46,17 @@ class CelebritiesListFragment : Fragment(), Injectable {
 
     private var adapter by autoCleared<PeopleAdapter>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.fragment_celebrities,
-                container,
-                false)
+            inflater,
+            R.layout.fragment_celebrities,
+            container,
+            false
+        )
         return binding.root
     }
 
@@ -73,7 +78,7 @@ class CelebritiesListFragment : Fragment(), Injectable {
 
     private fun initializeUI() {
         intiToolbar(getString(R.string.fragment_celebrities))
-        adapter = PeopleAdapter(dataBindingComponent) {
+        adapter = PeopleAdapter(appExecutors, dataBindingComponent) {
             findNavController().navigate(
                 CelebritiesListFragmentDirections.actionCelebritiesToCelebrity(
                     it
@@ -106,7 +111,16 @@ class CelebritiesListFragment : Fragment(), Injectable {
         })
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Timber.d("onDestroyView()")
+    }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Timber.d("onDestroy()")
+    }
 
     fun intiToolbar(title: String) {
         toolbar_title.text = title

@@ -1,8 +1,7 @@
-package com.mustafa.movieapp.view.ui.person
+package com.mustafa.movieapp.view.ui.person.celebrities
 
 import androidx.lifecycle.*
 import com.mustafa.movieapp.models.Resource
-import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.models.entity.Person
 import com.mustafa.movieapp.repository.PeopleRepository
 import com.mustafa.movieapp.testing.OpenForTesting

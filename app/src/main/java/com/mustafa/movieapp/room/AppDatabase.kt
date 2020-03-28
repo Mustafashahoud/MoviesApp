@@ -23,8 +23,13 @@ import com.mustafa.movieapp.utils.VideoListConverter
         (MovieSuggestionsFts::class),
         (TvSuggestionsFts::class),
         (FilteredMovieResult::class),
-        (FilteredTvResult::class)],
-    version = 25, exportSchema = false
+        (FilteredTvResult::class),
+        (PeopleResult::class),
+        (MoviePerson::class),
+        (TvPerson::class),
+        (MoviePersonResult::class),
+        (TvPersonResult::class)],
+    version = 28, exportSchema = false
 )
 @TypeConverters(
     value = [(StringListConverter::class), (IntegerListConverter::class),

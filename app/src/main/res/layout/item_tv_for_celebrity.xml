@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="com.mustafa.movieapp.utils.StringUtils"/>
+
+        <variable
+            name="tv"
+            type="com.mustafa.movieapp.models.entity.TvPerson" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="120dp"
+        android:layout_height="245dp"
+        style="@style/MyCardView"
+        android:layout_margin="2dp">
+
+        <RelativeLayout
+            android:id="@+id/relative_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foreground="?attr/selectableItemBackground"
+            android:background="@color/backgroundDarker">
+
+            <ImageView
+                android:id="@+id/item_poster_post"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:scaleType="fitXY"
+                app:imageUrl="@{tv.poster_path}"
+                tools:src="@drawable/ic_star_nav"
+                tools:ignore="ContentDescription" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="vertical"
+                android:layout_below="@+id/item_poster_post">
+
+                <TextView
+                    android:id="@+id/item_poster_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="3dp"
+                    android:ellipsize="middle"
+                    android:maxLines="2"
+                    android:textColor="@color/white"
+                    android:text="@{tv.name}"
+                    tools:text="Vikings"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:textColor="@color/preview"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:textSize="12sp"
+                    app:setCharacterForTvPerson="@{tv}"
+                    tools:text="Ch: Mustafa  "/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/preview"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:textSize="14sp"
+                    android:text="@{tv.first_air_date}"
+                    tools:text="1956 "/>
+            </LinearLayout>
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>
+
+

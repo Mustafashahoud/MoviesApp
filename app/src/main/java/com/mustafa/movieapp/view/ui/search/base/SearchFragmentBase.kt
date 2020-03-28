@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.mustafa.movieapp.R
-import com.mustafa.movieapp.di.Injectable
 import com.mustafa.movieapp.extension.gone
 import com.mustafa.movieapp.extension.inVisible
 import com.mustafa.movieapp.extension.visible
@@ -53,7 +52,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-abstract class SearchFragmentBase : Fragment(), Injectable {
+abstract class SearchFragmentBase : Fragment() {
 
     private var isComingFromEdit = false
 

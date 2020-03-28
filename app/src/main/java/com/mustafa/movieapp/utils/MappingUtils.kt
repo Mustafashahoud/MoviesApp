@@ -1,5 +1,8 @@
 package com.mustafa.movieapp.utils
 
+import com.mustafa.movieapp.models.entity.MoviePerson
+import com.mustafa.movieapp.models.entity.TvPerson
+
 
 /**
  * Mapping Genres' Ids To Strings according to the TheMovie Services
