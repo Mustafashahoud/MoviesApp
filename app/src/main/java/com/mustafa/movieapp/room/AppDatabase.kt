@@ -28,8 +28,11 @@ import com.mustafa.movieapp.utils.VideoListConverter
         (MoviePerson::class),
         (TvPerson::class),
         (MoviePersonResult::class),
-        (TvPersonResult::class)],
-    version = 28, exportSchema = false
+        (TvPersonResult::class),
+        (SearchPeopleResult::class),
+        (PeopleRecentQueries::class),
+        (PeopleSuggestionsFts::class)],
+    version = 30, exportSchema = false
 )
 @TypeConverters(
     value = [(StringListConverter::class), (IntegerListConverter::class),

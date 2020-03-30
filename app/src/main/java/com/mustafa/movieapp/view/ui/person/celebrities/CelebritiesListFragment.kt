@@ -100,6 +100,10 @@ class CelebritiesListFragment : Fragment(), Injectable {
                 }
             }
         })
+
+        search_icon.setOnClickListener {
+            navController().navigate(CelebritiesListFragmentDirections.actionCelebritiesToSearchCelebritiesFragment())
+        }
     }
 
 
@@ -111,20 +115,10 @@ class CelebritiesListFragment : Fragment(), Injectable {
         })
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Timber.d("onDestroyView()")
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Timber.d("onDestroy()")
-    }
-
     fun intiToolbar(title: String) {
         toolbar_title.text = title
     }
+
 
     /**
      * Created to be able to override in tests

@@ -14,6 +14,11 @@
         <action
             android:id="@+id/action_celebrities_to_celebrity"
             app:destination="@id/celebrityDetail" />
+
+        <action
+            android:id="@+id/action_celebrities_to_searchCelebritiesFragment"
+            app:destination="@id/searchCelebritiesFragment" />
+
     </fragment>
 
 
@@ -47,7 +52,6 @@
     </fragment>
 
 
-
     <fragment
         android:id="@+id/celebrityTvDetail"
         android:name="com.mustafa.movieapp.view.ui.person.detail.TvPersonDetailFragment"
@@ -57,5 +61,43 @@
             android:name="tv"
             app:argType="com.mustafa.movieapp.models.entity.TvPerson" />
     </fragment>
+
+    <fragment
+        android:id="@+id/searchCelebritiesFragment"
+        android:name="com.mustafa.movieapp.view.ui.person.search.SearchCelebritiesFragment"
+        android:label="searchCelebritiesFragment"
+        tools:layout="@layout/fragment_celebrities_search">
+
+        <action
+            android:id="@+id/action_searchCelebritiesFragment_to_celebritiesFragment"
+            app:popUpTo="@id/celebritiesFragment" />
+
+        <action
+            android:id="@+id/action_searchCelebritiesFragment_to_searchCelebritiesResultFragment"
+            app:destination="@id/searchCelebritiesResultFragment" />
+
+        <action
+            android:id="@+id/action_searchCelebritiesFragment_to_celebrityDetail"
+            app:destination="@id/celebrityDetail" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/searchCelebritiesResultFragment"
+        android:name="com.mustafa.movieapp.view.ui.person.search.SearchCelebritiesResultFragment"
+        android:label="searchCelebritiesResultFragment"
+        tools:layout="@layout/fragment_celebrities_search_result">
+        <action
+            android:id="@+id/action_searchCelebritiesResultFragment_to_celebrityDetail"
+            app:destination="@id/celebrityDetail" />
+
+        <action
+            android:id="@+id/action_searchCelebritiesResultFragment_to_searchCelebritiesFragment"
+            app:popUpTo="@id/searchCelebritiesFragment" />
+
+        <argument
+            android:name="query"
+            app:argType="string" />
+    </fragment>
+
 
 </navigation>

@@ -10,6 +10,8 @@ import com.mustafa.movieapp.view.ui.person.celebrities.CelebritiesListFragment
 import com.mustafa.movieapp.view.ui.person.detail.CelebrityDetailFragment
 import com.mustafa.movieapp.view.ui.person.detail.MoviePersonDetailFragment
 import com.mustafa.movieapp.view.ui.person.detail.TvPersonDetailFragment
+import com.mustafa.movieapp.view.ui.person.search.SearchCelebritiesFragment
+import com.mustafa.movieapp.view.ui.person.search.SearchCelebritiesResultFragment
 import com.mustafa.movieapp.view.ui.search.TvSearchFragment
 import com.mustafa.movieapp.view.ui.search.filter.TvSearchResultFilterFragment
 import com.mustafa.movieapp.view.ui.tv.tvdetail.TvDetailFragment
@@ -62,4 +64,11 @@ abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract fun contributeTvPersonDetailFragment(): TvPersonDetailFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeSearchCelebritiesFragment(): SearchCelebritiesFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeSearchCelebritiesResultFragment(): SearchCelebritiesResultFragment
+
 }

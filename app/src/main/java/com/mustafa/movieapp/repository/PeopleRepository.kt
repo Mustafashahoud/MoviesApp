@@ -9,6 +9,7 @@ import com.mustafa.movieapp.mappers.*
 import com.mustafa.movieapp.models.Resource
 import com.mustafa.movieapp.models.entity.*
 import com.mustafa.movieapp.models.network.*
+import com.mustafa.movieapp.room.AppDatabase
 import com.mustafa.movieapp.room.PeopleDao
 import com.mustafa.movieapp.utils.AbsentLiveData
 import com.mustafa.movieapp.view.ui.common.AppExecutors
@@ -17,9 +18,10 @@ import javax.inject.Singleton
 
 @Singleton
 class PeopleRepository @Inject constructor(
-        private val peopleService: PeopleService,
-        private val peopleDao: PeopleDao,
-        private val appExecutors: AppExecutors
+    private val peopleService: PeopleService,
+    private val peopleDao: PeopleDao,
+    private val db: AppDatabase,
+    private val appExecutors: AppExecutors
 ) : Repository {
 
     fun loadPeople(page: Int): LiveData<Resource<List<Person>>> {
@@ -34,6 +36,7 @@ class PeopleRepository @Inject constructor(
 
                 for (item in items.results) {
                     item.page = page
+                    item.search = false
                 }
                 if (page != 1) {
                     val prevPageNumber = page - 1
@@ -43,12 +46,16 @@ class PeopleRepository @Inject constructor(
                 }
 
                 ids.addAll(personIds)
-                peopleDao.insertPeople(people = items.results)
+
                 val peopleResult = PeopleResult(
                     ids = ids,
                     page = page
                 )
-                peopleDao.insertPeopleResult(peopleResult)
+                db.run {
+                    peopleDao.insertPeopleResult(peopleResult)
+                    peopleDao.insertPeople(people = items.results)
+                }
+
             }
 
             override fun shouldFetch(data: List<Person>?): Boolean {
@@ -101,8 +108,76 @@ class PeopleRepository @Inject constructor(
             override fun pageChecker(): PersonDetailPagingChecker {
                 return PersonDetailPagingChecker()
             }
+
             override fun createCall(): LiveData<ApiResponse<PersonDetail>> {
                 return peopleService.fetchPersonDetail(id = id)
+            }
+        }.asLiveData()
+    }
+
+    fun searchPeople(query: String, page: Int): LiveData<Resource<List<Person>>> {
+        return object :
+            NetworkBoundResource<List<Person>, PeopleResponse, PeoplePagingChecker>(
+                appExecutors
+            ) {
+            override fun saveCallResult(items: PeopleResponse) {
+
+                val ids = arrayListOf<Int>()
+                val personIds: List<Int> = items.results.map { it.id }
+
+                for (item in items.results) {
+                    item.page = page
+                    item.search = true
+                }
+                if (page > 1) {
+                    val prevPageNumber = page - 1
+                    val peopleSearchResult = peopleDao.searchPeopleResult(query, prevPageNumber)
+                    ids.addAll(peopleSearchResult.ids)
+                }
+                if (page != 1) {
+                    val prevPageNumber = page - 1
+                    val peopleResult =
+                        peopleDao.searchPeopleResult(query, prevPageNumber)
+                    ids.addAll(peopleResult.ids)
+                }
+
+                ids.addAll(personIds)
+
+                val searchPeopleResult = SearchPeopleResult(
+                query = query,
+                ids = ids,
+                page = page
+                )
+                val recentQueries = PeopleRecentQueries(query)
+
+                db.runInTransaction {
+                    peopleDao.insertPeopleRecentQuery(recentQueries)
+                    peopleDao.insertSearchPeopleResult(searchPeopleResult)
+                    peopleDao.insertPeople(people = items.results)
+                }
+
+            }
+
+            override fun shouldFetch(data: List<Person>?): Boolean {
+                return true
+            }
+
+            override fun loadFromDb(): LiveData<List<Person>> {
+                return Transformations.switchMap(peopleDao.searchPeopleResultLiveData(query, page)) { searchData ->
+                    if (searchData == null) {
+                        AbsentLiveData.create()
+                    } else {
+                        peopleDao.loadSearchPeopleListOrdered(searchData.ids)
+                    }
+                }
+            }
+
+            override fun pageChecker(): PeoplePagingChecker {
+                return PeoplePagingChecker()
+            }
+
+            override fun createCall(): LiveData<ApiResponse<PeopleResponse>> {
+                return peopleService.searchPeople(query, page = page)
             }
         }.asLiveData()
     }
@@ -130,7 +205,11 @@ class PeopleRepository @Inject constructor(
             }
 
             override fun loadFromDb(): LiveData<List<MoviePerson>> {
-                return Transformations.switchMap(peopleDao.getMoviePersonResultByPersonIdLiveData(personId)) { searchData ->
+                return Transformations.switchMap(
+                    peopleDao.getMoviePersonResultByPersonIdLiveData(
+                        personId
+                    )
+                ) { searchData ->
                     if (searchData == null) {
                         AbsentLiveData.create()
                     } else {
@@ -171,7 +250,11 @@ class PeopleRepository @Inject constructor(
             }
 
             override fun loadFromDb(): LiveData<List<TvPerson>> {
-                return Transformations.switchMap(peopleDao.getTvPersonResultByPersonIdLiveData(personId)) { searchData ->
+                return Transformations.switchMap(
+                    peopleDao.getTvPersonResultByPersonIdLiveData(
+                        personId
+                    )
+                ) { searchData ->
                     if (searchData == null) {
                         AbsentLiveData.create()
                     } else {
@@ -189,4 +272,22 @@ class PeopleRepository @Inject constructor(
             }
         }.asLiveData()
     }
+
+    fun getPeopleSuggestionsFromRoom(query: String?): LiveData<List<Person>> {
+        val peopleQuery = MutableLiveData<String>()
+        peopleQuery.value = query
+        return Transformations.switchMap(peopleQuery) {
+            if (it.isNullOrBlank()) {
+                AbsentLiveData.create()
+            } else {
+                peopleDao.loadPeopleSuggestions(it)
+            }
+        }
+
+    }
+
+
+    fun getPeopleRecentQueries() = peopleDao.loadPeopleRecentQueries()
+    fun deleteAllPeopleRecentQueries() =
+        peopleDao.deleteAllPeopleRecentQueries()
 }

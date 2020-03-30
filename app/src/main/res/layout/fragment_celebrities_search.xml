@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,33 +20,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@color/tabItemsColor"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:textAlignment="viewStart"
-                    android:theme="@style/SelectableItemTheme"
-                    app:tabIndicatorColor="@color/colorAccent"
-                    app:tabMode="scrollable"
-                    app:tabSelectedTextColor="@color/white"
-                    app:tabTextColor="@color/tabTextColor">
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-
-                        android:text="@string/recent" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/filter_movies" />
-                </com.google.android.material.tabs.TabLayout>
 
                 <RelativeLayout
                     android:id="@+id/recent_queries_bar"
@@ -85,11 +57,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <include
-                    android:id="@+id/filters"
-                    layout="@layout/fragment_search_filter"
-                    android:visibility="invisible" />
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView_suggestion"
                     android:layout_width="match_parent"
@@ -101,11 +68,9 @@
                     android:id="@+id/listView_recent_queries"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="invisible"
                     tools:listitem="@layout/recent_query_item" />
             </FrameLayout>
         </LinearLayout>
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

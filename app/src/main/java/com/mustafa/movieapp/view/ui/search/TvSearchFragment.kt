@@ -14,11 +14,9 @@ import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentSearchBinding
 import com.mustafa.movieapp.di.Injectable
-import com.mustafa.movieapp.models.Status
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.TvSearchListAdapter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
-import com.mustafa.movieapp.view.ui.common.RetryCallback
 import com.mustafa.movieapp.view.ui.search.base.SearchFragmentBase
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search.view.*
@@ -57,29 +55,11 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
 
     fun navController() = findNavController()
 
-
-    private fun getVisibility() : Boolean {
-        return viewModel.searchTvListLiveData.value?.status == Status.SUCCESS
-                && viewModel.searchTvListLiveData.value?.data?.size == 0
-    }
-
     override fun setSearchViewHint() {
         search_view.queryHint = "Search Series"
     }
 
-    override fun setBindingVariables() {
-        with(binding) {
-            resource = viewModel.searchTvListLiveData.value
-            visible = getVisibility()
-            query = viewModel.queryTvLiveData
-            callback = object : RetryCallback {
-                override fun retry() {
-                    viewModel.refresh()
-                }
-            }
-            lifecycleOwner = this@TvSearchFragment
-        }
-    }
+    override fun setBindingVariables() {/*Do nothing*/}
 
     override fun navigateFromSearchFragmentToSearchFragmentResultFilter(bundle: Bundle) {
         findNavController().navigate(

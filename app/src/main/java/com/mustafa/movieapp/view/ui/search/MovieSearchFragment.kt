@@ -14,11 +14,9 @@ import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentSearchBinding
 import com.mustafa.movieapp.di.Injectable
-import com.mustafa.movieapp.models.Status
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.MovieSearchListAdapter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
-import com.mustafa.movieapp.view.ui.common.RetryCallback
 import com.mustafa.movieapp.view.ui.search.base.SearchFragmentBase
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search.view.*
@@ -64,28 +62,11 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
     private fun navController() = findNavController()
 
 
-    private fun getVisibility() : Boolean {
-        return viewModel.searchMovieListLiveData.value?.status == Status.SUCCESS
-                && viewModel.searchMovieListLiveData.value?.data?.size == 0
-    }
-
     override fun setSearchViewHint() {
         search_view.queryHint = "Search Movies"
     }
 
-    override fun setBindingVariables() {
-        with(binding) {
-            resource = viewModel.searchMovieListLiveData.value
-            visible = getVisibility()
-            query = viewModel.queryMovieLiveData
-            callback = object : RetryCallback {
-                override fun retry() {
-                    viewModel.refresh()
-                }
-            }
-            lifecycleOwner = this@MovieSearchFragment
-        }
-    }
+    override fun setBindingVariables() {/*DO nothing*/}
 
     override fun navigateFromSearchFragmentToSearchFragmentResultFilter(bundle: Bundle) {
         findNavController().navigate(
