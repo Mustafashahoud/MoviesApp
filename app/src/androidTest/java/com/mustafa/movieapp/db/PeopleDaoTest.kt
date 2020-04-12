@@ -1,51 +1,44 @@
+
 package com.mustafa.movieapp.db
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
 import com.mustafa.movieapp.models.entity.Person
-import com.mustafa.movieapp.utils.LiveDataTestUtil.getValue
+import com.mustafa.movieapp.utils.LiveDataTestUtil
 import com.mustafa.movieapp.utils.MockTestUtil.Companion.mockPerson
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class PeopleDaoTest : DbTest() {
 
-    // Executes each task synchronously using Architecture Components.
-    @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+  @Test
+  fun insertAndRead() {
+    val people = ArrayList<Person>()
+    val mockPerson = mockPerson()
+    people.add(mockPerson)
 
-    @Test
-    fun insertAndRead() {
-        //Given - insert
-        val people = listOf(mockPerson())
-        db.peopleDao().insertPeople(people)
+    db.peopleDao().insertPeople(people)
+    val loadFromDB = LiveDataTestUtil.getValue(db.peopleDao().getPeople(1))[0]
+    assertThat(loadFromDB.page, `is`(1))
+    assertThat(loadFromDB.id, `is`(123))
+  }
 
-        // When
-        val loadFromDB = getValue(db.peopleDao().loadPeopleList(listOf(123)))[0]
+  @Test
+  fun updateAndRead() {
+    val people = ArrayList<Person>()
+    val mockPerson = mockPerson()
+    people.add(mockPerson)
+    db.peopleDao().insertPeople(people)
 
-        //// THEN - The loaded data contains the expected values
-        assertThat(loadFromDB.page, `is`(1))
-        assertThat(loadFromDB.id, `is`(123))
-    }
+    val loadFromDB = db.peopleDao().getPerson(mockPerson.id)
+    assertThat(loadFromDB.page, `is`(1))
 
-    @Test
-    fun updateAndRead() {
+    mockPerson.page = 10
+    db.peopleDao().updatePerson(mockPerson)
 
-        val mockedPerson = mockPerson()
-        val people = listOf(mockedPerson)
-        db.peopleDao().insertPeople(people)
-
-        val loadFromDB = db.peopleDao().getPerson(mockedPerson.id)
-        assertThat(loadFromDB.page, `is`(1))
-
-        mockedPerson.page = 10
-        db.peopleDao().updatePerson(mockedPerson)
-
-        val updated = db.peopleDao().getPerson(mockedPerson.id)
-        assertThat(updated.page, `is`(10))
-    }
+    val updated = db.peopleDao().getPerson(mockPerson.id)
+    assertThat(updated.page, `is`(10))
+  }
 }

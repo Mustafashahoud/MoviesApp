@@ -7,7 +7,7 @@ import androidx.test.runner.AndroidJUnitRunner
 import com.mustafa.movieapp.TestMovieApp
 
 @Suppress("unused")
-class MovieGuide : AndroidJUnitRunner() {
+class AndroidJunitTestRunner : AndroidJUnitRunner() {
   @Throws(InstantiationException::class, IllegalAccessException::class, ClassNotFoundException::class)
   override fun newApplication(cl: ClassLoader, className: String, context: Context): Application {
     return super.newApplication(cl, TestMovieApp::class.java.name, context)

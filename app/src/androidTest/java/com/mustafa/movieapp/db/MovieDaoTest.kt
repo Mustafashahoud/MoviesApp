@@ -1,49 +1,44 @@
+
 package com.mustafa.movieapp.db
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
 import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.utils.LiveDataTestUtil
 import com.mustafa.movieapp.utils.MockTestUtil.Companion.mockMovie
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class MovieDaoTest : DbTest() {
 
-    @get:Rule
-    var instantTaskExecutorRule = InstantTaskExecutorRule()
+  @Test
+  fun insertAndReadTest() {
+    val movieList = ArrayList<Movie>()
+    val movie = mockMovie()
+    movieList.add(movie)
 
-    @Test
-    fun insertAndReadTest() {
-        val movieList = ArrayList<Movie>()
-        val movie = mockMovie()
-        movieList.add(movie)
+    db.movieDao().insertMovieList(movieList)
+    val loadFromDB = LiveDataTestUtil.getValue(db.movieDao().loadDiscoveryMovieList(movie.page))[0]
+    assertThat(loadFromDB.page, `is`(1))
+    assertThat(loadFromDB.id, `is`(123))
+  }
 
-        db.movieDao().insertMovieList(movieList)
-        val loadFromDB =
-            LiveDataTestUtil.getValue(db.movieDao().loadDiscoveryMovieList(movie.page))[0]
-        assertThat(loadFromDB.page, `is`(1))
-        assertThat(loadFromDB.id, `is`(123))
-    }
+  @Test
+  fun updateAndReadTest() {
+    val movieList = ArrayList<Movie>()
+    val movie = mockMovie()
+    movieList.add(movie)
+    db.movieDao().insertMovieList(movieList)
 
-    @Test
-    fun updateAndReadTest() {
-        val movieList = ArrayList<Movie>()
-        val movie = mockMovie()
-        movieList.add(movie)
-        db.movieDao().insertMovieList(movieList)
+    val loadFromDB = db.movieDao().getMovie(movie.id)
+    assertThat(loadFromDB.page, `is`(1))
 
-        val loadFromDB = db.movieDao().getMovie(movie.id)
-        assertThat(loadFromDB.page, `is`(1))
+    movie.page = 10
+    db.movieDao().updateMovie(movie)
 
-        movie.page = 10
-        db.movieDao().updateMovie(movie)
-
-        val updated = db.movieDao().getMovie(movie.id)
-        assertThat(updated.page, `is`(10))
-    }
+    val updated = db.movieDao().getMovie(movie.id)
+    assertThat(updated.page, `is`(10))
+  }
 }

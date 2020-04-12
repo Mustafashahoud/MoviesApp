@@ -1,20 +1,17 @@
 package com.mustafa.movieapp.util
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.testing.FragmentScenario
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.rule.ActivityTestRule
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
 /**
  * A JUnit rule that registers an idling resource for all fragment views that use data binding.
  */
-class DataBindingIdlingResourceRule() : TestWatcher() {
-    private val idlingResource = DataBindingIdlingResource()
-
-    fun monitorFragment(fragmentScenario: FragmentScenario<out Fragment>) {
-        idlingResource.monitorFragment(fragmentScenario)
-    }
+class DataBindingIdlingResourceRule(
+        activityTestRule: ActivityTestRule<*>
+) : TestWatcher() {
+    private val idlingResource = DataBindingIdlingResource(activityTestRule)
 
     override fun finished(description: Description?) {
         IdlingRegistry.getInstance().unregister(idlingResource)
