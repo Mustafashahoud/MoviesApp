@@ -2,7 +2,6 @@
 package com.mustafa.movieapp.view.viewholder
 
 import android.view.View
-import com.skydoves.baserecyclerviewadapter.BaseViewHolder
 import com.mustafa.movieapp.models.Review
 import kotlinx.android.synthetic.main.item_review.view.*
 

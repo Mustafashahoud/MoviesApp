@@ -173,9 +173,6 @@ dependencies {
     implementation "com.github.florent37:glidepalette:$glidePaletteVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
 
-    // adapter
-    implementation "com.github.skydoves:baserecyclerviewadapter:$baseAdapterVersion"
-
     // debugging
     implementation "com.jakewharton.timber:timber:$timberVersion"
     implementation "com.facebook.stetho:stetho:$stethoVersion"

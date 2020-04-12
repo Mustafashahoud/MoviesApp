@@ -1,13 +1,14 @@
 package com.mustafa.movieapp.view.adapter
 
 import android.view.View
-import com.skydoves.baserecyclerviewadapter.BaseAdapter
-import com.skydoves.baserecyclerviewadapter.BaseViewHolder
-import com.skydoves.baserecyclerviewadapter.SectionRow
+
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.models.Resource
 import com.mustafa.movieapp.models.Review
+import com.mustafa.movieapp.view.viewholder.BaseAdapter
+import com.mustafa.movieapp.view.viewholder.BaseViewHolder
 import com.mustafa.movieapp.view.viewholder.ReviewListViewHolder
+import com.mustafa.movieapp.view.viewholder.SectionRow
 
 class ReviewListAdapter : BaseAdapter() {
 

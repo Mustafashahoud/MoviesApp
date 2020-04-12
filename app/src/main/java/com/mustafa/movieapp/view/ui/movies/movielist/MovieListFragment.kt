@@ -65,13 +65,10 @@ class MovieListFragment : Fragment(), Injectable {
             container,
             false
         )
-        Timber.d("Hell..Yeahh...onCreateView()")
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Timber.d("Hell..Yeahh...onViewCreated()")
         subscribers()
         initializeUI()
     }
@@ -133,59 +130,11 @@ class MovieListFragment : Fragment(), Injectable {
         title.text = titleIn
 
         search_icon.setOnClickListener {
-            navController().navigate(MovieListFragmentDirections
-                .actionMoviesFragmentToMovieSearchFragment(false))
+            navController().navigate(
+                MovieListFragmentDirections
+                    .actionMoviesFragmentToMovieSearchFragment(false)
+            )
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Timber.d("Hell..Yeahh...onStart()")
-        activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visible()
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        Timber.d("Hell..Yeahh...onDestroy()")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Timber.d("Hell..Yeahh...onStop()")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Timber.d("Hell..Yeahh...onResume()")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Timber.d("Hell..Yeahh...onPause()")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Timber.d("Hell..Yeahh...onDestroyView()")
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        Timber.d("Hell..Yeahh...onDetach()")
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Timber.d("Hell..Yeahh...onCreate()")
-    }
-
-    override fun onAttachFragment(childFragment: Fragment) {
-        super.onAttachFragment(childFragment)
-        Timber.d("Hell..Yeahh...onAttachFragment()")
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Timber.d("Hell..Yeahh...onAttach()")
     }
 
     /**
