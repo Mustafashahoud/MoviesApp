@@ -1,6 +1,7 @@
 package com.mustafa.movieapp.room
 
 import android.util.SparseIntArray
+import androidx.collection.SparseArrayCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.room.Dao
@@ -98,7 +99,7 @@ abstract class MovieDao {
     }
 
     fun loadDiscoveryMovieListOrdered(movieIds: List<Int>): LiveData<List<Movie>> {
-        val order = SparseIntArray() // SparseArrayCompat can be used
+        val order = SparseArrayCompat<Int>() // SparseArrayCompat can be used
         movieIds.withIndex().forEach {
             order.put(it.value, it.index)
         }

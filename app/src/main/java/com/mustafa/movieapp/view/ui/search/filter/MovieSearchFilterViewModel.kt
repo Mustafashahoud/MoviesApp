@@ -48,7 +48,7 @@ class MovieSearchFilterViewModel @Inject constructor(
             }
         }
 
-    fun loadFilteredMovies(
+    fun setFilters(
         rating: Int?,
         sort: String?,
         year: Int?,
@@ -57,7 +57,7 @@ class MovieSearchFilterViewModel @Inject constructor(
         language: String?,
         runtime: Int?,
         region: String?,
-        page: Int
+        page: Int?
     ) {
         this.sort = sort
         this.year = year
@@ -67,6 +67,10 @@ class MovieSearchFilterViewModel @Inject constructor(
         this.genres = genres
         this.region = region
         this.rating = rating
+        searchMovieFilterPageLiveData.value = page
+    }
+
+    fun setPage(page: Int?) {
         searchMovieFilterPageLiveData.value = page
     }
 
@@ -86,7 +90,11 @@ class MovieSearchFilterViewModel @Inject constructor(
         this.pageFiltersNumber = 1
     }
 
-    val totalFilterResult = discoverRepository.getTotalFilteredResults()
+    val totalFilterResult = Transformations.switchMap(searchMovieFilterPageLiveData) {
+        it?.let {
+            discoverRepository.getTotalFilteredResults()
+        } ?: AbsentLiveData.create()
+    }
 
     fun refresh() {
         searchMovieFilterPageLiveData.value?.let {

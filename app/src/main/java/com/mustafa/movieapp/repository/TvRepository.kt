@@ -25,7 +25,7 @@ class TvRepository @Inject constructor(
         private val service: TvService,
         private val tvDao: TvDao,
         private val appExecutors: AppExecutors)
-    : Repository {
+     {
 
 
     fun loadKeywordList(id: Int): LiveData<Resource<List<Keyword>>> {

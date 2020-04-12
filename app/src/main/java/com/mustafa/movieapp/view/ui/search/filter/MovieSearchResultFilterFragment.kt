@@ -117,7 +117,7 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
 
     override fun resetAndLoadFiltersSortedBy(order: String) {
         viewModel.resetFilterValues()
-        viewModel.loadFilteredMovies(
+        viewModel.setFilters(
             filtersData?.rating,
             order,
             filtersData?.year,

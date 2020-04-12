@@ -28,9 +28,6 @@ constructor(private val peopleRepository: PeopleRepository) : ViewModel() {
         peoplePageLiveData.value = 1
     }
 
-    fun setPeoplePage(page: Int) {
-        peoplePageLiveData.postValue(page)
-    }
     fun loadMore() {
         pageNumber++
         peoplePageLiveData.value = pageNumber

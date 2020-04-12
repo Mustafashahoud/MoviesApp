@@ -2,6 +2,7 @@
 package com.mustafa.movieapp.room
 
 import android.util.SparseIntArray
+import androidx.collection.SparseArrayCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.room.Dao
@@ -63,7 +64,7 @@ abstract class TvDao {
   abstract fun loadDiscoveryTvList(tvIds: List<Int>): LiveData<List<Tv>>
 
   fun loadDiscoveryTvListOrdered(tvIds: List<Int>): LiveData<List<Tv>> {
-    val order = SparseIntArray() // SparseArrayCompat can be used
+    val order = SparseArrayCompat<Int>() // SparseIntArray can be used
     tvIds.withIndex().forEach {
       order.put(it.value, it.index)
     }
@@ -72,7 +73,6 @@ abstract class TvDao {
       tvs.sortedWith(compareBy { order.get(it.id) })
     }
   }
-
 
   @Query("SELECT * FROM Tv WHERE name LIKE :query || '%' OR name LIKE '%' || :query || '%' LIMIT 20" )
   abstract fun searchTvSuggestionResultLiveData(

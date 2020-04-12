@@ -1,0 +1,373 @@
+{
+  "page": 1,
+  "total_results": 39,
+  "total_pages": 2,
+  "results": [
+    {
+      "popularity": 7.417,
+      "vote_count": 131,
+      "video": false,
+      "poster_path": "/rm5idrQxHUh5XDDMU47uKVusQo0.jpg",
+      "id": 42661,
+      "adult": false,
+      "backdrop_path": "/sncFo2xTfZFv7ApUZlqM9QFip8X.jpg",
+      "original_language": "en",
+      "original_title": "The Vikings",
+      "genre_ids": [
+        28,
+        12,
+        18
+      ],
+      "title": "The Vikings",
+      "vote_average": 7.2,
+      "overview": "Viking half-brothers fight over a throne and a beautiful captive.",
+      "release_date": "1958-06-28"
+    },
+    {
+      "popularity": 9.538,
+      "vote_count": 436,
+      "video": false,
+      "poster_path": "/qK3f8jxu8mpvN9V5WndK9UIfpID.jpg",
+      "id": 9642,
+      "adult": false,
+      "backdrop_path": "/qaI0AMzvlrnJ4bIvr7dub2Hvk2P.jpg",
+      "original_language": "fr",
+      "original_title": "Astérix et les Vikings",
+      "genre_ids": [
+        12,
+        16,
+        35,
+        10751
+      ],
+      "title": "Asterix and the Vikings",
+      "vote_average": 6.1,
+      "overview": "Asterix and Obelix have been given a tough mission: Transform the chief's lazy nephew Justforkix into a warrior. When the Vikings abduct him and bring him back to their homeland, Asterix and Obelix must travel to Norway to rescue Justforkix.",
+      "release_date": "2006-04-05"
+    },
+    {
+      "popularity": 3.217,
+      "vote_count": 2,
+      "video": false,
+      "poster_path": null,
+      "id": 374917,
+      "adult": false,
+      "backdrop_path": null,
+      "original_language": "en",
+      "original_title": "The Real Vikings",
+      "genre_ids": [
+        99
+      ],
+      "title": "The Real Vikings",
+      "vote_average": 10,
+      "overview": "Scandinavia s fiercest warriors uncovered.  Sit back as we take an in-depth look at these ferocious sea warriors in this special from the HISTORY Channel.  Consisting of three HISTORY specials:  Foot Soldiers: The Vikings,  The Vikings: Lost Worlds  and Viking Terror  This collection vividly depicts how these raiders, traders, explorers and settlers set sail from Denmark, Norway and Sweden and how they mercilessly plundered Europe.  We ll follow a team of historical detectives who examine evidence from excavations and evaluate scientific studies and historical documents to see where the Vikings raided and what they left in their wake. In Viking Terror, Green Beret Terry Schappert reveals why the Vikings have earned the title The Hells Angels of the Middle Ages, and he ll test their weapons and tactics.",
+      "release_date": "2013-09-09"
+    },
+    {
+      "popularity": 1.214,
+      "id": 464296,
+      "video": false,
+      "vote_count": 1,
+      "vote_average": 8,
+      "title": "Vegas Vikings",
+      "release_date": "2014-12-06",
+      "original_language": "en",
+      "original_title": "Vegas Vikings",
+      "genre_ids": [
+        99,
+        18,
+        53
+      ],
+      "backdrop_path": null,
+      "adult": false,
+      "overview": "A group of fearless, compassionate individuals with Viking spirit set out to turn around the most dangerous neighborhood in Las Vegas, to help the children living there, reducing violent crime with a record 75%.",
+      "poster_path": null
+    },
+    {
+      "popularity": 1.357,
+      "vote_count": 0,
+      "video": false,
+      "poster_path": null,
+      "id": 391580,
+      "adult": false,
+      "backdrop_path": null,
+      "original_language": "en",
+      "original_title": "The Vikings Uncovered",
+      "genre_ids": [
+        99
+      ],
+      "title": "The Vikings Uncovered",
+      "vote_average": 0,
+      "overview": "Dan Snow uncovers the lost Vikings in America with Dr Sarah Parcak. As Sarah searches for Vikings across the Atlantic, Dan explores their journey 500 years before Columbus.",
+      "release_date": "2016-04-04"
+    },
+    {
+      "popularity": 1.403,
+      "vote_count": 3,
+      "video": false,
+      "poster_path": "/oJVQycu4HkUNMonc62uAzHNfKBH.jpg",
+      "id": 181504,
+      "adult": false,
+      "backdrop_path": null,
+      "original_language": "en",
+      "original_title": "Vikings: Journey to New Worlds",
+      "genre_ids": [
+        99,
+        36
+      ],
+      "title": "Vikings: Journey to New Worlds",
+      "vote_average": 6.8,
+      "overview": "Filmmaker Marc Fafard examines the historical and cultural significance of the seafaring Vikings.",
+      "release_date": "2004-09-10"
+    },
+    {
+      "popularity": 0.852,
+      "vote_count": 0,
+      "video": false,
+      "poster_path": "/pJsYFYXoMYOxhqNq3zriTCli4Bf.jpg",
+      "id": 622735,
+      "adult": false,
+      "backdrop_path": "/tN6y2Gm0FarrcTj9p8ge9WY3VgF.jpg",
+      "original_language": "en",
+      "original_title": "NOVA: Vikings Unearthed",
+      "genre_ids": [
+        99
+      ],
+      "title": "NOVA: Vikings Unearthed",
+      "vote_average": 0,
+      "overview": "They were pioneering warriors, expert seafarers, and colonists of the North Atlantic realm. The Vikings even claimed in their sagas to have reached America. Now, renowned archaeologist Sarah Parcak uncovers new clues about their legendary expeditions and settlements.",
+      "release_date": "2016-07-01"
+    },
+    {
+      "popularity": 0.6,
+      "vote_count": 0,
+      "video": false,
+      "poster_path": null,
+      "id": 290675,
+      "adult": false,
+      "backdrop_path": null,
+      "original_language": "en",
+      "original_title": "Quark and the Vikings",
+      "genre_ids": [
+        16
+      ],
+      "title": "Quark and the Vikings",
+      "vote_average": 0,
+      "overview": "Quark the troll gets in the business of a horde of vikings.",
+      "release_date": "1987-12-02"
+    },
+    {
+      "popularity": 0.6,
+      "id": 367460,
+      "video": false,
+      "vote_count": 0,
+      "vote_average": 0,
+      "title": "A Vikings Carol",
+      "release_date": "",
+      "original_language": "en",
+      "original_title": "A Vikings Carol",
+      "genre_ids": [],
+      "backdrop_path": null,
+      "adult": false,
+      "overview": "A coming of age film that examines the reality that two sons face, seeing their aging father come to terms with his certain death. The three become closer as their Christmas reunion becomes joy filled. A turkey celebration prepairs them for the eventual send off of a galant Father to Vahalla.",
+      "poster_path": null
+    },
+    {
+      "popularity": 3.569,
+      "id": 561697,
+      "video": false,
+      "vote_count": 0,
+      "vote_average": 0,
+      "title": "Amon Amarth: The Pursuit of Vikings: 25 Years In The Eye of the Storm",
+      "release_date": "2018-11-13",
+      "original_language": "en",
+      "original_title": "Amon Amarth: The Pursuit of Vikings: 25 Years In The Eye of the Storm",
+      "genre_ids": [
+        10402
+      ],
+      "backdrop_path": "/rEITfB1qDPEMzdppOd8GEotHUI2.jpg",
+      "adult": false,
+      "overview": "On November 16th, Amon Amarth will release their new documentary and supporting live album(s), The Pursuit Of Vikings: 25 Years In The Eye Of The Storm – which includes a retrospective documentary that features a wealth of live and behind-the-scenes content and extensive band interviews. This film tells the Swedish quintet’s history, through both their own eyes and those of the fans that have supported them along the way. It is a thrilling collection that pays respect to the faithful, as well as making for a detailed and riveting introduction for those new to their inspiring story. Paired with this documentary is the live video/audio, which contains two different sets at 2017′s Summer Breeze Festival in Dinkelsbuhl, Germany, capturing the unit at their very best.",
+      "poster_path": "/fkbRjOOvygs3JlTRvdL5iSS47m9.jpg"
+    },
+    {
+      "popularity": 0.845,
+      "vote_count": 0,
+      "video": false,
+      "poster_path": null,
+      "id": 434754,
+      "adult": false,
+      "backdrop_path": null,
+      "original_language": "en",
+      "original_title": "The Last Battle of the Vikings",
+      "genre_ids": [],
+      "title": "The Last Battle of the Vikings",
+      "vote_average": 0,
+      "overview": "Documentary on viking life and conquest.",
+      "release_date": "2012-02-13"
+    },
+    {
+      "popularity": 0.6,
+      "id": 470708,
+      "video": false,
+      "vote_count": 2,
+      "vote_average": 4,
+      "title": "Radioactive Cannibal Vikings from Hell",
+      "release_date": "",
+      "original_language": "sv",
+      "original_title": "Radioactive Cannibal Vikings from Hell",
+      "genre_ids": [
+        28,
+        35,
+        27
+      ],
+      "backdrop_path": null,
+      "adult": false,
+      "overview": "In a near future, four criminal psychotics divides themselves from society in a road trip of random ultra violence upon anyone that crosses them. Their violent nature soon forces them into the Swedish country-roads on their flight from the police. What they don't know is that their murderous joy-ride soon will turn into a desperate fight for their lives as they end up in a village that have been cut off from the rest of the world since the age of the Vikings, and where the government have disposed radioactive waste that has turned the villagers into mutated, cannibalistic monsters! And this is a fight our band of outlaws are not sure to win.",
+      "poster_path": "/iBGLwBrg30DA3kvXKGASrZTrGfC.jpg"
+    },
+    {
+      "popularity": 0.6,
+      "id": 295161,
+      "video": false,
+      "vote_count": 0,
+      "vote_average": 0,
+      "title": "Vikings From The British Museum",
+      "release_date": "2014-10-07",
+      "original_language": "en",
+      "original_title": "Vikings From The British Museum",
+      "genre_ids": [],
+      "backdrop_path": null,
+      "adult": false,
+      "overview": "Concert/special event",
+      "poster_path": null
+    },
+    {
+      "popularity": 0.6,
+      "id": 685825,
+      "video": false,
+      "vote_count": 0,
+      "vote_average": 0,
+      "title": "Vikings: Warriors From The Sea",
+      "release_date": "2007-01-01",
+      "original_language": "en",
+      "original_title": "Vikings: Warriors From The Sea",
+      "genre_ids": [
+        99,
+        36
+      ],
+      "backdrop_path": null,
+      "adult": false,
+      "overview": "Who were the real Vikings', what were they really like' The legend of the Vikings is brought to life in a dramatic and gripping program set in the tenth century and based around the island of Karmoy off the western coast of Norway - home of the first Kings.",
+      "poster_path": null
+    },
+    {
+      "popularity": 0.6,
+      "id": 513525,
+      "video": false,
+      "vote_count": 0,
+      "vote_average": 0,
+      "title": "Ils ont changé le monde - Les Vikings",
+      "release_date": "2017-09-18",
+      "original_language": "fr",
+      "original_title": "Ils ont changé le monde - Les Vikings",
+      "genre_ids": [
+        99
+      ],
+      "backdrop_path": "/eM9038DLla7yyRANZKyl1KOE6hz.jpg",
+      "adult": false,
+      "overview": "",
+      "poster_path": "/j1LSxGiY6iB1Y6RVvD80vjUfMKi.jpg"
+    },
+    {
+      "popularity": 0.6,
+      "genre_ids": [],
+      "video": true,
+      "vote_count": 0,
+      "original_language": "en",
+      "adult": false,
+      "title": "The Tennessee Titans vs the Minnesota Vikings",
+      "original_title": "The Tennessee Titans vs the Minnesota Vikings",
+      "backdrop_path": null,
+      "id": 423538,
+      "vote_average": 0,
+      "overview": "The Tennessee Titans take on the Minnesota Vikings in an interconference game",
+      "poster_path": null
+    },
+    {
+      "popularity": 1.695,
+      "vote_count": 0,
+      "video": false,
+      "poster_path": null,
+      "id": 211972,
+      "adult": false,
+      "backdrop_path": null,
+      "original_language": "sv",
+      "original_title": "Här kommer bärsärkarna",
+      "genre_ids": [
+        12,
+        35
+      ],
+      "title": "Two Vikings",
+      "vote_average": 0,
+      "overview": "The viking chief Hjorvard has two wild sons, Glum and Garm, both notorious berserkers.",
+      "release_date": "1965-03-03"
+    },
+    {
+      "popularity": 0.6,
+      "id": 430633,
+      "video": false,
+      "vote_count": 0,
+      "vote_average": 0,
+      "title": "The Viking's Daughter: The Story of the Ancient Norsemen",
+      "release_date": "1908-08-01",
+      "original_language": "en",
+      "original_title": "The Viking's Daughter: The Story of the Ancient Norsemen",
+      "genre_ids": [
+        18,
+        12
+      ],
+      "backdrop_path": null,
+      "adult": false,
+      "overview": "A Saxon prisoner rescues his Viking's captor's daughter, resulting in his freedom and their marriage.",
+      "poster_path": null
+    },
+    {
+      "popularity": 3.103,
+      "vote_count": 12,
+      "video": false,
+      "poster_path": "/6N0fyIx8yAGnA1mdbCxctsWZtr3.jpg",
+      "id": 86256,
+      "adult": false,
+      "backdrop_path": "/iftpkNEXXz5orvzChnNOHbnc1LB.jpg",
+      "original_language": "tr",
+      "original_title": "Tarkan Viking Kanı",
+      "genre_ids": [
+        12,
+        14
+      ],
+      "title": "Tarkan and the Blood of the Vikings",
+      "vote_average": 4.9,
+      "overview": "Tarkan Versus the Vikings, Turkey’s answer to the Italian sword and sandal films, is more fun than the proverbial barrel of monkeys and just as crazed. Everything in this movie is energetic, outsized, colorful and wacky, from Tarkan’s mighty moustache to the Vikings’ red and blue fuzzy underoos. Tarkan doesn’t just walk around, like Hercules - he runs, he leaps, he literally bounces from place to place. The gigantic melees capture the frenetic flavor of old Errol Flynn movies, but up the ante of sex and violence to please ‘70s moviegoers. It’s like Conan the Barbarian done on $10,000 and amphetamines. - CSB",
+      "release_date": "1971-01-01"
+    },
+    {
+      "popularity": 4.695,
+      "vote_count": 14,
+      "video": false,
+      "poster_path": "/nafiqo261ZuIohTsXxnHzMGnrTX.jpg",
+      "id": 293894,
+      "adult": false,
+      "backdrop_path": null,
+      "original_language": "en",
+      "original_title": "Viking: The Berserkers",
+      "genre_ids": [
+        27,
+        53
+      ],
+      "title": "Viking: The Berserkers",
+      "vote_average": 5.1,
+      "overview": "The Hunger Games heads back to the Dark Ages when a group of five young Saxons is captured by a clan of fearsome Viking warriors and used as prey in a ritualistic manhunt. High on a potion that turns them \"berserk\" the brutal hunters are soon on the scent of the terrified youngsters in a desperate battle for survival from the ritualistic manhunt. Written and directed by Welsh film-maker Antony Smith.",
+      "release_date": "2014-09-15"
+    }
+  ]
+}

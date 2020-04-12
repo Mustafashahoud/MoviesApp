@@ -25,7 +25,7 @@ class TvsRepository @Inject constructor(
     private val db: AppDatabase,
     private val tvDao: TvDao,
     private val appExecutors: AppExecutors
-) : Repository {
+) {
 
     private val photoListRateLimit = RateLimiter<String>(1, TimeUnit.DAYS)
     fun loadTvs(page: Int): LiveData<Resource<List<Tv>>> {

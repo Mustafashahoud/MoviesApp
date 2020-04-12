@@ -46,15 +46,14 @@ class TvSearchFilterViewModel @Inject constructor(
             }
         }
 
-    fun loadFilteredTvs(
-        rating: Int?,
-        sort: String?,
-        year: Int?,
-        genres: String?,
-        keywords: String?,
-        language: String?,
-        runtime: Int?,
-        region: String?,
+    fun setFilters(
+        rating: Int? = null,
+        sort: String? = null,
+        year: Int? = null,
+        keywords: String? = null,
+        genres: String? = null,
+        language: String? = null,
+        runtime: Int? = null,
         page: Int
     ) {
         this.sort = sort
@@ -64,6 +63,11 @@ class TvSearchFilterViewModel @Inject constructor(
         this.runtime = runtime
         this.genres = genres
         this.rating = rating
+        searchTvFilterPageLiveData.value = page
+    }
+
+    //For Testing
+    fun setPage(page: Int?) {
         searchTvFilterPageLiveData.value = page
     }
 
@@ -83,7 +87,12 @@ class TvSearchFilterViewModel @Inject constructor(
         this.pageFiltersNumber = 1
     }
 
-    val totalTvFilterResult = discoverRepository. getTotalTvFilteredResults()
+    val totalTvFilterResult = Transformations.switchMap(searchTvFilterPageLiveData) {
+        it?.let {
+            discoverRepository. getTotalTvFilteredResults()
+        } ?: AbsentLiveData.create()
+    }
+
 
     fun refresh() {
         searchTvFilterPageLiveData.value?.let {

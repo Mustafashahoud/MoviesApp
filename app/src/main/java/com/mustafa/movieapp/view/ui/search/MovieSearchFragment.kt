@@ -139,7 +139,7 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
     }
 
     override fun setSuggestionsQuery(newText: String?) {
-        viewModel.setMovieSuggestionsQuery(newText!!)
+        viewModel.setMovieSuggestionsQuery(newText)
     }
 
 }

@@ -132,7 +132,7 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
     }
 
     override fun setSuggestionsQuery(newText: String?) {
-        viewModel.setTvSuggestionsQuery(newText!!)
+        viewModel.setTvSuggestionsQuery(newText)
     }
 
 }

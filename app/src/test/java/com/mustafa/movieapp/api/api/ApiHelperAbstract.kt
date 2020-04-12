@@ -7,6 +7,8 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import okio.Okio
+import okio.buffer
+import okio.source
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.After
@@ -20,7 +22,7 @@ import java.io.IOException
 import java.nio.charset.StandardCharsets
 
 @RunWith(JUnit4::class)
-abstract class ApiAbstract<T> {
+abstract class ApiHelperAbstract<T> {
   @Rule
   @JvmField
   val instantExecutorRule: InstantTaskExecutorRule = InstantTaskExecutorRule()
@@ -48,7 +50,7 @@ abstract class ApiAbstract<T> {
   @Throws(IOException::class)
   private fun enqueueResponse(fileName: String, headers: Map<String, String>) {
     val inputStream = javaClass.classLoader!!.getResourceAsStream("api-response/$fileName")
-    val source = Okio.buffer(Okio.source(inputStream))
+    val source = inputStream.source().buffer()
     val mockResponse = MockResponse()
     for ((key, value) in headers) {
       mockResponse.addHeader(key, value)

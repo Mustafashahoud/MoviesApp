@@ -34,7 +34,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled false
-        testInstrumentationRunner "com.mustafa.movieapp.runner.AndroidJunitTestRunner"
+        testInstrumentationRunner "com.mustafa.movieapp.runner.MovieGuide"
         buildConfigField "String", "TMDB_API_KEY", "\"${getProperty("local.properties", "tmdb_api_key")}\""
     }
     kotlinOptions {
@@ -53,22 +53,44 @@ android {
         preDexLibraries true
     }
     sourceSets {
-        androidTest.java.srcDirs += "src/test-common/java"
-        test.java.srcDirs += "src/test-common/java"
+
+        String sharedTestDir = "src/test-common/java"
+        test {
+            java.srcDirs += sharedTestDir
+        }
+        androidTest {
+            java.srcDirs += sharedTestDir
+        }
+//        androidTest.java.srcDirs += "src/test-common/java"
+//        test.java.srcDirs += "src/test-common/java"
     }
     buildTypes {
         debug {
-            applicationIdSuffix ".debug"
+            minifyEnabled false
+            testCoverageEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            testProguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguardTest-rules.pro'
         }
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    testOptions.unitTests {
+        returnDefaultValues = true
+        all {
+            testLogging {
+                events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+            }
+        }
     }
 }
 
@@ -172,4 +194,40 @@ dependencies {
     androidTestImplementation "androidx.test:rules:$androidxTestRules"
     androidTestImplementation "androidx.test:runner:$androidxTestRules"
     androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+}
+task fullCoverageReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports."
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
+                      '**/*Test*.*', 'android/**/*.*',
+                      '**/*_MembersInjector.class',
+                      '**/Dagger*Component.class',
+                      '**/Dagger*Component$Builder.class',
+                      '**/*_*Factory.class',
+                      '**/*ComponentImpl.class',
+                      '**/*SubComponentBuilder.class']
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+
+    // coverageSourceDirs
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.from = files([mainSrc])
+    classDirectories.from = files([debugTree])
+    executionData.from = fileTree(dir: "$buildDir", includes: [
+            "jacoco/testDebugUnitTest.exec",
+            "outputs/code-coverage/connected/*coverage.ec"
+    ])
+}
+
+// we need all open to run tests which  a we enable only for debug builds.
+project.tasks.whenTaskAdded {
+    if (it.name == "testReleaseUnitTest") {
+        it.enabled = false
+    }
 }

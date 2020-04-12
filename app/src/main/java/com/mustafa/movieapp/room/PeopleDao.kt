@@ -1,6 +1,7 @@
 package com.mustafa.movieapp.room
 
 import android.util.SparseIntArray
+import androidx.collection.SparseArrayCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.room.Dao
@@ -22,9 +23,6 @@ abstract class PeopleDao {
     @Query("SELECT * FROM people WHERE id = :id_")
     abstract fun getPerson(id_: Int): Person
 
-    @Query("SELECT * FROM People WHERE page = :page_")
-    abstract fun getPeople(page_: Int): LiveData<List<Person>>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertPeopleResult(result: PeopleResult)
 
@@ -41,13 +39,13 @@ abstract class PeopleDao {
     abstract fun loadPeopleList(personIds: List<Int>): LiveData<List<Person>>
 
 
-    fun loadFilteredTvListOrdered(tvIds: List<Int>): LiveData<List<Person>> {
-        val order = SparseIntArray() // SparseArrayCompat can be used
-        tvIds.withIndex().forEach {
+    fun loadPeopleListOrdered(peopleIds: List<Int>): LiveData<List<Person>> {
+        val order = SparseArrayCompat<Int>() // SparseArrayCompat can be used
+        peopleIds.withIndex().forEach {
             order.put(it.value, it.index)
         }
         return Transformations.map(
-            loadPeopleList(tvIds)
+            loadPeopleList(peopleIds)
         ) { people ->
             people.sortedWith(compareBy { order.get(it.id) })
         }

@@ -60,7 +60,7 @@ class TvSearchResultFragment : Fragment(), Injectable {
 
         subscribers()
 
-        viewModel.setTvSearchQueryAndPage(getQuerySafeArgs(), 1)
+        viewModel.setSearchTvQueryAndPage(getQuerySafeArgs(), 1)
 
         with(binding) {
             lifecycleOwner = this@TvSearchResultFragment

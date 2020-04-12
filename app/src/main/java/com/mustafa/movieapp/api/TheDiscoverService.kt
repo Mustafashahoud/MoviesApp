@@ -36,7 +36,7 @@ interface TheDiscoverService {
 
   /**
    *
-   * @param [query] a ame of a movie to be searched for.
+   * @param [query] name of a movie to be searched for.
    * @param [page] Specify the page of results to query.
    * @return [DiscoverMovieResponse] response
    */
@@ -47,23 +47,13 @@ interface TheDiscoverService {
 
     /**
      *
-     * @param [query] a ame of a tv to be searched for.
+     * @param [query] name of a tv to be searched for.
      * @param [page] Specify the page of results to query.
      * @return [DiscoverTvResponse] response
      */
     @GET("/3/search/tv")
     fun searchTvs(@Query("query") query: String,
                      @Query("page") page: Int) : LiveData<ApiResponse<DiscoverTvResponse>>
-
-
-  /**
-   * @param [query] a name of a person to be searched for.
-   * @param [page] Specify the page of results to query.
-   * @return [PeopleResponse] response
-   */
-  @GET("/3/search/people")
-  fun searchPeople(@Query("query") query: String,
-                   @Query("page") page: Int) : LiveData<ApiResponse<PeopleResponse>>
 
 
   /**

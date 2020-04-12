@@ -15,16 +15,18 @@ import com.mustafa.movieapp.models.network.KeywordListResponse
 import com.mustafa.movieapp.models.network.ReviewListResponse
 import com.mustafa.movieapp.models.network.VideoListResponse
 import com.mustafa.movieapp.room.MovieDao
+import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.view.ui.common.AppExecutors
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
 class MovieRepository @Inject constructor(
         private val service: MovieService,
         private val movieDao: MovieDao,
         private val appExecutors: AppExecutors
-) : Repository {
+)  {
 
     fun loadKeywordList(id: Int): LiveData<Resource<List<Keyword>>> {
         return object : NetworkBoundResource<

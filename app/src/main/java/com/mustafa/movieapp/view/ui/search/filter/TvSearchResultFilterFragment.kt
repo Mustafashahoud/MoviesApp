@@ -116,7 +116,7 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
 
     override fun resetAndLoadFiltersSortedBy(order: String) {
         viewModel.resetFilterValues()
-        viewModel.loadFilteredTvs(
+        viewModel.setFilters(
             filtersData?.rating,
             order,
             filtersData?.year,
@@ -124,7 +124,6 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
             filtersData?.keywords,
             filtersData?.language,
             filtersData?.runtime,
-            filtersData?.region,
             1
         )
     }

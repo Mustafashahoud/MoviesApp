@@ -11,18 +11,20 @@ import com.mustafa.movieapp.models.entity.*
 import com.mustafa.movieapp.models.network.*
 import com.mustafa.movieapp.room.AppDatabase
 import com.mustafa.movieapp.room.PeopleDao
+import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.AbsentLiveData
 import com.mustafa.movieapp.view.ui.common.AppExecutors
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
 class PeopleRepository @Inject constructor(
     private val peopleService: PeopleService,
     private val peopleDao: PeopleDao,
     private val db: AppDatabase,
     private val appExecutors: AppExecutors
-) : Repository {
+)  {
 
     fun loadPeople(page: Int): LiveData<Resource<List<Person>>> {
         return object :
@@ -67,7 +69,7 @@ class PeopleRepository @Inject constructor(
                     if (searchData == null) {
                         AbsentLiveData.create()
                     } else {
-                        peopleDao.loadFilteredTvListOrdered(searchData.ids)
+                        peopleDao.loadPeopleListOrdered(searchData.ids)
                     }
                 }
             }

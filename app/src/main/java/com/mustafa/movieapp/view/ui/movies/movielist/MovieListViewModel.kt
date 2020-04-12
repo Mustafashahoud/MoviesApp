@@ -33,7 +33,7 @@ class MovieListViewModel @Inject constructor(
         moviePageLiveData.value = 1
     }
 
-    final fun setMoviePage(page: Int) {
+    fun setMoviePage(page: Int) {
         moviePageLiveData.value = page
     }
 

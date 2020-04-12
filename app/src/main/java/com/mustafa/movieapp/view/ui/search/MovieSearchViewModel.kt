@@ -16,15 +16,14 @@ class MovieSearchViewModel @Inject constructor(
     private val discoverRepository: DiscoverRepository
 ) : ViewModel() {
 
-
     private val searchMoviePageLiveData: MutableLiveData<Int> = MutableLiveData()
     private var moviesPageNumber = 1
-
     private val _movieQuery = MutableLiveData<String>()
+
     val queryMovieLiveData: LiveData<String> = _movieQuery
     val searchMovieListLiveData: LiveData<Resource<List<Movie>>> = Transformations
         .switchMap(searchMoviePageLiveData) {
-            if (it == null || queryMovieLiveData.value == null) {
+            if (it == null || queryMovieLiveData.value.isNullOrEmpty()) {
                 AbsentLiveData.create()
             } else {
                 discoverRepository.searchMovies(queryMovieLiveData.value!!, it)
@@ -53,11 +52,6 @@ class MovieSearchViewModel @Inject constructor(
         }
     }
 
-    fun resetPageNumber() {
-        moviesPageNumber = 1
-    }
-
-
     private val _movieSuggestionsQuery = MutableLiveData<String>()
     private val movieSuggestionsQuery: LiveData<String> = _movieSuggestionsQuery
     val movieSuggestions: LiveData<List<Movie>> = Transformations
@@ -69,7 +63,7 @@ class MovieSearchViewModel @Inject constructor(
             }
         }
 
-    fun setMovieSuggestionsQuery(newText: String) {
+    fun setMovieSuggestionsQuery(newText: String?) {
         _movieSuggestionsQuery.value = newText
     }
 

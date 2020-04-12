@@ -30,4 +30,26 @@ data class Tv(
   val original_name: String,
   var search: Boolean?,
   var filter: Boolean?
-) : Parcelable
+) : Parcelable {
+  constructor(id: Int, search: Boolean?, filter: Boolean?) :this(
+    1,
+    emptyList(),
+    emptyList(),
+    emptyList(),
+    "",
+    0f,
+    id,
+    "",
+    0f,
+    "",
+    "",
+    ArrayList(),
+    ArrayList(),
+    "",
+    1,
+    "",
+    "",
+    search,
+    filter
+  )
+}

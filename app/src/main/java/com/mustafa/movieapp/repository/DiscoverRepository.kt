@@ -11,6 +11,7 @@ import com.mustafa.movieapp.models.network.DiscoverTvResponse
 import com.mustafa.movieapp.room.AppDatabase
 import com.mustafa.movieapp.room.MovieDao
 import com.mustafa.movieapp.room.TvDao
+import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.AbsentLiveData
 import com.mustafa.movieapp.utils.RateLimiter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
 class DiscoverRepository @Inject constructor(
     private val discoverService: TheDiscoverService,
@@ -25,7 +27,7 @@ class DiscoverRepository @Inject constructor(
     private val db: AppDatabase,
     private val tvDao: TvDao,
     private val appExecutors: AppExecutors
-) : Repository {
+)  {
 
     private val photoListRateLimit = RateLimiter<String>(1, TimeUnit.DAYS)
 
@@ -270,27 +272,6 @@ class DiscoverRepository @Inject constructor(
         }.asLiveData()
     }
 
-    fun getMovieSuggestions(query: String, page: Int): LiveData<List<Movie>> {
-        val results = MediatorLiveData<List<Movie>>()
-        val response = discoverService.searchMovies(query, page)
-        results.addSource(response) {
-            when (response.value) {
-                is ApiSuccessResponse -> {
-                    results.value =
-                        (response.value as ApiSuccessResponse<DiscoverMovieResponse>).body.results
-                }
-                is ApiEmptyResponse -> {
-                    results.value = null
-                }
-                is ApiErrorResponse -> {
-                    results.value = null
-                }
-            }
-        }
-        return results
-    }
-
-
     fun getMovieSuggestionsFromRoom(query: String?): LiveData<List<Movie>> {
         val movieQuery = MutableLiveData<String>()
         movieQuery.value = query
@@ -334,14 +315,14 @@ class DiscoverRepository @Inject constructor(
     fun getTotalFilteredResults(): LiveData<String> = totalFilteredResults
 
     fun loadFilteredMovies(
-        rating: Int?,
-        sort: String?,
-        year: Int?,
-        keywords: String?,
-        genres: String?,
-        language: String?,
-        runtime: Int?,
-        region: String?,
+        rating: Int? = null,
+        sort: String? = null,
+        year: Int? = null,
+        keywords: String? = null,
+        genres: String? = null,
+        language: String? = null,
+        runtime: Int? = null,
+        region: String? = null,
         page: Int
     ): LiveData<Resource<List<Movie>>> {
         return object :
@@ -418,13 +399,13 @@ class DiscoverRepository @Inject constructor(
     fun getTotalTvFilteredResults(): LiveData<String> = totalTvFilteredResults
 
     fun loadFilteredTvs(
-        rating: Int?,
-        sort: String?,
-        year: Int?,
-        keywords: String?,
-        genres: String?,
-        language: String?,
-        runtime: Int?,
+        rating: Int? = null,
+        sort: String? = null,
+        year: Int? = null,
+        keywords: String? = null,
+        genres: String? = null,
+        language: String? = null,
+        runtime: Int? = null,
         page: Int
     ): LiveData<Resource<List<Tv>>> {
 

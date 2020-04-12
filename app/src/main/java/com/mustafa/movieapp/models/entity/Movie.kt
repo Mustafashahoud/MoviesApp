@@ -38,28 +38,28 @@ data class Movie(
 ) : Parcelable {
 
   /**
-   * Empty constructor will be used in [@SuggestionsAdapter]
+   * Empty constructor will be used in Testing
    */
   @Ignore
-  constructor(id: Int, title: String, poster_path: String?, vote_average: Float, release_date: String?) : this(
+  constructor(id: Int) : this(
     id,
-    0,
+    1,
     null,
     null,
     null,
-    poster_path,
+    "poster_path",
     false,
     "",
-    release_date,
+    "1992",
     listOf(),
     "",
     "",
-    title,
+    "title",
     null,
     0F,
     0,
     false,
-    vote_average,
+    0f,
     false,
     false
   )

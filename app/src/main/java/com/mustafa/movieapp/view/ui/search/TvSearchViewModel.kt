@@ -23,7 +23,7 @@ class TvSearchViewModel @Inject constructor(
     val queryTvLiveData: LiveData<String> = _tvQuery
     val searchTvListLiveData: LiveData<Resource<List<Tv>>> = Transformations
         .switchMap(searchTvPageLiveData) {
-            if (it == null || queryTvLiveData.value == null) {
+            if (it == null || queryTvLiveData.value.isNullOrEmpty()) {
                 AbsentLiveData.create()
             } else {
                 discoverRepository.searchTvs(queryTvLiveData.value!!, it)
@@ -46,7 +46,7 @@ class TvSearchViewModel @Inject constructor(
         searchTvPageLiveData.value = tvsPageNumber
     }
 
-    fun setTvSearchQueryAndPage(query: String?, page: Int) {
+    fun setSearchTvQueryAndPage(query: String?, page: Int) {
         val input = query?.toLowerCase(Locale.getDefault())?.trim()
         if (input == queryTvLiveData.value) {
             return
@@ -66,7 +66,7 @@ class TvSearchViewModel @Inject constructor(
             }
         }
 
-    fun setTvSuggestionsQuery(newText: String) {
+    fun setTvSuggestionsQuery(newText: String?) {
         _tvSuggestionsQuery.value = newText
     }
 

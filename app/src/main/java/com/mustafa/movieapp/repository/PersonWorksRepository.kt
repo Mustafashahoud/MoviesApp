@@ -24,7 +24,7 @@ class PersonWorksRepository @Inject constructor(
     private val peopleService: PeopleService,
     private val peopleDao: PeopleDao,
     private val appExecutors: AppExecutors
-) : Repository {
+) {
 
     fun loadMoviesForPerson(personId: Int): LiveData<Resource<List<MoviePerson>>> {
         return object :
