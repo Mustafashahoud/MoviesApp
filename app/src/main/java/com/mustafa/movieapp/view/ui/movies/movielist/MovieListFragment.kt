@@ -1,6 +1,5 @@
 package com.mustafa.movieapp.view.ui.movies.movielist
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,12 +14,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentMoviesBinding
 import com.mustafa.movieapp.di.Injectable
-import com.mustafa.movieapp.extension.visible
 import com.mustafa.movieapp.models.Status
 import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.testing.OpenForTesting
@@ -30,10 +27,8 @@ import com.mustafa.movieapp.view.ui.common.AppExecutors
 import com.mustafa.movieapp.view.ui.common.RetryCallback
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.toolbar_search.*
-import timber.log.Timber
 import javax.inject.Inject
 
-@Suppress("SpellCheckingInspection")
 @OpenForTesting
 class MovieListFragment : Fragment(), Injectable {
 
@@ -65,13 +60,10 @@ class MovieListFragment : Fragment(), Injectable {
             container,
             false
         )
-        Timber.d("Hell..Yeahh...onCreateView()")
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Timber.d("Hell..Yeahh...onViewCreated()")
         subscribers()
         initializeUI()
     }
@@ -133,59 +125,11 @@ class MovieListFragment : Fragment(), Injectable {
         title.text = titleIn
 
         search_icon.setOnClickListener {
-            navController().navigate(MovieListFragmentDirections
-                .actionMoviesFragmentToMovieSearchFragment(false))
+            navController().navigate(
+                MovieListFragmentDirections
+                    .actionMoviesFragmentToMovieSearchFragment(false)
+            )
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Timber.d("Hell..Yeahh...onStart()")
-        activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visible()
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        Timber.d("Hell..Yeahh...onDestroy()")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Timber.d("Hell..Yeahh...onStop()")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Timber.d("Hell..Yeahh...onResume()")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Timber.d("Hell..Yeahh...onPause()")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Timber.d("Hell..Yeahh...onDestroyView()")
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        Timber.d("Hell..Yeahh...onDetach()")
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Timber.d("Hell..Yeahh...onCreate()")
-    }
-
-    override fun onAttachFragment(childFragment: Fragment) {
-        super.onAttachFragment(childFragment)
-        Timber.d("Hell..Yeahh...onAttachFragment()")
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Timber.d("Hell..Yeahh...onAttach()")
     }
 
     /**
