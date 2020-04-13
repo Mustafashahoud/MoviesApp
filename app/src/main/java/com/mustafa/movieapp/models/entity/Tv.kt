@@ -31,7 +31,7 @@ data class Tv(
   var search: Boolean?,
   var filter: Boolean?
 ) : Parcelable {
-  constructor(id: Int, search: Boolean?, filter: Boolean?) :this(
+  constructor(id: Int, search: Boolean? = false, filter: Boolean? = false, name: String = "ANY_TV") :this(
     1,
     emptyList(),
     emptyList(),
@@ -47,7 +47,7 @@ data class Tv(
     ArrayList(),
     "",
     1,
-    "",
+    name,
     "",
     search,
     filter

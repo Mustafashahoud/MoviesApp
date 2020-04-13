@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -11,7 +12,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieapp.R
@@ -36,7 +36,7 @@ class TvListFragment : Fragment(), Injectable {
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    private val dataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
     private val viewModel by viewModels<TvListViewModel> {
         viewModelFactory
@@ -91,13 +91,14 @@ class TvListFragment : Fragment(), Injectable {
         recyclerView_list_tvs.layoutManager = GridLayoutManager(context, 3)
         recyclerView_list_tvs.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val layoutManager = recyclerView.layoutManager as GridLayoutManager
                 val lastPosition = layoutManager.findLastVisibleItemPosition()
                 if (lastPosition == adapter.itemCount - 1
                     && viewModel.tvListLiveData.value?.status != Status.LOADING
-                    && dy > 0
                 ) {
-                    viewModel.loadMore()
+                    viewModel.tvListLiveData.value?.let {
+                        if (it.hasNextPage) viewModel.loadMore()
+                    }
                 }
             }
         })

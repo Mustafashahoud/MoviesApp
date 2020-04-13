@@ -11,7 +11,7 @@ import com.mustafa.movieapp.models.network.PersonDetail
 class MockTestUtil {
     companion object {
         fun mockMovie() = Movie(123)
-        fun mockTv() = Tv(123, search = false, filter = false)
+        fun mockTv() = Tv(123)
         fun mockPerson() = Person(1, mockPersonDetail(), "/", false, 123, "", 0f, false)
         fun mockKeywordList(): List<Keyword> {
             val keywords = ArrayList<Keyword>()
@@ -42,6 +42,12 @@ class MockTestUtil {
         fun createMovies(count: Int): List<Movie> {
             return (0 until count).map {
                 Movie(it)
+            }
+        }
+
+        fun createTvs(count: Int): List<Tv> {
+            return (0 until count).map {
+                Tv(it)
             }
         }
     }
