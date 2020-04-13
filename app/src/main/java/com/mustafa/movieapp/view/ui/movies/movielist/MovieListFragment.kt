@@ -98,7 +98,9 @@ class MovieListFragment : Fragment(), Injectable {
                 if (lastPosition == adapter.itemCount - 1
                     && viewModel.movieListLiveData.value?.status != Status.LOADING
                 ) {
-                    viewModel.loadMore()
+                    viewModel.movieListLiveData.value?.let {
+                        if (it.hasNextPage) viewModel.loadMore()
+                    }
                 }
             }
         })
