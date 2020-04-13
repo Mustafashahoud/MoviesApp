@@ -26,8 +26,6 @@ class MovieApp : Application(), HasAndroidInjector {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
-
-//    Stetho.initializeWithDefaults(this)
     }
 
     override fun androidInjector(): AndroidInjector<Any> {
