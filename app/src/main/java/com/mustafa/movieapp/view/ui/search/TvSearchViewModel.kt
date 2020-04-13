@@ -70,7 +70,9 @@ class TvSearchViewModel @Inject constructor(
         _tvSuggestionsQuery.value = newText
     }
 
-    fun getTvRecentQueries(): LiveData<List<TvRecentQueries>> = discoverRepository.getTvRecentQueries()
+    fun getTvRecentQueries(): LiveData<List<TvRecentQueries>> =
+        discoverRepository.getTvRecentQueries()
+
     fun deleteAllTvRecentQueries() {
         discoverRepository.deleteAllTvRecentQueries()
     }

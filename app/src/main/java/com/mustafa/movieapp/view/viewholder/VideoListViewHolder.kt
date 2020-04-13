@@ -1,4 +1,3 @@
-
 package com.mustafa.movieapp.view.viewholder
 
 import android.view.View
@@ -10,39 +9,41 @@ import com.mustafa.movieapp.models.Video
 import kotlinx.android.synthetic.main.item_video.view.*
 
 class VideoListViewHolder(
-  val view: View,
-  private val delegate: Delegate
+    val view: View,
+    private val delegate: Delegate
 ) : BaseViewHolder(view) {
 
-  interface Delegate {
-    fun onItemClicked(video: Video)
-  }
-
-  private lateinit var video: Video
-
-  override fun bindData(data: Any) {
-    if (data is Video) {
-      video = data
-      drawItem()
+    interface Delegate {
+        fun onItemClicked(video: Video)
     }
-  }
 
-  private fun drawItem() {
-    itemView.run {
-      item_video_title.text = video.name
-      Glide.with(context)
-        .load(Api.getYoutubeThumbnailPath(video.key))
-        .listener(GlidePalette.with(Api.getYoutubeThumbnailPath(video.key))
-          .use(BitmapPalette.Profile.VIBRANT)
-          .intoBackground(item_video_palette)
-          .crossfade(true))
-        .into(item_video_cover)
+    private lateinit var video: Video
+
+    override fun bindData(data: Any) {
+        if (data is Video) {
+            video = data
+            drawItem()
+        }
     }
-  }
 
-  override fun onClick(v: View?) {
-    delegate.onItemClicked(video)
-  }
+    private fun drawItem() {
+        itemView.run {
+            item_video_title.text = video.name
+            Glide.with(context)
+                .load(Api.getYoutubeThumbnailPath(video.key))
+                .listener(
+                    GlidePalette.with(Api.getYoutubeThumbnailPath(video.key))
+                        .use(BitmapPalette.Profile.VIBRANT)
+                        .intoBackground(item_video_palette)
+                        .crossfade(true)
+                )
+                .into(item_video_cover)
+        }
+    }
 
-  override fun onLongClick(v: View?) = false
+    override fun onClick(v: View?) {
+        delegate.onItemClicked(video)
+    }
+
+    override fun onLongClick(v: View?) = false
 }

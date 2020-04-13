@@ -5,8 +5,12 @@ import androidx.collection.ArrayMap
 import java.util.concurrent.TimeUnit
 
 /**
+ * Copied from https://github.com/android/architecture-components-samples/tree/master/GithubBrowserSample
+ */
+/**
  * Utility class that decides whether we should fetch some data or not.
  */
+@Suppress("unused")
 class RateLimiter<in KEY>(timeout: Int, timeUnit: TimeUnit) {
     private val timestamps = ArrayMap<KEY, Long>()
     private val timeout = timeUnit.toMillis(timeout.toLong())

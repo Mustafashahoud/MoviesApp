@@ -1,6 +1,8 @@
 package com.mustafa.movieapp.view.viewholder
 
-@Suppress("unused", "MemberVisibilityCanBePrivate")
+/**
+ * https://github.com/skydoves/TheMovies
+ */
 data class SectionRow(
     var section: Int = 0,
     var row: Int = 0

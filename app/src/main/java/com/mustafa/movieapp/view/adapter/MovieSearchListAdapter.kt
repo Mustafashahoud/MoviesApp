@@ -6,12 +6,10 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import com.mustafa.movieapp.R
-import com.mustafa.movieapp.databinding.ItemMovieBinding
 import com.mustafa.movieapp.databinding.ItemMovieSearchBinding
 import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.view.ui.common.AppExecutors
 import com.mustafa.movieapp.view.ui.common.DataBoundListAdapter
-import com.mustafa.movieapp.view.ui.common.RecyclerViewBase
 
 class MovieSearchListAdapter(
     appExecutors: AppExecutors,
@@ -23,6 +21,7 @@ class MovieSearchListAdapter(
         override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
             return oldItem.id == newItem.id
         }
+
         override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
             return oldItem == (newItem)
         }

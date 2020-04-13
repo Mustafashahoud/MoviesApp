@@ -1,5 +1,8 @@
 package com.mustafa.movieapp.api
 
+/**
+ * Copied from https://github.com/skydoves/TheMovies
+ */
 object Api {
     private const val BASE_POSTER_PATH = "https://image.tmdb.org/t/p/w342"
     private const val BASE_BACKDROP_PATH = "https://image.tmdb.org/t/p/w780"

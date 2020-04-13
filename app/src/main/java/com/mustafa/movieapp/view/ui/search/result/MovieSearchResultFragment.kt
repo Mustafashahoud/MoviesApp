@@ -1,6 +1,5 @@
 package com.mustafa.movieapp.view.ui.search.result
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +26,6 @@ import com.mustafa.movieapp.view.ui.search.MovieSearchViewModel
 import kotlinx.android.synthetic.main.fragment_movie_search_result.*
 import kotlinx.android.synthetic.main.fragment_movie_search_result.view.*
 import kotlinx.android.synthetic.main.toolbar_search_result.*
-import timber.log.Timber
 import javax.inject.Inject
 
 class MovieSearchResultFragment : Fragment(), Injectable {
@@ -133,7 +131,6 @@ class MovieSearchResultFragment : Fragment(), Injectable {
             navController().navigate(MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieSearchFragment())
         }
     }
-
 
 
     /**

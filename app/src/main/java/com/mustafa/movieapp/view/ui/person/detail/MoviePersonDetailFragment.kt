@@ -2,7 +2,6 @@ package com.mustafa.movieapp.view.ui.person.detail
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -11,7 +10,6 @@ import com.mustafa.movieapp.R
 import com.mustafa.movieapp.databinding.FragmentMovieCelebrityDetailBinding
 import com.mustafa.movieapp.di.Injectable
 import com.mustafa.movieapp.models.entity.MoviePerson
-import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.autoCleared
 
 
@@ -41,7 +39,7 @@ class MoviePersonDetailFragment : Fragment(), Injectable {
         }
     }
 
-    private fun getMovieFromIntent(): MoviePerson{
+    private fun getMovieFromIntent(): MoviePerson {
         return MoviePersonDetailFragmentArgs.fromBundle(
             requireArguments()
         ).movie

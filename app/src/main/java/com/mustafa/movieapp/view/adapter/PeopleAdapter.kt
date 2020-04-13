@@ -6,13 +6,10 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import com.mustafa.movieapp.R
-import com.mustafa.movieapp.databinding.ItemMovieSearchBinding
 import com.mustafa.movieapp.databinding.ItemPersonBinding
-import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.models.entity.Person
 import com.mustafa.movieapp.view.ui.common.AppExecutors
 import com.mustafa.movieapp.view.ui.common.DataBoundListAdapter
-import com.mustafa.movieapp.view.ui.common.RecyclerViewBase
 
 class PeopleAdapter(
     appExecutors: AppExecutors,
@@ -24,6 +21,7 @@ class PeopleAdapter(
         override fun areItemsTheSame(oldItem: Person, newItem: Person): Boolean {
             return oldItem.id == newItem.id
         }
+
         override fun areContentsTheSame(oldItem: Person, newItem: Person): Boolean {
             return oldItem == (newItem)
         }

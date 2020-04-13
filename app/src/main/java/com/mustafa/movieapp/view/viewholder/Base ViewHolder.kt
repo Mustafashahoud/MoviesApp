@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 
 /**
- * Copied from import skydoves
+ * https://github.com/skydoves/TheMovies
  */
 /** BaseViewHolder is an abstract class for structuring the base view holder class.  */
 @Suppress("unused", "LeakingThis")

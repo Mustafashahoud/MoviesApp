@@ -1,8 +1,5 @@
 package com.mustafa.movieapp.utils
 
-import com.mustafa.movieapp.models.entity.MoviePerson
-import com.mustafa.movieapp.models.entity.TvPerson
-
 
 /**
  * Mapping Genres' Ids To Strings according to the TheMovie Services
@@ -15,9 +12,9 @@ class StringUtils {
         @JvmStatic
         fun getMovieGenresById(ids: List<Int>): String {
             val listString = arrayListOf<String>()
-            for (id in ids){
+            for (id in ids) {
                 when (id) {
-                    12 ->  listString.add("Adventure")
+                    12 -> listString.add("Adventure")
                     28 -> listString.add("Action")
                     16 -> listString.add("Animation")
                     35 -> listString.add("Comedy")
@@ -45,9 +42,9 @@ class StringUtils {
         @JvmStatic
         fun getTvGenresById(ids: List<Int>): String {
             val listString = arrayListOf<String>()
-            for (id in ids){
+            for (id in ids) {
                 when (id) {
-                    10759 ->  listString.add("Action & Adventure")
+                    10759 -> listString.add("Action & Adventure")
                     10762 -> listString.add("Kids")
                     16 -> listString.add("Animation")
                     35 -> listString.add("Comedy")
@@ -74,9 +71,9 @@ class StringUtils {
         fun getMovieGenresAsSeparatedString(genres: List<String>?): String {
             val listGenresInteger = arrayListOf<Int>()
             if (genres != null) {
-                for (genre in genres){
+                for (genre in genres) {
                     when (genre) {
-                        "Adventure" ->  listGenresInteger.add(12)
+                        "Adventure" -> listGenresInteger.add(12)
                         "Action" -> listGenresInteger.add(28)
                         "Animation" -> listGenresInteger.add(16)
                         "Comedy" -> listGenresInteger.add(35)
@@ -153,15 +150,15 @@ class StringUtils {
 
         @JvmStatic
         fun mapRunTime(runtime: String?): Int {
-           runtime?.let {
-               return when (runtime) {
-                   "1 hour or more" -> 60
-                   "2 hours or more" -> 120
-                   "3 hours or more" -> 180
-                   "4 hours or more" -> 240
-                   else -> 120
-               }
-           }
+            runtime?.let {
+                return when (runtime) {
+                    "1 hour or more" -> 60
+                    "2 hours or more" -> 120
+                    "3 hours or more" -> 180
+                    "4 hours or more" -> 240
+                    else -> 120
+                }
+            }
             return 120
         }
 
@@ -170,8 +167,8 @@ class StringUtils {
         fun mapKeywordsToSeparatedIds(languages: List<String>?): String {
             val keywordIds = ArrayList<String>()
             if (languages != null) {
-                for (language in languages){
-                    when(language) {
+                for (language in languages) {
+                    when (language) {
                         "Based on Real Events" -> keywordIds.add("260728")
                         "Based on nNovel" -> keywordIds.add("260723")
                         "Anime" -> keywordIds.add("210024")

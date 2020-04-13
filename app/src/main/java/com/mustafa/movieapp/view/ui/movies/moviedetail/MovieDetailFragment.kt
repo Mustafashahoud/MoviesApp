@@ -23,7 +23,6 @@ import com.mustafa.movieapp.view.adapter.ReviewListAdapter
 import com.mustafa.movieapp.view.adapter.VideoListAdapter
 import com.mustafa.movieapp.view.viewholder.VideoListViewHolder
 import kotlinx.android.synthetic.main.layout_movie_detail_body.*
-import kotlinx.android.synthetic.main.toolbar_detail.*
 import javax.inject.Inject
 
 class MovieDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
@@ -36,14 +35,14 @@ class MovieDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable
     private var binding by autoCleared<FragmentMovieDetailBinding>()
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(
-                inflater,
-                R.layout.fragment_movie_detail,
-                container,
-                false
+            inflater,
+            R.layout.fragment_movie_detail,
+            container,
+            false
         )
 
         return binding.root
@@ -67,9 +66,11 @@ class MovieDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable
 
 
     private fun initializeUI() {
-        detail_body_recyclerView_trailers.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
+        detail_body_recyclerView_trailers.layoutManager =
+            LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
         detail_body_recyclerView_trailers.adapter = VideoListAdapter(this)
-        detail_body_recyclerView_reviews.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        detail_body_recyclerView_reviews.layoutManager =
+            LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         detail_body_recyclerView_reviews.adapter = ReviewListAdapter()
         detail_body_recyclerView_reviews.isNestedScrollingEnabled = false
         detail_body_recyclerView_reviews.setHasFixedSize(true)
@@ -85,7 +86,8 @@ class MovieDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable
 
 
     override fun onItemClicked(video: Video) {
-        val playVideoIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Api.getYoutubeVideoPath(video.key)))
+        val playVideoIntent =
+            Intent(Intent.ACTION_VIEW, Uri.parse(Api.getYoutubeVideoPath(video.key)))
         startActivity(playVideoIntent)
     }
 

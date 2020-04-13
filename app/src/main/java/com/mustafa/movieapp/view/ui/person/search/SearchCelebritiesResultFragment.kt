@@ -80,7 +80,7 @@ class SearchCelebritiesResultFragment : Fragment(), Injectable {
 
     private fun subscribers() {
         viewModel.searchPeopleListLiveData.observe(viewLifecycleOwner, Observer {
-           binding.searchResult = viewModel.searchPeopleListLiveData
+            binding.searchResult = viewModel.searchPeopleListLiveData
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }

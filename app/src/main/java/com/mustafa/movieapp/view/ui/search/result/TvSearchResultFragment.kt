@@ -106,7 +106,8 @@ class TvSearchResultFragment : Fragment(), Injectable {
 
         recyclerView_search_result_tvs.layoutManager = LinearLayoutManager(context)
 
-        recyclerView_search_result_tvs.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        recyclerView_search_result_tvs.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val lastPosition = layoutManager.findLastVisibleItemPosition()

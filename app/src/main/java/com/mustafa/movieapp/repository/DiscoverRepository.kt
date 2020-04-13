@@ -1,7 +1,10 @@
 package com.mustafa.movieapp.repository
 
-import androidx.lifecycle.*
-import com.mustafa.movieapp.api.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import com.mustafa.movieapp.api.ApiResponse
+import com.mustafa.movieapp.api.TheDiscoverService
 import com.mustafa.movieapp.mappers.MoviePagingChecker
 import com.mustafa.movieapp.mappers.TvPagingChecker
 import com.mustafa.movieapp.models.Resource
@@ -13,9 +16,7 @@ import com.mustafa.movieapp.room.MovieDao
 import com.mustafa.movieapp.room.TvDao
 import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.AbsentLiveData
-import com.mustafa.movieapp.utils.RateLimiter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,9 +28,7 @@ class DiscoverRepository @Inject constructor(
     private val db: AppDatabase,
     private val tvDao: TvDao,
     private val appExecutors: AppExecutors
-)  {
-
-    private val photoListRateLimit = RateLimiter<String>(1, TimeUnit.DAYS)
+) {
 
     fun loadMovies(page: Int): LiveData<Resource<List<Movie>>> {
         return object :
@@ -447,10 +446,10 @@ class DiscoverRepository @Inject constructor(
 
             override fun loadFromDb(): LiveData<List<Tv>> {
                 return Transformations.switchMap(tvDao.getFilteredTvResultByPageLiveData(page)) { searchData ->
-                            if (searchData == null) {
-                                AbsentLiveData.create()
-                            } else {
-                                movieDao.loadFilteredTvListOrdered(searchData.ids)
+                    if (searchData == null) {
+                        AbsentLiveData.create()
+                    } else {
+                        movieDao.loadFilteredTvListOrdered(searchData.ids)
                     }
                 }
             }

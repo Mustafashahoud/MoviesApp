@@ -9,4 +9,4 @@ import androidx.recyclerview.widget.RecyclerView
  * @param <T> The type of the ViewDataBinding.
 </T> */
 class DataBoundViewHolder<out T : ViewDataBinding> constructor(val binding: T) :
-        RecyclerView.ViewHolder(binding.root)
+    RecyclerView.ViewHolder(binding.root)

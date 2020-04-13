@@ -1,6 +1,9 @@
 package com.mustafa.movieapp.view.ui.movies.movielist
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import com.mustafa.movieapp.models.Resource
 import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.repository.DiscoverRepository

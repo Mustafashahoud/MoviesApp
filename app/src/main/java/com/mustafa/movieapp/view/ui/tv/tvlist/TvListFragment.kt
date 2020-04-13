@@ -20,7 +20,6 @@ import com.mustafa.movieapp.databinding.FragmentTvsBinding
 import com.mustafa.movieapp.di.Injectable
 import com.mustafa.movieapp.extension.visible
 import com.mustafa.movieapp.models.Status
-import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.TvListAdapter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
@@ -29,12 +28,10 @@ import kotlinx.android.synthetic.main.fragment_tvs.*
 import kotlinx.android.synthetic.main.toolbar_search.*
 import javax.inject.Inject
 
-@OpenForTesting
-@Suppress("SpellCheckingInspection")
-class TvListFragment : Fragment(), Injectable  {
+class TvListFragment : Fragment(), Injectable {
 
     @Inject
-    lateinit var viewmodelFactory: ViewModelProvider.Factory
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
     lateinit var appExecutors: AppExecutors
@@ -42,7 +39,7 @@ class TvListFragment : Fragment(), Injectable  {
     private val dataBindingComponent = FragmentDataBindingComponent(this)
 
     private val viewModel by viewModels<TvListViewModel> {
-        viewmodelFactory
+        viewModelFactory
     }
     private var binding by autoCleared<FragmentTvsBinding>()
 

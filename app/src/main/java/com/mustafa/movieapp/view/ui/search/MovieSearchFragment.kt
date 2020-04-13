@@ -66,7 +66,8 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
         search_view.queryHint = "Search Movies"
     }
 
-    override fun setBindingVariables() {/*DO nothing*/}
+    override fun setBindingVariables() {/*DO nothing*/
+    }
 
     override fun navigateFromSearchFragmentToSearchFragmentResultFilter(bundle: Bundle) {
         findNavController().navigate(

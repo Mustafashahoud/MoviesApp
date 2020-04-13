@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.mustafa.movieapp.models.Resource
-import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.models.entity.PeopleRecentQueries
 import com.mustafa.movieapp.models.entity.Person
 import com.mustafa.movieapp.repository.PeopleRepository

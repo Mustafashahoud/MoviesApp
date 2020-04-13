@@ -16,7 +16,6 @@ import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentCelebrityDetailBinding
 import com.mustafa.movieapp.di.Injectable
 import com.mustafa.movieapp.models.entity.Person
-import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.MoviePersonListAdapter
 import com.mustafa.movieapp.view.adapter.TvPersonListAdapter
@@ -25,7 +24,6 @@ import kotlinx.android.synthetic.main.fragment_celebrity_detail.*
 import kotlinx.android.synthetic.main.toolbar_detail.*
 import javax.inject.Inject
 
-@OpenForTesting
 class CelebrityDetailFragment : Fragment(), Injectable {
 
 

@@ -14,14 +14,17 @@ import com.mustafa.movieapp.utils.AbsentLiveData
 import javax.inject.Inject
 
 
+/**
+ * Copied from https://github.com/skydoves/TheMovies
+ */
 @OpenForTesting
 class MovieDetailViewModel @Inject constructor(private val repository: MovieRepository) :
     ViewModel() {
 
     private val movieIdLiveData: MutableLiveData<Int> = MutableLiveData()
-    val keywordListLiveData: LiveData<Resource<List<Keyword>>>
-    val videoListLiveData: LiveData<Resource<List<Video>>>
-    val reviewListLiveData: LiveData<Resource<List<Review>>>
+    final val keywordListLiveData: LiveData<Resource<List<Keyword>>>
+    final val videoListLiveData: LiveData<Resource<List<Video>>>
+    final val reviewListLiveData: LiveData<Resource<List<Review>>>
 
     init {
         this.keywordListLiveData = movieIdLiveData.switchMap {

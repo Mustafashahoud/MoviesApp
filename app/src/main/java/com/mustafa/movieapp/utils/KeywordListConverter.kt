@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mustafa.movieapp.models.Keyword
 
-open class KeywordListConverter {
+open class  KeywordListConverter {
     @TypeConverter
     fun fromString(value: String): List<Keyword>? {
         val listType = object : TypeToken<List<Keyword>>() {}.type

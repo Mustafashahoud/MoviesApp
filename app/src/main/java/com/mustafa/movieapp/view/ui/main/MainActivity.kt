@@ -1,4 +1,3 @@
-
 package com.mustafa.movieapp.view.ui.main
 
 import android.os.Bundle
@@ -11,7 +10,7 @@ import com.mustafa.movieapp.R
 import com.mustafa.movieapp.extension.getCurrentNavigationFragment
 import com.mustafa.movieapp.extension.isRecyclerViewScrollPositionZero
 import com.mustafa.movieapp.extension.setSmoothScrollToZero
-import com.mustafa.movieapp.view.setupWithNavController
+import com.mustafa.movieapp.utils.setupWithNavController
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -23,101 +22,100 @@ import javax.inject.Inject
  * An activity that inflates a layout that has a [BottomNavigationView].
  */
 class MainActivity : AppCompatActivity(), HasAndroidInjector {
-  @Inject
-  lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
-  private var currentNavController: LiveData<NavController>? = null
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
+    private var currentNavController: LiveData<NavController>? = null
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
-    if (savedInstanceState == null) {
-      setupBottomNavigationBar()
-    } // Else, need to wait for onRestoreInstanceState
-    setOnNavigationItemReselected()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        if (savedInstanceState == null) {
+            setupBottomNavigationBar()
+        } // Else, need to wait for onRestoreInstanceState
+        setOnNavigationItemReselected()
+    }
 
-  override fun onBackPressed() {
+    override fun onBackPressed() {
 //    val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_container)
 //    val backStackEntryCount = navHostFragment?.childFragmentManager?.backStackEntryCount
 //    for (x in 0 until backStackEntryCount!!) {
 //      val entry = navHostFragment.childFragmentManager.getBackStackEntryAt(x)
 //      Timber.d("BackStack ${entry.name}")
 //    }
-    val currentFragment: Fragment? = supportFragmentManager.getCurrentNavigationFragment()
-    val currentFragmentName = (currentFragment as Fragment).javaClass.simpleName
+        val currentFragment: Fragment? = supportFragmentManager.getCurrentNavigationFragment()
+        val currentFragmentName = (currentFragment as Fragment).javaClass.simpleName
 
-    if (currentFragmentName == MOVIE_LIST_FRAGMENT) {
-      if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_movies)!!) {
-        currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_movies)
-      } else {
-        super.onBackPressed()
-      }
-    }
-
-    else if (currentFragmentName == TV_LIST_FRAGMENT) {
-      if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_tvs)!!) {
-        currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_tvs)
-      } else {
+        if (currentFragmentName == MOVIE_LIST_FRAGMENT) {
+            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_movies)!!) {
+                currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_movies)
+            } else {
+                super.onBackPressed()
+            }
+        } else if (currentFragmentName == TV_LIST_FRAGMENT) {
+            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_tvs)!!) {
+                currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_tvs)
+            } else {
 //        currentFragment.findNavController().popBackStack()
-        super.onBackPressed()
-      }
+                super.onBackPressed()
+            }
+        } else super.onBackPressed()
     }
-    else super.onBackPressed()
-  }
-  companion object {
-    const val MOVIE_LIST_FRAGMENT = "MovieListFragment"
-    const val TV_LIST_FRAGMENT = "TvListFragment"
-    const val CELEBRITY_LIST_FRAGMENT = "StarListFragment"
-  }
+
+    companion object {
+        const val MOVIE_LIST_FRAGMENT = "MovieListFragment"
+        const val TV_LIST_FRAGMENT = "TvListFragment"
+        const val CELEBRITY_LIST_FRAGMENT = "StarListFragment"
+    }
 
 
-  override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-    super.onRestoreInstanceState(savedInstanceState)
-    // Now that BottomNavigationBar has restored its instance state
-    // and its selectedItemId, we can proceed with setting up the
-    // BottomNavigationBar with Navigation
-    setupBottomNavigationBar()
-  }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+        super.onRestoreInstanceState(savedInstanceState)
+        // Now that BottomNavigationBar has restored its instance state
+        // and its selectedItemId, we can proceed with setting up the
+        // BottomNavigationBar with Navigation
+        setupBottomNavigationBar()
+    }
 
-  /**
-   * Called on first creation and when restoring state.
-   */
-  private fun setupBottomNavigationBar() {
-    val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+    /**
+     * Called on first creation and when restoring state.
+     */
+    private fun setupBottomNavigationBar() {
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
 
-    val navGraphIds = listOf(R.navigation.movie, R.navigation.tv, R.navigation.star)
+        val navGraphIds = listOf(R.navigation.movie, R.navigation.tv, R.navigation.star)
 
-    // Setup the bottom navigation view with a list of navigation graphs
-    val controller = bottomNavigationView.setupWithNavController(
-      navGraphIds = navGraphIds,
-      fragmentManager = supportFragmentManager,
-      containerId = R.id.nav_host_container,
-      intent = intent
-    )
+        // Setup the bottom navigation view with a list of navigation graphs
+        val controller = bottomNavigationView.setupWithNavController(
+            navGraphIds = navGraphIds,
+            fragmentManager = supportFragmentManager,
+            containerId = R.id.nav_host_container,
+            intent = intent
+        )
 
-    //Whenever the selected controller changes, setup the action bar.
+        //Whenever the selected controller changes, setup the action bar.
 //    controller.observe(this, Observer { navController ->
 //      setupActionBarWithNavController(navController)
 //    })
-    currentNavController = controller
-  }
+        currentNavController = controller
+    }
 
 //  override fun onSupportNavigateUp(): Boolean {
 //    return currentNavController?.value?.navigateUp() ?: false
 //  }
 
-  private fun setOnNavigationItemReselected() {
-    bottom_navigation.setOnNavigationItemReselectedListener {
-      when (it.itemId) {
-        R.id.movie -> supportFragmentManager.getCurrentNavigationFragment()
-          ?.setSmoothScrollToZero(R.id.recyclerView_list_movies)
-        R.id.tv -> supportFragmentManager.getCurrentNavigationFragment()
-          ?.setSmoothScrollToZero(R.id.recyclerView_list_tvs)
-      }
+    private fun setOnNavigationItemReselected() {
+        bottom_navigation.setOnNavigationItemReselectedListener {
+            when (it.itemId) {
+                R.id.movie -> supportFragmentManager.getCurrentNavigationFragment()
+                    ?.setSmoothScrollToZero(R.id.recyclerView_list_movies)
+                R.id.tv -> supportFragmentManager.getCurrentNavigationFragment()
+                    ?.setSmoothScrollToZero(R.id.recyclerView_list_tvs)
+            }
+        }
     }
-  }
-  override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
+
+    override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 }
 
 

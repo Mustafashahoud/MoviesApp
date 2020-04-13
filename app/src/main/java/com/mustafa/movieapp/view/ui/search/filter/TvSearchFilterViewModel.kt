@@ -89,7 +89,7 @@ class TvSearchFilterViewModel @Inject constructor(
 
     val totalTvFilterResult = Transformations.switchMap(searchTvFilterPageLiveData) {
         it?.let {
-            discoverRepository. getTotalTvFilteredResults()
+            discoverRepository.getTotalTvFilteredResults()
         } ?: AbsentLiveData.create()
     }
 

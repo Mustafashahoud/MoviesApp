@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
  * @param <T> Type of the items in the list
  * @param <V> The type of the ViewDataBinding
 </V></T> */
+@Suppress("unused")
 abstract class RecyclerViewBase<T, V : ViewDataBinding> :
         RecyclerView.Adapter<DataBoundViewHolder<V>>(){
 

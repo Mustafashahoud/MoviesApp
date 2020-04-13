@@ -1,4 +1,3 @@
-
 package com.mustafa.movieapp.api
 
 import androidx.lifecycle.LiveData
@@ -14,28 +13,28 @@ import java.util.concurrent.atomic.AtomicBoolean
  * @param <R>
 </R> */
 class LiveDataCallAdapter<R>(private val responseType: Type) :
-        CallAdapter<R, LiveData<ApiResponse<R>>> {
+    CallAdapter<R, LiveData<ApiResponse<R>>> {
 
-  override fun responseType() = responseType
+    override fun responseType() = responseType
 
-  override fun adapt(call: Call<R>): LiveData<ApiResponse<R>> {
-    return object : LiveData<ApiResponse<R>>() {
-      private var started = AtomicBoolean(false)
-      override fun onActive() {
-        super.onActive()
-        if (started.compareAndSet(false, true)) {
-          call.enqueue(object : Callback<R> {
-            override fun onResponse(call: Call<R>, response: Response<R>) {
-              postValue(ApiResponse.create(response))
+    override fun adapt(call: Call<R>): LiveData<ApiResponse<R>> {
+        return object : LiveData<ApiResponse<R>>() {
+            private var started = AtomicBoolean(false)
+            override fun onActive() {
+                super.onActive()
+                if (started.compareAndSet(false, true)) {
+                    call.enqueue(object : Callback<R> {
+                        override fun onResponse(call: Call<R>, response: Response<R>) {
+                            postValue(ApiResponse.create(response))
+                        }
+
+                        override fun onFailure(call: Call<R>, throwable: Throwable) {
+                            postValue(ApiResponse.create(throwable))
+                        }
+                    })
+                }
             }
-
-            override fun onFailure(call: Call<R>, throwable: Throwable) {
-              postValue(ApiResponse.create(throwable))
-            }
-          })
         }
-      }
     }
-  }
 }
 

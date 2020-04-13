@@ -31,25 +31,3 @@ class FragmentBindingAdapters @Inject constructor(val fragment: Fragment) {
         }
     }
 }
-
-@BindingAdapter("setCharacterForTvPerson")
-fun setCharacterForTv(textView: TextView, tv: TvPerson) {
-    textView.text = tv.let {
-        if (tv.character.isNotEmpty()) "Ch.: ${tv.character}"
-        else {
-            textView.visibility = View.GONE
-            ""
-        }
-    }
-}
-
-@BindingAdapter("setCharacterForMoviePerson")
-fun setCharacterForMovie(textView: TextView, movie: MoviePerson) {
-    textView.text = movie.let {
-        if (movie.character.isNotEmpty()) "Ch.: ${movie.character}"
-        else {
-            textView.visibility = View.GONE
-            ""
-        }
-    }
-}

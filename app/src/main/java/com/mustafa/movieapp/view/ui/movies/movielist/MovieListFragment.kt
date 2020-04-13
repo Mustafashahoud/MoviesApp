@@ -1,11 +1,11 @@
 package com.mustafa.movieapp.view.ui.movies.movielist
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -13,28 +13,21 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentMoviesBinding
 import com.mustafa.movieapp.di.Injectable
-import com.mustafa.movieapp.extension.visible
 import com.mustafa.movieapp.models.Status
 import com.mustafa.movieapp.models.entity.Movie
-import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.MovieListAdapter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
 import com.mustafa.movieapp.view.ui.common.RetryCallback
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.toolbar_search.*
-import timber.log.Timber
 import javax.inject.Inject
 
-@Suppress("SpellCheckingInspection")
-@OpenForTesting
 class MovieListFragment : Fragment(), Injectable {
 
     @Inject
@@ -45,8 +38,8 @@ class MovieListFragment : Fragment(), Injectable {
 
     private val viewModel by viewModels<MovieListViewModel> { viewModelFactory }
 
-    @Suppress("LeakingThis")
-    var dataBindingComponent = FragmentDataBindingComponent(this)
+
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
     var binding by autoCleared<FragmentMoviesBinding>()
 
@@ -100,11 +93,10 @@ class MovieListFragment : Fragment(), Injectable {
         recyclerView_list_movies.layoutManager = GridLayoutManager(context, 3)
         recyclerView_list_movies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val layoutManager = recyclerView.layoutManager as GridLayoutManager
                 val lastPosition = layoutManager.findLastVisibleItemPosition()
                 if (lastPosition == adapter.itemCount - 1
                     && viewModel.movieListLiveData.value?.status != Status.LOADING
-                    && dy > 0
                 ) {
                     viewModel.loadMore()
                 }

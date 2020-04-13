@@ -1,4 +1,4 @@
-package com.mustafa.movieapp.view
+package com.mustafa.movieapp.utils
 
 
 import android.content.Intent
@@ -58,9 +58,16 @@ fun BottomNavigationView.setupWithNavController(
         if (this.selectedItemId == graphId) {
             // Update livedata with the selected graph
             selectedNavController.value = navHostFragment.navController
-            attachNavHostFragment(fragmentManager, navHostFragment, index == 0)
+            attachNavHostFragment(
+                fragmentManager,
+                navHostFragment,
+                index == 0
+            )
         } else {
-            detachNavHostFragment(fragmentManager, navHostFragment)
+            detachNavHostFragment(
+                fragmentManager,
+                navHostFragment
+            )
         }
     }
 

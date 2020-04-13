@@ -1,6 +1,9 @@
 package com.mustafa.movieapp.view.ui.tv.tvlist
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import com.mustafa.movieapp.models.Resource
 import com.mustafa.movieapp.models.entity.Tv
 import com.mustafa.movieapp.repository.DiscoverRepository
@@ -16,13 +19,14 @@ constructor(private val discoverRepository: DiscoverRepository) : ViewModel() {
 
     private var tvPageLiveData: MutableLiveData<Int> = MutableLiveData()
     val tvListLiveData: LiveData<Resource<List<Tv>>> = Transformations
-            .switchMap(tvPageLiveData) {
-                if (it == null) {
-                    AbsentLiveData.create()
-                } else {
-                    discoverRepository.loadTvs(it)
-                }
+        .switchMap(tvPageLiveData) {
+            if (it == null) {
+                AbsentLiveData.create()
+            } else {
+                discoverRepository.loadTvs(it)
             }
+        }
+
     fun setTvPage(page: Int) {
         tvPageLiveData.value = page
     }

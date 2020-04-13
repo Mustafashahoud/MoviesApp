@@ -15,7 +15,8 @@ import com.mustafa.movieapp.utils.FiltersConstants.Companion.RATINGS
 import com.mustafa.movieapp.utils.StringUtils
 import kotlinx.android.synthetic.main.fragment_search_result_filter.*
 
-abstract class SearchResultFilterFragmentBase : Fragment(), Injectable, PopupMenu.OnMenuItemClickListener {
+abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
+    PopupMenu.OnMenuItemClickListener {
 
 
     protected var filtersMap: HashMap<String, ArrayList<String>>? = null
@@ -25,7 +26,7 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable, PopupMen
         const val popularity = "popularity.desc"
         const val vote = "vote_average.desc"
         const val release = "release_date.desc"
-        const val sort_by_popularity= "Popularity"
+        const val sort_by_popularity = "Popularity"
         const val sort_by_vote_count = "Vote Count"
         const val sort_by_release_date = "Release Date"
     }
@@ -35,7 +36,7 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable, PopupMen
         initializeUI()
         observeSubscribers()
         renderSortByTextView(sort_by_popularity)
-        if (filtersData == null){
+        if (filtersData == null) {
             filtersMap = getFilterMap()
             filtersData = FilterData(
                 getRatingFilters(),
@@ -55,7 +56,8 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable, PopupMen
     private fun initializeUI() {
         setRecyclerViewAdapter()
 
-        nestedScrollView.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener{
+        nestedScrollView.setOnScrollChangeListener(object :
+            NestedScrollView.OnScrollChangeListener {
             override fun onScrollChange(
                 v: NestedScrollView?,
                 scrollX: Int,
@@ -63,10 +65,11 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable, PopupMen
                 oldScrollX: Int,
                 oldScrollY: Int
             ) {
-                if(v?.getChildAt(v.childCount - 1) != null) {
+                if (v?.getChildAt(v.childCount - 1) != null) {
                     if ((scrollY >= (v.getChildAt(v.childCount - 1).measuredHeight - v.measuredHeight))
                         && scrollY > oldScrollY
-                        && !isLoading() ) {
+                        && !isLoading()
+                    ) {
                         loadMoreFilters()
                     }
                 }
@@ -74,7 +77,7 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable, PopupMen
 
         })
 
-        sort_by_icon.setOnClickListener{
+        sort_by_icon.setOnClickListener {
             PopupMenu(requireContext(), it).apply {
                 setOnMenuItemClickListener(this@SearchResultFilterFragmentBase)
                 inflate(R.menu.navigation_drawer_menu)

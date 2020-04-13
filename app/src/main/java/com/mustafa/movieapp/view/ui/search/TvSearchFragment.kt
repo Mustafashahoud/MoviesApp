@@ -59,7 +59,8 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
         search_view.queryHint = "Search Series"
     }
 
-    override fun setBindingVariables() {/*Do nothing*/}
+    override fun setBindingVariables() {/*Do nothing*/
+    }
 
     override fun navigateFromSearchFragmentToSearchFragmentResultFilter(bundle: Bundle) {
         findNavController().navigate(

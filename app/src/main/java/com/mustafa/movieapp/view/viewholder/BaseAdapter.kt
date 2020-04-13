@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 
 /**
- * copied from skydoves.
+ * https://github.com/skydoves/TheMovies
  */
 /** BaseAdapter is an abstract class for structuring the base adapter class. */
 @Suppress(

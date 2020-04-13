@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -15,7 +14,6 @@ import com.mustafa.movieapp.databinding.FragmentTvCelebrityDetailBinding
 import com.mustafa.movieapp.di.Injectable
 import com.mustafa.movieapp.models.Video
 import com.mustafa.movieapp.models.entity.TvPerson
-import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.viewholder.VideoListViewHolder
 

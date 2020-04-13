@@ -18,17 +18,14 @@ import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentCelebritiesBinding
 import com.mustafa.movieapp.di.Injectable
 import com.mustafa.movieapp.models.Status
-import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.PeopleAdapter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
 import com.mustafa.movieapp.view.ui.common.RetryCallback
 import kotlinx.android.synthetic.main.fragment_celebrities.*
 import kotlinx.android.synthetic.main.toolbar_search.*
-import timber.log.Timber
 import javax.inject.Inject
 
-@OpenForTesting
 class CelebritiesListFragment : Fragment(), Injectable {
 
     @Inject
