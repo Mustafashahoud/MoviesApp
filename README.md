@@ -1,5 +1,7 @@
 # movieGuide
 
+#### This App is written with the help of  [GithubBrowserSample](https://github.com/android/architecture-components-samples/tree/master/GithubBrowserSample) and [skydoves](https://github.com/skydoves/TheMovies2).
+
 A Movie Application uses [TheMovie API](https://www.themoviedb.org) based on Kotlin MVVM architecture and material design.
 
 ![MovieGuide](https://user-images.githubusercontent.com/33812602/74789710-d4256480-52b5-11ea-964a-022592cfabdb.gif)
