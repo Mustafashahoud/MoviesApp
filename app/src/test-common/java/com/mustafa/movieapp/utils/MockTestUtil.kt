@@ -38,5 +38,11 @@ class MockTestUtil {
         fun mockPersonDetail(): PersonDetail {
             return PersonDetail("", "", "", emptyList(), "")
         }
+
+        fun createMovies(count: Int): List<Movie> {
+            return (0 until count).map {
+                Movie(it)
+            }
+        }
     }
 }

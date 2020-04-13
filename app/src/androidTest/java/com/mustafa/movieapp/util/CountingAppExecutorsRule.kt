@@ -4,13 +4,14 @@ import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingResource
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
-import java.util.UUID
+import java.util.*
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.TimeUnit
-
+/**
+ * Copied for https://github.com/android/architecture-components-samples/tree/master/GithubBrowserSample
+ */
 /**
  * A Junit rule that registers an espresso idling resource which counts all tasks that are submitted
- * via [AppExecutors].
  */
 class CountingAppExecutorsRule : TestWatcher() {
     // give it a unique id to workaround an espresso bug where you cannot register/unregister

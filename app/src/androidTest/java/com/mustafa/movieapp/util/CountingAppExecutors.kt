@@ -1,13 +1,17 @@
 package com.mustafa.movieapp.util
 
+import com.mustafa.movieapp.view.ui.common.AppExecutors
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
+/**
+ * Copied for https://github.com/android/architecture-components-samples/tree/master/GithubBrowserSample
+ */
 class CountingAppExecutors(idleCallback: (() -> Unit)? = null) {
 
-    private val lock = java.lang.Object()
+    private val lock = Object()
 
     private var taskCount = 0
 
@@ -33,9 +37,8 @@ class CountingAppExecutors(idleCallback: (() -> Unit)? = null) {
             }
         }
         appExecutors = AppExecutors(
-                CountingExecutor(increment, decrement),
-                CountingExecutor(increment, decrement),
-                CountingExecutor(increment, decrement)
+            CountingExecutor(increment, decrement),
+            CountingExecutor(increment, decrement)
         )
     }
 
@@ -62,8 +65,8 @@ class CountingAppExecutors(idleCallback: (() -> Unit)? = null) {
     }
 
     private class CountingExecutor(
-            private val increment: () -> Unit,
-            private val decrement: () -> Unit
+        private val increment: () -> Unit,
+        private val decrement: () -> Unit
     ) : Executor {
 
         private val delegate = Executors.newSingleThreadExecutor()

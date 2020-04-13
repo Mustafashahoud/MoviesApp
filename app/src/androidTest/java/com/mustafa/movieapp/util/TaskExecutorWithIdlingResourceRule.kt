@@ -9,6 +9,10 @@ import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.TimeUnit
 
 /**
+ * Copied for https://github.com/android/architecture-components-samples/tree/master/GithubBrowserSample
+ */
+
+/**
  * A Junit rule that registers Architecture Components' background threads as an Espresso idling
  * resource.
  */

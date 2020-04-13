@@ -2,8 +2,10 @@
 package com.mustafa.movieapp
 
 import android.app.Application
-import com.mustafa.movieapp.di.DaggerAppComponent
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
 
+/**
+ * We use a separate App for tests to prevent initializing dependency injection.
+ *
+ * See [com.mustafa.movieapp.util.MovieGuideTestRunner].
+ */
 class TestMovieApp : Application()

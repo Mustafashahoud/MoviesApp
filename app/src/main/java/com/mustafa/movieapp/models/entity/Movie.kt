@@ -41,7 +41,7 @@ data class Movie(
    * Empty constructor will be used in Testing
    */
   @Ignore
-  constructor(id: Int) : this(
+  constructor(id: Int, title: String = "ANY_MOVIE") : this(
     id,
     1,
     null,
@@ -54,7 +54,7 @@ data class Movie(
     listOf(),
     "",
     "",
-    "title",
+    title,
     null,
     0F,
     0,
