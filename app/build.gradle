@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'jacoco'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: "kotlin-allopen"
 
@@ -117,7 +116,7 @@ dependencies {
     def junitVersion = '4.13'
     def espressoVersion = '3.2.0'
     def androidxTestRules = '1.2.0'
-    def nav_version = '2.2.1'
+    def nav_version = '2.3.0-alpha04'
     def circleImageVersion = '3.1.0'
     def constraintLayout = '2.0.0-beta4'
 
@@ -198,37 +197,10 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$androidxTestRules"
     androidTestImplementation "org.mockito:mockito-android:3.3.3"
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
+    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 
 }
-task fullCoverageReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
-    group = "Reporting"
-    description = "Generate Jacoco coverage reports."
 
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-
-    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*',
-                      '**/*Test*.*', 'android/**/*.*',
-                      '**/*_MembersInjector.class',
-                      '**/Dagger*Component.class',
-                      '**/Dagger*Component$Builder.class',
-                      '**/*_*Factory.class',
-                      '**/*ComponentImpl.class',
-                      '**/*SubComponentBuilder.class']
-    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
-
-    // coverageSourceDirs
-    def mainSrc = "${project.projectDir}/src/main/java"
-
-    sourceDirectories.from = files([mainSrc])
-    classDirectories.from = files([debugTree])
-    executionData.from = fileTree(dir: "$buildDir", includes: [
-            "jacoco/testDebugUnitTest.exec",
-            "outputs/code-coverage/connected/*coverage.ec"
-    ])
-}
 
 // we need all open to run tests which  a we enable only for debug builds.
 project.tasks.whenTaskAdded {
