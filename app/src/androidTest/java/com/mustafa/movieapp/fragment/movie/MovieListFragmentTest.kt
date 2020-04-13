@@ -1,4 +1,4 @@
-package com.mustafa.movieapp.fragment
+package com.mustafa.movieapp.fragment.movie
 
 import androidx.databinding.DataBindingComponent
 import androidx.fragment.app.testing.launchFragmentInContainer
@@ -21,6 +21,7 @@ import com.mustafa.movieapp.util.*
 import com.mustafa.movieapp.utils.MockTestUtil
 import com.mustafa.movieapp.view.ui.movies.movielist.MovieListFragment
 import com.mustafa.movieapp.view.ui.movies.movielist.MovieListViewModel
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.whenever
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.not
@@ -135,13 +136,23 @@ class MovieListFragmentTest {
     }
 
     @Test
-    fun loadMore() {
+    fun loadMore_HasNextPage_True() {
         val movies = MockTestUtil.createMovies(20)
         results.postValue(Resource.success(movies, true))
         val action = RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(19)
         onView(withId(R.id.recyclerView_list_movies)).perform(action)
         onView(listMatcher().atPosition(19)).check(matches(isDisplayed()))
         verify(viewModel).loadMore()
+    }
+
+    @Test
+    fun loadMore_HasNextPage_False() {
+        val movies = MockTestUtil.createMovies(20)
+        results.postValue(Resource.success(movies, false))
+        val action = RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(19)
+        onView(withId(R.id.recyclerView_list_movies)).perform(action)
+        onView(listMatcher().atPosition(19)).check(matches(isDisplayed()))
+        verify(viewModel, never()).loadMore()
     }
 
     @Test
