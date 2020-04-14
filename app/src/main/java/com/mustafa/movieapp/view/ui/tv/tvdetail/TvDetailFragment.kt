@@ -28,15 +28,12 @@ import kotlinx.android.synthetic.main.layout_tv_detail_body.*
 import javax.inject.Inject
 
 
-@OpenForTesting
 class TvDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val vm by viewModels<TvDetailViewModel> {
-        viewModelFactory
-    }
+    private val viewModel by viewModels<TvDetailViewModel> { viewModelFactory }
     private var binding by autoCleared<FragmentTvDetailBinding>()
 
     override fun onCreateView(
@@ -56,10 +53,10 @@ class TvDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        vm.setTvId(getTvFromIntent().id)
+        viewModel.setTvId(getTvFromIntent().id)
         with(binding) {
             lifecycleOwner = this@TvDetailFragment
-            detailBody.viewModel = vm
+            detailBody.viewModel = viewModel
             tv = getTvFromIntent()
             detailHeader.tv = getTvFromIntent()
             detailBody.tv = getTvFromIntent()

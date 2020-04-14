@@ -41,11 +41,9 @@ class MovieListFragment : Fragment(), Injectable {
 
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
-    var binding by autoCleared<FragmentMoviesBinding>()
+    private var binding by autoCleared<FragmentMoviesBinding>()
 
-    var adapter by autoCleared<MovieListAdapter>()
-
-    val movies = mutableSetOf<Movie>()
+    private var adapter by autoCleared<MovieListAdapter>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

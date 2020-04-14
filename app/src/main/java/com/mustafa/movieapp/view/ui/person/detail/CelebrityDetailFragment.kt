@@ -33,18 +33,17 @@ class CelebrityDetailFragment : Fragment(), Injectable {
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    @Suppress("LeakingThis")
     var dataBindingComponent = FragmentDataBindingComponent(this)
 
     private val viewModel by viewModels<PersonDetailViewModel> { viewModelFactory }
 
-    var binding by autoCleared<FragmentCelebrityDetailBinding>()
+    private var binding by autoCleared<FragmentCelebrityDetailBinding>()
 
-    var adapterMoviesForCelebrity by autoCleared<MoviePersonListAdapter>()
+    private var adapterMoviesForCelebrity by autoCleared<MoviePersonListAdapter>()
 
-    var adapterTvsForCelebrity by autoCleared<TvPersonListAdapter>()
+    private var adapterTvsForCelebrity by autoCleared<TvPersonListAdapter>()
 
-    var personId = -1
+    private var personId = -1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

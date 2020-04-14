@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -33,14 +34,13 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
 
     private val viewModel by viewModels<MovieSearchViewModel> { viewModelFactory }
 
-    var dataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
-    var binding by autoCleared<FragmentSearchBinding>()
+    private var binding by autoCleared<FragmentSearchBinding>()
 
-    var movieAdapter by autoCleared<MovieSearchListAdapter>()
+    private var movieAdapter by autoCleared<MovieSearchListAdapter>()
 
 //    private lateinit var mSearchViewAdapter: SuggestionsAdapter
-
 
     override fun onCreateView(
         inflater: LayoutInflater,

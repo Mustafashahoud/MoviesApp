@@ -8,10 +8,12 @@ import com.mustafa.movieapp.models.Resource
 import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.models.entity.MovieRecentQueries
 import com.mustafa.movieapp.repository.DiscoverRepository
+import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.AbsentLiveData
 import java.util.*
 import javax.inject.Inject
 
+@OpenForTesting
 class MovieSearchViewModel @Inject constructor(
     private val discoverRepository: DiscoverRepository
 ) : ViewModel() {

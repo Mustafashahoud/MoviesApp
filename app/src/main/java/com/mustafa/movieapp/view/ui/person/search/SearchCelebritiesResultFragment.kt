@@ -41,8 +41,8 @@ class SearchCelebritiesResultFragment : Fragment(), Injectable {
 
     private val viewModel by viewModels<SearchCelebritiesResultViewModel> { viewModelFactory }
     var dataBindingComponent = FragmentDataBindingComponent(this)
-    var binding by autoCleared<FragmentCelebritiesSearchResultBinding>()
-    var adapter by autoCleared<PeopleSearchListAdapter>()
+    private var binding by autoCleared<FragmentCelebritiesSearchResultBinding>()
+    private var adapter by autoCleared<PeopleSearchListAdapter>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

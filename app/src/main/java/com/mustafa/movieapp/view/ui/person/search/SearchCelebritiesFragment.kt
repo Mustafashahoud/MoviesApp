@@ -42,12 +42,11 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
 
     private val viewModel by viewModels<SearchCelebritiesResultViewModel> { viewModelFactory }
 
-    @Suppress("LeakingThis")
     var dataBindingComponent = FragmentDataBindingComponent(this)
 
-    var binding by autoCleared<FragmentCelebritiesSearchBinding>()
+    private var binding by autoCleared<FragmentCelebritiesSearchBinding>()
 
-    var adapter by autoCleared<PeopleSearchListAdapter>()
+    private var adapter by autoCleared<PeopleSearchListAdapter>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

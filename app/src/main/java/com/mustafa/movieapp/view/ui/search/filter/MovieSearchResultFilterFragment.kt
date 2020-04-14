@@ -34,8 +34,8 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
 
     private val viewModel by viewModels<MovieSearchFilterViewModel> { viewModelFactory }
     var dataBindingComponent = FragmentDataBindingComponent(this)
-    var binding by autoCleared<FragmentSearchResultFilterBinding>()
-    var adapter by autoCleared<MovieSearchListAdapter>()
+    private var binding by autoCleared<FragmentSearchResultFilterBinding>()
+    private var adapter by autoCleared<MovieSearchListAdapter>()
 
 
     override fun onCreateView(

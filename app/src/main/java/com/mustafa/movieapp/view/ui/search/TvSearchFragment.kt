@@ -32,10 +32,10 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    val viewModel by viewModels<TvSearchViewModel> { viewModelFactory }
+    private val viewModel by viewModels<TvSearchViewModel> { viewModelFactory }
     var dataBindingComponent = FragmentDataBindingComponent(this)
-    var binding by autoCleared<FragmentSearchBinding>()
-    var tvAdapter by autoCleared<TvSearchListAdapter>()
+    private var binding by autoCleared<FragmentSearchBinding>()
+    private var tvAdapter by autoCleared<TvSearchListAdapter>()
 
 
     override fun onCreateView(

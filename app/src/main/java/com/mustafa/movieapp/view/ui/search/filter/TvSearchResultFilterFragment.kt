@@ -33,8 +33,8 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
 
     private val viewModel by viewModels<TvSearchFilterViewModel> { viewModelFactory }
     var dataBindingComponent = FragmentDataBindingComponent(this)
-    var binding by autoCleared<FragmentSearchResultFilterBinding>()
-    var adapter by autoCleared<TvSearchListAdapter>()
+    private var binding by autoCleared<FragmentSearchResultFilterBinding>()
+    private var adapter by autoCleared<TvSearchListAdapter>()
 
 
     override fun onCreateView(
