@@ -56,7 +56,7 @@ class TvDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        vm.postTvId(getTvFromIntent().id)
+        vm.setTvId(getTvFromIntent().id)
         with(binding) {
             lifecycleOwner = this@TvDetailFragment
             detailBody.viewModel = vm

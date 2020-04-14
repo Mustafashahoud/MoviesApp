@@ -2,6 +2,9 @@ package com.mustafa.movieapp.utils
 
 import com.mustafa.movieapp.models.Keyword
 
+/**
+ * Copied form https://github.com/skydoves/TheMovies
+ */
 object KeywordListMapper {
     fun mapToStringList(keywords: List<Keyword>): List<String> {
         var list: MutableList<String> = ArrayList()

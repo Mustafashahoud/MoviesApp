@@ -30,7 +30,7 @@ class MovieDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val vm by viewModels<MovieDetailViewModel> { viewModelFactory }
+    private val viewModel by viewModels<MovieDetailViewModel> { viewModelFactory }
 
     private var binding by autoCleared<FragmentMovieDetailBinding>()
 
@@ -50,11 +50,11 @@ class MovieDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        vm.postMovieId(getMovieSafeArgs().id)
+        viewModel.setMovieId(getMovieSafeArgs().id)
 
         with(binding) {
             lifecycleOwner = this@MovieDetailFragment
-            detailBody.viewModel = vm
+            detailBody.viewModel = viewModel
             movie = getMovieSafeArgs()
             detailHeader.movie = getMovieSafeArgs()
             detailBody.movie = getMovieSafeArgs()

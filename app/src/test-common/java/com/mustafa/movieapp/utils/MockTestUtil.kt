@@ -10,29 +10,33 @@ import com.mustafa.movieapp.models.network.PersonDetail
 
 class MockTestUtil {
     companion object {
+
         fun mockMovie() = Movie(123)
+
         fun mockTv() = Tv(123)
+
         fun mockPerson() = Person(1, mockPersonDetail(), "/", false, 123, "", 0f, false)
+
         fun mockKeywordList(): List<Keyword> {
-            val keywords = ArrayList<Keyword>()
-            keywords.add(Keyword(100, "keyword0"))
-            keywords.add(Keyword(101, "keyword1"))
-            keywords.add(Keyword(102, "keyword2"))
-            return keywords
+            return listOf(
+                Keyword(100, "keyword0"),
+                Keyword(100, "keyword0"),
+                Keyword(100, "keyword0")
+            )
         }
 
         fun mockVideoList(): List<Video> {
-            val videos = ArrayList<Video>()
-            videos.add(Video("123", "video0", "", "", 0, ""))
-            videos.add(Video("123", "video0", "", "", 0, ""))
-            return videos
+            return listOf(
+                Video("123", "video0", "", "", 0, ""),
+                Video("123", "video0", "", "", 0, "")
+            )
         }
 
         fun mockReviewList(): List<Review> {
-            val reviews = ArrayList<Review>()
-            reviews.add(Review("123", "", "", ""))
-            reviews.add(Review("123", "", "", ""))
-            return reviews
+            return listOf(
+                Review("123", "Mustafa", "", ""),
+                Review("123", "", "", "")
+            )
         }
 
         fun mockPersonDetail(): PersonDetail {
