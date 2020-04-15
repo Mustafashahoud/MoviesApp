@@ -4,12 +4,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieapp.R
-import com.mustafa.movieapp.extension.getCurrentNavigationFragment
-import com.mustafa.movieapp.extension.isRecyclerViewScrollPositionZero
-import com.mustafa.movieapp.extension.setSmoothScrollToZero
+import com.mustafa.movieapp.extension.*
 import com.mustafa.movieapp.utils.setupWithNavController
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -33,6 +33,14 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
         setOnNavigationItemReselected()
+
+        currentNavController?.observe(this, Observer { navController ->
+            navController.addOnDestinationChangedListener { _, destination, _ ->
+                if (isSearchFragment(destination)) {
+                    findViewById<BottomNavigationView>(R.id.bottom_navigation).gone()
+                } else findViewById<BottomNavigationView>(R.id.bottom_navigation).visible()
+            }
+        })
     }
 
     override fun onBackPressed() {
@@ -55,7 +63,12 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
             if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_tvs)!!) {
                 currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_tvs)
             } else {
-//        currentFragment.findNavController().popBackStack()
+                super.onBackPressed()
+            }
+        } else if (currentFragmentName == CELEBRITY_LIST_FRAGMENT) {
+            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_celebrities)!!) {
+                currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_celebrities)
+            } else {
                 super.onBackPressed()
             }
         } else super.onBackPressed()
@@ -64,7 +77,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
     companion object {
         const val MOVIE_LIST_FRAGMENT = "MovieListFragment"
         const val TV_LIST_FRAGMENT = "TvListFragment"
-        const val CELEBRITY_LIST_FRAGMENT = "StarListFragment"
+        const val CELEBRITY_LIST_FRAGMENT = "CelebritiesListFragment"
     }
 
 
@@ -111,9 +124,16 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
                     ?.setSmoothScrollToZero(R.id.recyclerView_list_movies)
                 R.id.tv -> supportFragmentManager.getCurrentNavigationFragment()
                     ?.setSmoothScrollToZero(R.id.recyclerView_list_tvs)
+                R.id.star -> supportFragmentManager.getCurrentNavigationFragment()
+                    ?.setSmoothScrollToZero(R.id.recyclerView_list_celebrities)
             }
         }
     }
+
+    private fun isSearchFragment(destination: NavDestination): Boolean =
+        destination.id == R.id.movieSearchFragment
+                || destination.id == R.id.tvSearchFragment
+                || destination.id == R.id.searchCelebritiesFragment
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 }
