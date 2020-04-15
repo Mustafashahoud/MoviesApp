@@ -19,7 +19,6 @@ import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentMoviesBinding
 import com.mustafa.movieapp.di.Injectable
 import com.mustafa.movieapp.models.Status
-import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.MovieListAdapter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
@@ -124,7 +123,7 @@ class MovieListFragment : Fragment(), Injectable {
         search_icon.setOnClickListener {
             findNavController().navigate(
                 MovieListFragmentDirections
-                    .actionMoviesFragmentToMovieSearchFragment(false)
+                    .actionMoviesFragmentToMovieSearchFragment()
             )
         }
     }
