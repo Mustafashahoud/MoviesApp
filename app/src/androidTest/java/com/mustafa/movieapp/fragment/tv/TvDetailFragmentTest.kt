@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.HorizontalScrollView
 import android.widget.ListView
 import android.widget.ScrollView
-import androidx.core.os.bundleOf
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.MutableLiveData
@@ -26,6 +25,7 @@ import com.mustafa.movieapp.models.entity.Tv
 import com.mustafa.movieapp.util.*
 import com.mustafa.movieapp.utils.MockTestUtil
 import com.mustafa.movieapp.view.ui.tv.tvdetail.TvDetailFragment
+import com.mustafa.movieapp.view.ui.tv.tvdetail.TvDetailFragmentArgs
 import com.mustafa.movieapp.view.ui.tv.tvdetail.TvDetailViewModel
 import com.nhaarman.mockitokotlin2.whenever
 import com.schibsted.spain.barista.interaction.BaristaScrollInteractions.scrollTo
@@ -67,9 +67,13 @@ class TvDetailFragmentTest {
         whenever(viewModel.reviewListLiveData).thenReturn(reviewsLiveData)
         whenever(viewModel.videoListLiveData).thenReturn(videosLiveData)
 
+        //There are Two ways to create a bundle
         /*IMPORTANT NOTE*/
-        // The key must be the same as android:name in the argument Tag in your navGraph.
-        val bundle = bundleOf("tv" to Tv(1))
+        /*The key must be the same as android:name in the argument Tag in your navGraph.*/
+        //1- val bundle = bundleOf("tv" to Tv(1))
+
+        // 2-
+        val bundle = TvDetailFragmentArgs(Tv(1)).toBundle()
 
         val scenario = launchFragmentInContainer(
             bundle, themeResId = R.style.AppTheme

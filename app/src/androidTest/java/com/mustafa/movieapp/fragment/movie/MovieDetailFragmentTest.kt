@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.HorizontalScrollView
 import android.widget.ListView
 import android.widget.ScrollView
-import androidx.core.os.bundleOf
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.lifecycle.MutableLiveData
@@ -26,6 +25,7 @@ import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.util.*
 import com.mustafa.movieapp.utils.MockTestUtil
 import com.mustafa.movieapp.view.ui.movies.moviedetail.MovieDetailFragment
+import com.mustafa.movieapp.view.ui.movies.moviedetail.MovieDetailFragmentArgs
 import com.mustafa.movieapp.view.ui.movies.moviedetail.MovieDetailViewModel
 import com.nhaarman.mockitokotlin2.whenever
 import com.schibsted.spain.barista.interaction.BaristaScrollInteractions.scrollTo
@@ -70,9 +70,13 @@ class MovieDetailFragmentTest {
         whenever(viewModel.reviewListLiveData).thenReturn(reviewsLiveData)
         whenever(viewModel.videoListLiveData).thenReturn(videosLiveData)
 
+        //Two ways to create a bundle
         /*IMPORTANT NOTE*/
-        // The key must be the same as android:name in the argument Tag in your navGraph.
-        val bundle = bundleOf("movie" to Movie(1))
+        /*The key must be the same as android:name in the argument Tag in your navGraph.*/
+        //1- val bundle = bundleOf("movie" to Movie(1))
+
+        // 2-
+        val bundle = MovieDetailFragmentArgs(Movie(1)).toBundle()
 
         val scenario = launchFragmentInContainer(
             bundle, themeResId = R.style.AppTheme
@@ -123,7 +127,6 @@ class MovieDetailFragmentTest {
         onView(withId(R.id.detail_body_tags)).check(matches(isDisplayed()))
 
     }
-
 
 
     private fun listMatcherVideos(): RecyclerViewMatcher {
