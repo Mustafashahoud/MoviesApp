@@ -13,12 +13,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentTvsBinding
 import com.mustafa.movieapp.di.Injectable
-import com.mustafa.movieapp.extension.visible
 import com.mustafa.movieapp.models.Status
 import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.TvListAdapter
@@ -80,7 +78,7 @@ class TvListFragment : Fragment(), Injectable {
     private fun initializeUI() {
         intiToolbar(getString(R.string.fragment_tvs))
         adapter = TvListAdapter(dataBindingComponent, appExecutors) {
-            navController().navigate(
+            findNavController().navigate(
                 TvListFragmentDirections.actionTvsToTvDetail(
                     it
                 )
@@ -104,7 +102,7 @@ class TvListFragment : Fragment(), Injectable {
         })
 
         search_icon.setOnClickListener {
-            navController().navigate(
+            findNavController().navigate(
                 TvListFragmentDirections.actionTvsFragmentToTvSearchFragment()
             )
         }
@@ -118,18 +116,7 @@ class TvListFragment : Fragment(), Injectable {
         })
     }
 
-    /**
-     * Created to be able to override in tests
-     */
-    fun navController() = findNavController()
-
-    override fun onStart() {
-        super.onStart()
-        activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visible()
-    }
-
-
-    fun intiToolbar(title: String) {
+    private fun intiToolbar(title: String) {
         toolbar_title.text = title
     }
 

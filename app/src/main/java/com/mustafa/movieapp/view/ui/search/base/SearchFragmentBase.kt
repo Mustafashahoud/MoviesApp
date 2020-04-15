@@ -21,7 +21,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.extension.gone
@@ -46,7 +45,6 @@ import com.mustafa.movieapp.view.adapter.filterSelectableAdapter.SelectableItem
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search_filter.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
-import org.jetbrains.anko.find
 import org.jetbrains.anko.textColor
 import java.util.*
 import kotlin.collections.ArrayList
@@ -88,8 +86,6 @@ abstract class SearchFragmentBase : Fragment() {
 
 
     private fun initializeUI() {
-
-        hideNavigationBottomView()
 
         initToolbar()
 
@@ -222,10 +218,6 @@ abstract class SearchFragmentBase : Fragment() {
             isComingFromEdit = true
             renderViewsWhenFiltersTabSelected()
         }
-    }
-
-    private fun hideNavigationBottomView() {
-        this.activity?.find<BottomNavigationView>(R.id.bottom_navigation)?.gone()
     }
 
     private fun setFilterButtons() {

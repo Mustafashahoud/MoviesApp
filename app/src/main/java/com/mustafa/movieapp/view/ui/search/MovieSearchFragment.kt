@@ -56,12 +56,6 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
         return binding.root
     }
 
-    /**
-     * Created to be able to override in tests
-     */
-    private fun navController() = findNavController()
-
-
     override fun setSearchViewHint() {
         search_view.queryHint = "Search Movies"
     }
@@ -113,7 +107,7 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
             appExecutors,
             dataBindingComponent
         ) {
-            navController().navigate(
+            findNavController().navigate(
                 MovieSearchFragmentDirections.actionMovieSearchFragmentToMovieDetail(
                     it
                 )

@@ -95,7 +95,7 @@ class MovieSearchResultFragment : Fragment(), Injectable {
             appExecutors,
             dataBindingComponent
         ) {
-            navController().navigate(
+            findNavController().navigate(
                 MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieDetail(
                     it
                 )
@@ -124,17 +124,12 @@ class MovieSearchResultFragment : Fragment(), Injectable {
         })
 
         search_view.setOnSearchClickListener {
-            navController().navigate(MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieSearchFragment())
+            findNavController().navigate(MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieSearchFragment())
         }
 
         arrow_back.setOnClickListener {
-            navController().navigate(MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieSearchFragment())
+            findNavController().navigate(MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieSearchFragment())
         }
     }
 
-
-    /**
-     * Created to be able to override in tests
-     */
-    fun navController() = findNavController()
 }

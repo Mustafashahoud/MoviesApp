@@ -99,7 +99,7 @@ class CelebritiesListFragment : Fragment(), Injectable {
         })
 
         search_icon.setOnClickListener {
-            navController().navigate(CelebritiesListFragmentDirections.actionCelebritiesToSearchCelebritiesFragment())
+            findNavController().navigate(CelebritiesListFragmentDirections.actionCelebritiesToSearchCelebritiesFragment())
         }
     }
 
@@ -112,13 +112,7 @@ class CelebritiesListFragment : Fragment(), Injectable {
         })
     }
 
-    fun intiToolbar(title: String) {
+    private fun intiToolbar(title: String) {
         toolbar_title.text = title
     }
-
-
-    /**
-     * Created to be able to override in tests
-     */
-    fun navController() = findNavController()
 }

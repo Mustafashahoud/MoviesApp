@@ -79,7 +79,7 @@ class MovieListFragment : Fragment(), Injectable {
         }
 
         adapter = MovieListAdapter(appExecutors, dataBindingComponent) {
-            navController().navigate(
+            findNavController().navigate(
                 MovieListFragmentDirections.actionMoviesFragmentToMovieDetail(
                     it
                 )
@@ -122,16 +122,11 @@ class MovieListFragment : Fragment(), Injectable {
         title.text = titleIn
 
         search_icon.setOnClickListener {
-            navController().navigate(
+            findNavController().navigate(
                 MovieListFragmentDirections
                     .actionMoviesFragmentToMovieSearchFragment(false)
             )
         }
     }
-
-    /**
-     * Created to be able to override in tests
-     */
-    fun navController() = findNavController()
 
 }

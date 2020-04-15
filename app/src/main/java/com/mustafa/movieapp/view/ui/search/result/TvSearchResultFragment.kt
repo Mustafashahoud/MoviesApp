@@ -96,7 +96,7 @@ class TvSearchResultFragment : Fragment(), Injectable {
             appExecutors,
             dataBindingComponent
         ) {
-            navController().navigate(
+            findNavController().navigate(
                 TvSearchResultFragmentDirections.actionTvSearchFragmentResultToTvDetail(it)
             )
         }
@@ -123,17 +123,11 @@ class TvSearchResultFragment : Fragment(), Injectable {
         })
 
         search_view.setOnSearchClickListener {
-            navController().navigate(TvSearchResultFragmentDirections.actionTvSearchFragmentResultToTvSearchFragment())
+            findNavController().navigate(TvSearchResultFragmentDirections.actionTvSearchFragmentResultToTvSearchFragment())
         }
 
         arrow_back.setOnClickListener {
-            navController().navigate(TvSearchResultFragmentDirections.actionTvSearchFragmentResultToTvSearchFragment())
+            findNavController().navigate(TvSearchResultFragmentDirections.actionTvSearchFragmentResultToTvSearchFragment())
         }
     }
-
-
-    /**
-     * Created to be able to override in tests
-     */
-    fun navController() = findNavController()
 }

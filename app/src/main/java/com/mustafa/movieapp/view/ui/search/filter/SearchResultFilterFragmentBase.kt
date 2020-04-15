@@ -7,7 +7,6 @@ import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.di.Injectable
 import com.mustafa.movieapp.utils.FiltersConstants
@@ -56,25 +55,15 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
     private fun initializeUI() {
         setRecyclerViewAdapter()
 
-        nestedScrollView.setOnScrollChangeListener(object :
-            NestedScrollView.OnScrollChangeListener {
-            override fun onScrollChange(
-                v: NestedScrollView?,
-                scrollX: Int,
-                scrollY: Int,
-                oldScrollX: Int,
-                oldScrollY: Int
-            ) {
-                if (v?.getChildAt(v.childCount - 1) != null) {
-                    if ((scrollY >= (v.getChildAt(v.childCount - 1).measuredHeight - v.measuredHeight))
-                        && scrollY > oldScrollY
-                        && !isLoading()
-                    ) {
-                        loadMoreFilters()
-                    }
+        nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, oldScrollY ->
+            if (v?.getChildAt(v.childCount - 1) != null) {
+                if ((scrollY >= (v.getChildAt(v.childCount - 1).measuredHeight - v.measuredHeight))
+                    && scrollY > oldScrollY
+                    && !isLoading()
+                ) {
+                    loadMoreFilters()
                 }
             }
-
         })
 
         sort_by_icon.setOnClickListener {
@@ -166,10 +155,6 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
         sort_by_text_view.text = "Sort by $sortType"
     }
 
-    /**
-     * Created to be able to override in tests
-     */
-    fun navController() = findNavController()
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         return when (item?.itemId) {
 

@@ -53,8 +53,6 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
         return binding.root
     }
 
-    fun navController() = findNavController()
-
     override fun setSearchViewHint() {
         search_view.queryHint = "Search Series"
     }
@@ -106,7 +104,7 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
             appExecutors,
             dataBindingComponent
         ) {
-            navController().navigate(
+            findNavController().navigate(
                 TvSearchFragmentDirections.actionTvSearchFragmentToTvDetail(
                     it
                 )

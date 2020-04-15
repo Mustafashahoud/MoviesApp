@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
@@ -84,7 +85,7 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
             appExecutors,
             dataBindingComponent
         ) {
-            navController().navigate(
+            findNavController().navigate(
                 TvSearchResultFilterFragmentDirections.actionTvSearchFragmentResultFilterToTvDetail(
                     it
                 )
@@ -109,7 +110,7 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
     }
 
     override fun navigateFromSearchResultFilterFragmentToSearchFragment() {
-        navController().navigate(
+        findNavController().navigate(
             TvSearchResultFilterFragmentDirections.actionTvSearchFragmentResultFilterToTvSearchFragment()
         )
     }

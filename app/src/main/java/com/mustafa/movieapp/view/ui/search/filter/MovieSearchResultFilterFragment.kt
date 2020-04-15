@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
@@ -85,7 +86,7 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
             appExecutors,
             dataBindingComponent
         ) {
-            navController().navigate(
+            findNavController().navigate(
                 MovieSearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieDetail(
                     it
                 )
@@ -110,7 +111,7 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
     }
 
     override fun navigateFromSearchResultFilterFragmentToSearchFragment() {
-        navController().navigate(
+        findNavController().navigate(
             MovieSearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieSearchFragment()
         )
     }
