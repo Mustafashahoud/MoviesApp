@@ -6,7 +6,6 @@ import com.mustafa.movieapp.models.Keyword
 import com.mustafa.movieapp.models.Resource
 import com.mustafa.movieapp.models.Review
 import com.mustafa.movieapp.models.Video
-import com.mustafa.movieapp.repository.DiscoverRepository
 import com.mustafa.movieapp.repository.MovieRepository
 import com.mustafa.movieapp.view.ui.movies.moviedetail.MovieDetailViewModel
 import com.nhaarman.mockitokotlin2.mock
@@ -41,7 +40,7 @@ class MovieDetailViewModelTest {
         viewModel.reviewListLiveData.observeForever(observerReview)
         viewModel.videoListLiveData.observeForever(observerVideo)
 
-        viewModel.postMovieId(null)
+        viewModel.setMovieId(null)
         verifyNoMoreInteractions(repository)
         verify(repository, never()).loadKeywordList(Mockito.anyInt())
         verify(repository, never()).loadReviewsList(Mockito.anyInt())
@@ -57,7 +56,7 @@ class MovieDetailViewModelTest {
         viewModel.reviewListLiveData.observeForever(observerReview)
         viewModel.videoListLiveData.observeForever(observerVideo)
 
-        viewModel.postMovieId(1)
+        viewModel.setMovieId(1)
         verify(repository).loadKeywordList(1)
         verify(repository).loadReviewsList(1)
         verify(repository).loadVideoList(1)
