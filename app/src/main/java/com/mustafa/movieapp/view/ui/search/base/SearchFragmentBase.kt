@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.IBinder
 import android.speech.RecognizerIntent
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
@@ -236,16 +235,22 @@ abstract class SearchFragmentBase : Fragment() {
         layoutParams2.weight = 0.5f
         layoutTab2.layoutParams = layoutParams2
 
-        val tabLayout = tabs.getChildAt(0) as ViewGroup
-        tabLayout.getChildAt(0).setOnClickListener {
-            isComingFromEdit = false
-            renderViewsWhenRecentTabSelected()
-
-        }
-        tabLayout.getChildAt(1).setOnClickListener {
-            isComingFromEdit = true
-            renderViewsWhenFiltersTabSelected()
-        }
+        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when (tab?.position) {
+                    0 -> {
+                        isComingFromEdit = false
+                        renderViewsWhenRecentTabSelected()
+                    }
+                    1 -> {
+                        isComingFromEdit = true
+                        renderViewsWhenFiltersTabSelected()
+                    }
+                }
+            }
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+        })
     }
 
     private fun setFilterButtons() {
