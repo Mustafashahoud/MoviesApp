@@ -80,6 +80,8 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
     private fun initToolbar() {
         search_view.onActionViewExpanded()
 
+        search_view.queryHint = "Search Celebrities"
+
         voiceSearch.setOnClickListener {
             val voiceIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             voiceIntent.putExtra(
