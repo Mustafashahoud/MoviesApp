@@ -16,14 +16,15 @@
     <string name="dialog_message">Clear recent searches and pages?</string>
     <string name="cancel">Cancel</string>
     <string name="see_results">SEE RESULTS</string>
-    <string name="imdb_rating">IMDb Rating</string>
-    <string name="genre">Genre</string>
-    <string name="country">Country</string>
-    <string name="search_type">Search Type</string>
-    <string name="keywords">keywords</string>
-    <string name="runtime">Runtime</string>
-    <string name="year">Year</string>
-    <string name="language">Primary Language</string>
+
+    // Filters titles
+    <string name="rating_title">IMDb Rating</string>
+    <string name="genre_title">Genre</string>
+    <string name="country_title">Country</string>
+    <string name="keyword_title">keywords</string>
+    <string name="runtime_title">Runtime</string>
+    <string name="year_title">Year</string>
+    <string name="language_title">Primary Language</string>
     <string name="edit">Edit</string>
     <string name="results">Results</string>
 
