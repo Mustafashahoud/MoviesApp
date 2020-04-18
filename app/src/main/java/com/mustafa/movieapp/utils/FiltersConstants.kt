@@ -1,7 +1,5 @@
 package com.mustafa.movieapp.utils
 
-import androidx.lifecycle.MutableLiveData
-
 class FiltersConstants {
     companion object {
         const val RUNTIME = "RUNTIME"
@@ -42,7 +40,7 @@ class FiltersConstants {
         )
 
         val countryFilters = listOf(
-            "United State", "Canada", "Germany", "France", "United Kingdom",
+            "United States", "Canada", "Germany", "France", "United Kingdom",
             "Spain", "Italy", "India", "Japan"
         )
 
@@ -55,8 +53,5 @@ class FiltersConstants {
             "2020", "2019", "2018", "2017", "2016",
             "2015", "2014", "2013", "2012", "2011", "2010|Before"
         )
-
-        val hasAnyFilterBeenSelected = MutableLiveData<Boolean>()
-
     }
 }
