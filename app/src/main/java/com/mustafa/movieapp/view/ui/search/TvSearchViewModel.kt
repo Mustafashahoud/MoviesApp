@@ -8,10 +8,12 @@ import com.mustafa.movieapp.models.Resource
 import com.mustafa.movieapp.models.entity.Tv
 import com.mustafa.movieapp.models.entity.TvRecentQueries
 import com.mustafa.movieapp.repository.DiscoverRepository
+import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.AbsentLiveData
 import java.util.*
 import javax.inject.Inject
 
+@OpenForTesting
 class TvSearchViewModel @Inject constructor(
     private val discoverRepository: DiscoverRepository
 ) : ViewModel() {
@@ -35,10 +37,6 @@ class TvSearchViewModel @Inject constructor(
         searchTvPageLiveData.value?.let {
             searchTvPageLiveData.value = it
         }
-    }
-
-    fun resetPageNumber() {
-        tvsPageNumber = 1
     }
 
     fun loadMore() {
