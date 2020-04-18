@@ -123,8 +123,8 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
     override fun observeAndSetRecentQueries() {
         viewModel.getMovieRecentQueries().observe(viewLifecycleOwner, Observer { it ->
             if (!it.isNullOrEmpty()) {
-                val queries = it.map { it.query }
-                setListViewOfRecentQueries(queries)
+                val queries = it.mapNotNull { it.query }.filter { it.isNotEmpty() }
+                if (queries.isNotEmpty()) setListViewOfRecentQueries(queries)
             }
         })
     }

@@ -218,5 +218,4 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
     abstract fun loadMoreFilters()
     abstract fun isLoading(): Boolean
     abstract fun navigateFromSearchResultFilterFragmentToSearchFragment()
-    //viewModel.searchMovieListFilterLiveData.value?.status != Status.LOADING
 }

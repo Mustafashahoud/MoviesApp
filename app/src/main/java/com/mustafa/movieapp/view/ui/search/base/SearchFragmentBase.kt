@@ -64,9 +64,14 @@ abstract class SearchFragmentBase : Fragment() {
 
     private var filtersToReSelect = ArrayList<String>()
 
+    private var hasRecentQueriesChanged = MutableLiveData<Boolean>()
+
+    private var arrayAdapter: ArrayAdapter<String>? = null
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observeRecentQueriesChanged()
         initializeUI()
         subscribers()
         setBindingVariables()
@@ -84,6 +89,12 @@ abstract class SearchFragmentBase : Fragment() {
 
     }
 
+    private fun observeRecentQueriesChanged() {
+        hasRecentQueriesChanged.observe(viewLifecycleOwner, Observer {
+            arrayAdapter?.let { adapter -> clear_recent_queries.isClickable = !adapter.isEmpty }
+        })
+    }
+
 
     private fun initializeUI() {
 
@@ -95,7 +106,7 @@ abstract class SearchFragmentBase : Fragment() {
 
         setFilterButtons()
 
-        initClearAndSeeResultBar()
+        initClearRecentClearAndSeeResultBarWidgets()
 
         if (tabs.getTabAt(0)?.isSelected!!)
             observeAndSetRecentQueries()
@@ -105,7 +116,7 @@ abstract class SearchFragmentBase : Fragment() {
 
     }
 
-    private fun initClearAndSeeResultBar() {
+    private fun initClearRecentClearAndSeeResultBarWidgets() {
         clear_filter.setOnClickListener {
 
             for (adapter in mapFilterTypeToSelectedFilters.keys) {
@@ -133,6 +144,25 @@ abstract class SearchFragmentBase : Fragment() {
             navigateFromSearchFragmentToSearchFragmentResultFilter(bundle)
 
         }
+
+
+        clear_recent_queries.setOnClickListener {
+            arrayAdapter?.let {
+                val builder = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
+                builder.setMessage(R.string.dialog_message)
+                    .setPositiveButton(R.string.clear) { _, _ ->
+                        deleteAllRecentQueries()
+                        it.clear()
+                        hideRecentQueries()
+                        hasRecentQueriesChanged.value = true
+                    }
+                    .setNegativeButton(R.string.cancel) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+
+                builder.create().show()
+            }
+        }
     }
 
 
@@ -158,9 +188,7 @@ abstract class SearchFragmentBase : Fragment() {
         val mapStringAdapterNameToSelectedFilters = HashMap<String, List<String>>()
         mapFilterTypeToSelectedFilters.map { it ->
             when (it.key.adapterName) {
-                RATINGS -> mapStringAdapterNameToSelectedFilters[RATINGS] = it.value.map {
-                    it.replace("+", "")
-                }
+                RATINGS -> mapStringAdapterNameToSelectedFilters[RATINGS] = it.value
                 RUNTIME -> mapStringAdapterNameToSelectedFilters[RUNTIME] = it.value
                 KEYWORDS -> mapStringAdapterNameToSelectedFilters[KEYWORDS] = it.value
                 LANGUAGES -> mapStringAdapterNameToSelectedFilters[LANGUAGES] = it.value
@@ -273,11 +301,11 @@ abstract class SearchFragmentBase : Fragment() {
         adapterName: String
     ) {
         val filters = ArrayList<String>()
-
         val selectableItemList = ArrayList<SelectableItem>()
+
         for (item in listOfButtonFiltersTitles) {
-            val itemState = filtersToReSelect.contains(item)
-            val selectableItem = SelectableItem(item, itemState)
+            val wasItemSelected = filtersToReSelect.contains(item)
+            val selectableItem = SelectableItem(item, wasItemSelected)
             selectableItemList.add(selectableItem)
         }
 
@@ -286,13 +314,9 @@ abstract class SearchFragmentBase : Fragment() {
                 filters.add(it)
                 hasAnyFilterBeenSelected.value = true
             }, {
+
                 if (filters.size > 0) filters.remove(it)
-
-                filtersToReSelect.contains(it)
-
-                if (filtersToReSelect.contains(it)) {
-                    filtersToReSelect.remove(it)
-                }
+                if (filtersToReSelect.contains(it)) filtersToReSelect.remove(it)
 
                 this.hasAnyFilterBeenSelected.value = true
             },
@@ -314,11 +338,16 @@ abstract class SearchFragmentBase : Fragment() {
      *
      */
     protected fun setListViewOfRecentQueries(queries: List<String?>) {
-        val arrayAdapter =
-            ArrayAdapter<String>(requireContext(), R.layout.recent_query_item, queries)
+        arrayAdapter =
+            ArrayAdapter<String>(
+                requireContext(),
+                R.layout.recent_query_item,
+                queries.requireNoNulls()
+            )
         if (tabs.getTabAt(0)?.isSelected!!) {
             showRecentQueries()
         }
+        hasRecentQueriesChanged.value = true
         listView_recent_queries.setHeaderDividersEnabled(true)
         listView_recent_queries.setFooterDividersEnabled(true)
         listView_recent_queries.adapter = arrayAdapter
@@ -327,20 +356,7 @@ abstract class SearchFragmentBase : Fragment() {
             navigateFromSearchFragmentToSearchFragmentResult(query)
         }
 
-        clear_recent_queries.setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
-            builder.setMessage(R.string.dialog_message)
-                .setPositiveButton(R.string.clear) { _, _ ->
-                    deleteAllRecentQueries()
-                    arrayAdapter.clear()
-                    hideRecentQueries()
-                }
-                .setNegativeButton(R.string.cancel) { dialog, _ ->
-                    dialog.dismiss()
-                }
 
-            builder.create().show()
-        }
     }
 
     /**

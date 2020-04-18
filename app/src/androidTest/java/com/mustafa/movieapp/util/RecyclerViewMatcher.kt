@@ -9,7 +9,7 @@ import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
 
 /**
- * Copied for https://github.com/android/architecture-components-samples/tree/master/GithubBrowserSample
+ * Copied from https://github.com/android/architecture-components-samples/tree/master/GithubBrowserSample
  */
 class RecyclerViewMatcher(private val recyclerViewId: Int) {
 
