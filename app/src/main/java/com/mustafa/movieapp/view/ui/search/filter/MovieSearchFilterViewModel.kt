@@ -7,9 +7,11 @@ import androidx.lifecycle.ViewModel
 import com.mustafa.movieapp.models.Resource
 import com.mustafa.movieapp.models.entity.Movie
 import com.mustafa.movieapp.repository.DiscoverRepository
+import com.mustafa.movieapp.testing.OpenForTesting
 import com.mustafa.movieapp.utils.AbsentLiveData
 import javax.inject.Inject
 
+@OpenForTesting
 class MovieSearchFilterViewModel @Inject constructor(
     private val discoverRepository: DiscoverRepository
 ) : ViewModel() {
