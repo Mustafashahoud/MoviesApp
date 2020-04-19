@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -37,7 +38,7 @@ class MovieSearchResultFragment : Fragment(), Injectable {
     lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<MovieSearchViewModel> { viewModelFactory }
-    var dataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     var binding by autoCleared<FragmentMovieSearchResultBinding>()
     var adapter by autoCleared<MovieSearchListAdapter>()
 
@@ -114,7 +115,6 @@ class MovieSearchResultFragment : Fragment(), Injectable {
                 val lastPosition = layoutManager.findLastVisibleItemPosition()
                 if (lastPosition == adapter.itemCount - 1
                     && viewModel.searchMovieListLiveData.value?.status != Status.LOADING
-                    && dy > 0
                 ) {
                     if (viewModel.searchMovieListLiveData.value?.hasNextPage!!) {
                         viewModel.loadMore()

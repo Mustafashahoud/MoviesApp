@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -37,7 +38,7 @@ class TvSearchResultFragment : Fragment(), Injectable {
     lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<TvSearchViewModel> { viewModelFactory }
-    var dataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     var binding by autoCleared<FragmentTvSearchResultBinding>()
     var adapter by autoCleared<TvSearchListAdapter>()
 
@@ -113,7 +114,6 @@ class TvSearchResultFragment : Fragment(), Injectable {
                 val lastPosition = layoutManager.findLastVisibleItemPosition()
                 if (lastPosition == adapter.itemCount - 1
                     && viewModel.searchTvListLiveData.value?.status != Status.LOADING
-                    && dy > 0
                 ) {
                     if (viewModel.searchTvListLiveData.value?.hasNextPage!!) {
                         viewModel.loadMore()
