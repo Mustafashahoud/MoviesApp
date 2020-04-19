@@ -43,7 +43,6 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        filtersMap = getFilterMap()
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_search_result_filter,

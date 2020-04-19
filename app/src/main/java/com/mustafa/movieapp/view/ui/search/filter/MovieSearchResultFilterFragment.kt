@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
+import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -34,7 +35,7 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
     lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<MovieSearchFilterViewModel> { viewModelFactory }
-    var dataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentSearchResultFilterBinding>()
     private var adapter by autoCleared<MovieSearchListAdapter>()
 
@@ -44,7 +45,6 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        filtersMap = getFilterMap()
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_search_result_filter,
