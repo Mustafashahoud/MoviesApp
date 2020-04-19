@@ -111,6 +111,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/total_filter_results"
                                 android:layout_width="wrap_content"
                                 android:layout_height="30dp"
                                 android:text="@{totalFilterResult}"

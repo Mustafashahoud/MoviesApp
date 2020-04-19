@@ -45,7 +45,7 @@ class MockTestUtil {
 
         fun createMovies(count: Int): List<Movie> {
             return (0 until count).map {
-                Movie(it)
+                Movie(it, "Movie$it")
             }
         }
 

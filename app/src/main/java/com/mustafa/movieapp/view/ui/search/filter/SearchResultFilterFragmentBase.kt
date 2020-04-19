@@ -60,6 +60,7 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
                 if ((scrollY >= (v.getChildAt(v.childCount - 1).measuredHeight - v.measuredHeight))
                     && scrollY > oldScrollY
                     && !isLoading()
+                    && hasNextPage()
                 ) {
                     loadMoreFilters()
                 }
@@ -78,6 +79,7 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
             navigateFromSearchResultFilterFragmentToSearchFragment()
         }
     }
+
 
     /**
      * Filtering process:
@@ -218,4 +220,5 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
     abstract fun loadMoreFilters()
     abstract fun isLoading(): Boolean
     abstract fun navigateFromSearchResultFilterFragmentToSearchFragment()
+    abstract fun hasNextPage(): Boolean
 }

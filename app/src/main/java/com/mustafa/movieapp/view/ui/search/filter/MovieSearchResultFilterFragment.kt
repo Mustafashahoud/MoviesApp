@@ -56,7 +56,7 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
 
     override fun getFilterMap(): HashMap<String, ArrayList<String>>? {
         @Suppress("UNCHECKED_CAST")
-        return arguments?.getSerializable("key") as HashMap<String, ArrayList<String>>
+        return arguments?.getSerializable("key") as HashMap<String, ArrayList<String>>?
     }
 
     override fun setBindingVariables() {
@@ -115,6 +115,14 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
             MovieSearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieSearchFragment()
         )
     }
+
+    override fun hasNextPage(): Boolean {
+        viewModel.searchMovieListFilterLiveData.value?.let {
+            return it.hasNextPage
+        }
+        return false
+    }
+
 
     override fun resetAndLoadFiltersSortedBy(order: String) {
         viewModel.resetFilterValues()

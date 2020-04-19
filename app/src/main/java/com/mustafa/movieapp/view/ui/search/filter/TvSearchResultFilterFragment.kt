@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -33,7 +34,7 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
     lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<TvSearchFilterViewModel> { viewModelFactory }
-    var dataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentSearchResultFilterBinding>()
     private var adapter by autoCleared<TvSearchListAdapter>()
 
@@ -54,7 +55,7 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
 
     override fun getFilterMap(): HashMap<String, ArrayList<String>>? {
         @Suppress("UNCHECKED_CAST")
-        return arguments?.getSerializable("key") as HashMap<String, ArrayList<String>>
+        return arguments?.getSerializable("key") as HashMap<String, ArrayList<String>>?
     }
 
     override fun setBindingVariables() {
@@ -113,6 +114,15 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
             TvSearchResultFilterFragmentDirections.actionTvSearchFragmentResultFilterToTvSearchFragment()
         )
     }
+
+
+    override fun hasNextPage(): Boolean {
+        viewModel.searchTvListFilterLiveData.value?.let {
+            return it.hasNextPage
+        }
+        return false
+    }
+
 
     override fun resetAndLoadFiltersSortedBy(order: String) {
         viewModel.resetFilterValues()
