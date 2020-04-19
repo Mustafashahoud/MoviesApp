@@ -9,7 +9,8 @@
     <string name="unknown_error">Unknown Error</string>
     <string name="empty_search_result">No results for <b>%s</b></string>
     <string name="recent">Recent</string>
-    <string name="filter_movies">Filter Your Movies</string>
+    <string name="filter_movies_tab_name">Filter Your Movies</string>
+    <string name="filter_series_tab_name">Filter Your Series</string>
     <string name="filter_tvs">Filter Your Series</string>
     <string name="recent_searches">Recent Searches</string>
     <string name="clear">CLEAR</string>

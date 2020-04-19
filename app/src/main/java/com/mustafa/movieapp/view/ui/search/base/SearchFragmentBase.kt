@@ -185,7 +185,7 @@ abstract class SearchFragmentBase : Fragment() {
      */
     private fun convertAdapterKeyMapToStringKeyMap(): Map<String, List<String>> {
         val mapStringAdapterNameToSelectedFilters = HashMap<String, List<String>>()
-        mapFilterTypeToSelectedFilters.map { it ->
+        mapFilterTypeToSelectedFilters.map {
             when (it.key.adapterName) {
                 RATINGS -> mapStringAdapterNameToSelectedFilters[RATINGS] = it.value
                 RUNTIME -> mapStringAdapterNameToSelectedFilters[RUNTIME] = it.value
@@ -234,6 +234,8 @@ abstract class SearchFragmentBase : Fragment() {
         layoutParams2.width = ActionBar.LayoutParams.WRAP_CONTENT
         layoutParams2.weight = 0.5f
         layoutTab2.layoutParams = layoutParams2
+
+        setFilterTabName(tabs.getTabAt(1))
 
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -515,5 +517,6 @@ abstract class SearchFragmentBase : Fragment() {
     protected abstract fun navigateFromSearchFragmentToSearchFragmentResultFilter(bundle: Bundle)
     protected abstract fun navigateFromSearchFragmentToSearchFragmentResult(query: String)
     protected abstract fun navigateFromSearchFragmentToListItemsFragment()
+    protected abstract fun setFilterTabName(tab: TabLayout.Tab?)
 
 }

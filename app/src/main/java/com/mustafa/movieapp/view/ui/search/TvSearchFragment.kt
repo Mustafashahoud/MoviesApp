@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.tabs.TabLayout
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieapp.databinding.FragmentSearchBinding
@@ -56,6 +57,10 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
 
     override fun setSearchViewHint() {
         search_view.queryHint = "Search Series"
+    }
+
+    override fun setFilterTabName(tab: TabLayout.Tab?) {
+        tab?.text = getString(R.string.filter_series_tab_name)
     }
 
     override fun setBindingVariables() {/*Do nothing*/
