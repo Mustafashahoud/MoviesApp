@@ -12,6 +12,7 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentBindingAdapters
 import com.mustafa.movieapp.models.Resource
@@ -27,9 +28,11 @@ import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
 
+@RunWith(AndroidJUnit4::class)
 class CelebritiesListFragmentTest {
     @Rule
     @JvmField

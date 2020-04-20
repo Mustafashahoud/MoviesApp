@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.*
+import androidx.test.espresso.Espresso.onData
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers
@@ -15,7 +15,6 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.binding.FragmentBindingAdapters
-import com.mustafa.movieapp.models.Resource
 import com.mustafa.movieapp.models.entity.PeopleRecentQueries
 import com.mustafa.movieapp.models.entity.Person
 import com.mustafa.movieapp.util.*
@@ -51,7 +50,6 @@ class SearchCelebritiesFragmentTest {
 
     private lateinit var mockBindingAdapter: FragmentBindingAdapters
 
-    private val peopleLiveData = MutableLiveData<Resource<List<Person>>>()
     private val celebritiesSuggestionsLiveData = MutableLiveData<List<Person>>()
     private val celebritiesRecentQueries = MutableLiveData<List<PeopleRecentQueries>>()
 
@@ -64,7 +62,6 @@ class SearchCelebritiesFragmentTest {
 
         viewModel = mock(SearchCelebritiesResultViewModel::class.java)
 
-        `when`(viewModel.searchPeopleListLiveData).thenReturn(peopleLiveData)
         `when`(viewModel.peopleSuggestions).thenReturn(celebritiesSuggestionsLiveData)
         `when`(viewModel.getPeopleRecentQueries()).thenReturn(celebritiesRecentQueries)
 

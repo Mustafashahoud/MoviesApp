@@ -120,11 +120,9 @@ class SearchCelebritiesResultFragment : Fragment(), Injectable {
                 val lastPosition = layoutManager.findLastVisibleItemPosition()
                 if (lastPosition == adapter.itemCount - 1
                     && viewModel.searchPeopleListLiveData.value?.status != Status.LOADING
-                    && dy > 0
+                    && viewModel.searchPeopleListLiveData.value?.hasNextPage!!
                 ) {
-                    if (viewModel.searchPeopleListLiveData.value?.hasNextPage!!) {
-                        viewModel.loadMore()
-                    }
+                    viewModel.loadMore()
                 }
             }
         })
