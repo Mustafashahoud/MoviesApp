@@ -34,15 +34,16 @@
           app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
         <ImageView
-            android:id="@+id/tv_detail_poster"
+            android:id="@+id/tv_celebrity_detail_poster"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             app:bindBackDropForTvPerson="@{tv}"
-            app:layout_collapseMode="parallax" />
+            app:layout_collapseMode="parallax"
+            tools:ignore="ContentDescription" />
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tv_detail_toolbar"
+            android:id="@+id/tv_celebrity_detail_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_collapseMode="pin" >
@@ -77,10 +78,11 @@
             layout="@layout/layout_tv_celebrity_detail_header" />
 
         <TextView
+            android:id="@+id/summary_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="23dp"
-            android:text="Summary"
+            android:text="@string/summary"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />

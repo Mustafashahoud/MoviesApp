@@ -35,7 +35,6 @@
     <string name="nav_about_us">About Us</string>
     <string name="movie_list_fragment_name">MovieListFragment</string>
     <string name="tv_list_fragment_name">TvListFragment</string>
-    <string name="summary">Summary</string>
     <string name="reviews">Reviews</string>
     <string name="trailers">Trailers</string>
 
@@ -47,4 +46,5 @@
     <string name="tv_shows_and_series">TV Shows and Series</string>
     <string name="movies">Movies</string>
     <string name="rating">Rating:</string>
+    <string name="summary">Summary</string>
 </resources>

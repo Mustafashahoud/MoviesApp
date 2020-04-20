@@ -28,7 +28,7 @@
         android:textColor="@color/white"
         android:textSize="22sp"
         android:textStyle="bold"
-        tools:text="Star Wars: The Last Jedi" />
+        tools:text="Troy" />
 
     <TextView
         android:id="@+id/detail_header_celebrity_character"
