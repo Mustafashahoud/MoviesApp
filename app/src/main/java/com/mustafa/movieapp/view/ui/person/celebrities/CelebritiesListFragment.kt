@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -34,7 +35,7 @@ class CelebritiesListFragment : Fragment(), Injectable {
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    var dataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
     private val viewModel by viewModels<CelebritiesListViewModel> {
         viewModelFactory
@@ -91,7 +92,7 @@ class CelebritiesListFragment : Fragment(), Injectable {
                 val lastPosition = layoutManager.findLastVisibleItemPosition()
                 if (lastPosition == adapter.itemCount - 1
                     && viewModel.peopleLiveData.value?.status != Status.LOADING
-                    && dy > 0
+                    && viewModel.peopleLiveData.value?.hasNextPage!!
                 ) {
                     viewModel.loadMore()
                 }

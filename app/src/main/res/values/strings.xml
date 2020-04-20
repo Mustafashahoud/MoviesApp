@@ -2,7 +2,7 @@
     <string name="app_name">MovieApp</string>
     <string name="fragment_movies">Movies</string>
     <string name="fragment_tvs">Series</string>
-    <string name="fragment_celebrities">Celebrities </string>
+    <string name="fragment_celebrities">Celebrities</string>
     <string name="transition_profile">transition_profile</string>
     <string name="main_fragment_movie">main_fragment_movie</string>
     <string name="retry">Retry</string>
