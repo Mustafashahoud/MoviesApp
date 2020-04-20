@@ -10,9 +10,11 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
+import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -42,11 +44,15 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
 
     private val viewModel by viewModels<SearchCelebritiesResultViewModel> { viewModelFactory }
 
-    var dataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
     private var binding by autoCleared<FragmentCelebritiesSearchBinding>()
 
     private var adapter by autoCleared<PeopleSearchListAdapter>()
+
+    private var arrayAdapter: ArrayAdapter<String>? = null
+
+    private var hasRecentQueriesChanged = MutableLiveData<Boolean>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,7 +77,7 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
 
     fun initializeUI() {
         initToolbar()
-        initAdapter()
+        initRecyclerView()
     }
 
     /**
@@ -117,9 +123,26 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
                 return true
             }
         })
+
+        clear_recent_queries.setOnClickListener {
+            arrayAdapter?.let {
+                val builder = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
+                builder.setMessage(R.string.dialog_message)
+                    .setPositiveButton(R.string.clear) { _, _ ->
+                        viewModel.deleteAllPeopleRecentQueries()
+                        it.clear()
+                        listView_recent_queries.inVisible()
+                    }
+                    .setNegativeButton(R.string.cancel) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+
+                builder.create().show()
+            }
+        }
     }
 
-    private fun initAdapter() {
+    private fun initRecyclerView() {
         adapter = PeopleSearchListAdapter(appExecutors, dataBindingComponent) {
             findNavController().navigate(
                 SearchCelebritiesFragmentDirections.actionSearchCelebritiesFragmentToCelebrityDetail(
@@ -148,15 +171,22 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
                 setListViewOfRecentQueries(queries)
             }
         })
+
+        hasRecentQueriesChanged.observe(viewLifecycleOwner, Observer {
+            arrayAdapter?.let { adapter -> clear_recent_queries.isClickable = !adapter.isEmpty }
+        })
     }
 
     /**
      *
      */
     private fun setListViewOfRecentQueries(queries: List<String?>) {
-        val arrayAdapter =
-            ArrayAdapter<String>(requireContext(), R.layout.recent_query_item, queries)
-
+        arrayAdapter = ArrayAdapter<String>(
+            requireContext(),
+            R.layout.recent_query_item,
+            queries.requireNoNulls()
+        )
+        hasRecentQueriesChanged.value = true
         listView_recent_queries.setHeaderDividersEnabled(true)
         listView_recent_queries.setFooterDividersEnabled(true)
         listView_recent_queries.adapter = arrayAdapter
@@ -165,19 +195,7 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
             navigateToSearchCelebritiesResultFragment(query)
         }
 
-        clear_recent_queries.setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
-            builder.setMessage(R.string.dialog_message)
-                .setPositiveButton(R.string.clear) { _, _ ->
-                    viewModel.deleteAllPeopleRecentQueries()
-                    arrayAdapter.clear()
-                }
-                .setNegativeButton(R.string.cancel) { dialog, _ ->
-                    dialog.dismiss()
-                }
 
-            builder.create().show()
-        }
     }
 
     private fun observeSuggestions(newText: String?) {

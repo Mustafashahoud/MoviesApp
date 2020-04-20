@@ -7,6 +7,7 @@ import android.speech.RecognizerIntent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -40,7 +41,7 @@ class SearchCelebritiesResultFragment : Fragment(), Injectable {
     lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<SearchCelebritiesResultViewModel> { viewModelFactory }
-    var dataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentCelebritiesSearchResultBinding>()
     private var adapter by autoCleared<PeopleSearchListAdapter>()
 
