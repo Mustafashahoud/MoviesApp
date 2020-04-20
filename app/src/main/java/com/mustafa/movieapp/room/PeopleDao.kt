@@ -35,7 +35,7 @@ abstract class PeopleDao {
     @Query("SELECT * FROM PeopleResult WHERE page = :pageNumber")
     abstract fun getPeopleResultByPageLiveData(pageNumber: Int): LiveData<PeopleResult>
 
-    @Query("SELECT * FROM People WHERE id in (:personIds) AND profile_path <> '' ")
+    @Query("SELECT * FROM People WHERE id in (:personIds) AND search = 0 AND profile_path <> '' ")
     abstract fun loadPeopleList(personIds: List<Int>): LiveData<List<Person>>
 
 

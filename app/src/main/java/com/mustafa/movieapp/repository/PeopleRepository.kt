@@ -136,12 +136,6 @@ class PeopleRepository @Inject constructor(
                     val peopleSearchResult = peopleDao.searchPeopleResult(query, prevPageNumber)
                     ids.addAll(peopleSearchResult.ids)
                 }
-                if (page != 1) {
-                    val prevPageNumber = page - 1
-                    val peopleResult =
-                        peopleDao.searchPeopleResult(query, prevPageNumber)
-                    ids.addAll(peopleResult.ids)
-                }
 
                 ids.addAll(personIds)
 
