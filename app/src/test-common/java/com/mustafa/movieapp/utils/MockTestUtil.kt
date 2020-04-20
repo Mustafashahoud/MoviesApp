@@ -16,14 +16,15 @@ class MockTestUtil {
         fun mockPerson() = Person(1, mockPersonDetail(), "/", false, 123, "MUSTAFA", 0f, false)
 
         fun mockMoviePerson() = MoviePerson(
-            1, "",
+            1,
+            "Achilles",
             "",
             false,
-            "",
+            "/",
             false,
-            "",
-            "",
-            listOf(),
+            "After Paris, a prince of Troy, has an affair with Menelaus's wife, Helen, he decides to take her with him. Later, Menelaus's brother uses that as an excuse to wage war against the city of Troy.",
+            "2004",
+            listOf(36),
             "",
             "",
             "Troy",
@@ -33,11 +34,12 @@ class MockTestUtil {
             1F
         )
         fun mockTvPerson() = TvPerson(
-            1, "",
+            1,
+            "Marty Byrde",
             "",
             "",
-            "",
-            "",
+            "Created by Bill Dubuque (\"The Accountant,\" \"The Judge\"), this drama series stars Jason Bateman as Marty Byrde, a financial planner who relocates his family from Chicago to a summer resort community in the Ozarks",
+            "2017",
             listOf(),
             "",
             "",
