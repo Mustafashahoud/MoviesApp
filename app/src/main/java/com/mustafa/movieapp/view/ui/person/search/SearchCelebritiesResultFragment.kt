@@ -26,7 +26,6 @@ import com.mustafa.movieapp.utils.autoCleared
 import com.mustafa.movieapp.view.adapter.PeopleSearchListAdapter
 import com.mustafa.movieapp.view.ui.common.AppExecutors
 import com.mustafa.movieapp.view.ui.common.RetryCallback
-import com.mustafa.movieapp.view.ui.search.result.MovieSearchResultFragmentDirections
 import kotlinx.android.synthetic.main.fragment_celebrities_search_result.*
 import kotlinx.android.synthetic.main.fragment_celebrities_search_result.view.*
 import kotlinx.android.synthetic.main.toolbar_search_result.*
@@ -128,7 +127,7 @@ class SearchCelebritiesResultFragment : Fragment(), Injectable {
         })
 
         search_view.setOnSearchClickListener {
-            findNavController().navigate(MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieSearchFragment())
+            findNavController().navigate(SearchCelebritiesResultFragmentDirections.actionSearchCelebritiesResultFragmentToSearchCelebritiesFragment())
         }
 
         arrow_back.setOnClickListener {
