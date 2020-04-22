@@ -3,10 +3,8 @@ package com.mustafa.movieapp.di
 import android.app.Application
 import androidx.annotation.NonNull
 import androidx.room.Room
-import androidx.room.migration.Migration
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.mustafa.movieapp.api.*
-import com.mustafa.movieapp.api.RequestInterceptor
 import com.mustafa.movieapp.room.AppDatabase
 import com.mustafa.movieapp.room.MovieDao
 import com.mustafa.movieapp.room.PeopleDao
@@ -48,7 +46,6 @@ class AppModule {
     fun providePeopleDao(@NonNull database: AppDatabase): PeopleDao {
         return database.peopleDao()
     }
-
 
 
     @Provides

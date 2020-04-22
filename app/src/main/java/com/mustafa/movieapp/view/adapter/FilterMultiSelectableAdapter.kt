@@ -1,19 +1,14 @@
-package com.mustafa.movieapp.view.adapter.filterSelectableAdapter
+package com.mustafa.movieapp.view.adapter
 
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.databinding.DataBindingComponent
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieapp.R
-import com.mustafa.movieapp.databinding.FilterButtonItemBinding
-import com.mustafa.movieapp.databinding.ItemMovieBinding
-import com.mustafa.movieapp.models.entity.Movie
+import com.mustafa.movieapp.models.SelectableItem
 import kotlinx.android.synthetic.main.filter_button_item.view.*
 
 
@@ -29,7 +24,9 @@ class FilterMultiSelectableAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectableViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.filter_button_item, parent, false)
-        return SelectableViewHolder(view)
+        return SelectableViewHolder(
+            view
+        )
     }
 
     override fun getItemCount(): Int {

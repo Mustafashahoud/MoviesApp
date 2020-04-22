@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import co.lujun.androidtagview.TagContainerLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -14,11 +15,19 @@ import com.mustafa.movieapp.extension.requestGlideListener
 import com.mustafa.movieapp.extension.visible
 import com.mustafa.movieapp.models.Keyword
 import com.mustafa.movieapp.models.Resource
+import com.mustafa.movieapp.models.Review
+import com.mustafa.movieapp.models.Video
 import com.mustafa.movieapp.models.entity.*
 import com.mustafa.movieapp.models.network.PersonDetail
 import com.mustafa.movieapp.utils.KeywordListMapper
 import com.mustafa.movieapp.utils.StringUtils
+import com.mustafa.movieapp.view.adapter.ReviewListAdapter
+import com.mustafa.movieapp.view.adapter.VideoListAdapter
 
+
+/**
+ *  Copied from https://github.com/skydoves/TheMovies
+ */
 @BindingAdapter("visibilityByResource")
 fun bindVisibilityByResource(view: View, resource: Resource<List<Any>>?) {
     view.bindResource(resource) {
@@ -204,3 +213,29 @@ fun setCharacterForMovie(textView: TextView, movie: MoviePerson) {
     }
 }
 
+
+@BindingAdapter("adapterVideoList")
+fun bindAdapterVideoList(view: RecyclerView, resource: Resource<List<Video>>?) {
+    view.bindResource(resource) {
+        if (resource != null) {
+            val adapter = view.adapter as? VideoListAdapter
+            adapter?.addVideoList(resource)
+            if (resource.data?.isNotEmpty()!!) {
+                view.visible()
+            }
+        }
+    }
+}
+
+@BindingAdapter("adapterReviewList")
+fun bindAdapterReviewList(view: RecyclerView, resource: Resource<List<Review>>?) {
+    view.bindResource(resource) {
+        if (resource != null) {
+            val adapter = view.adapter as? ReviewListAdapter
+            adapter?.addReviewList(resource)
+            if (resource.data?.isNotEmpty()!!) {
+                view.visible()
+            }
+        }
+    }
+}

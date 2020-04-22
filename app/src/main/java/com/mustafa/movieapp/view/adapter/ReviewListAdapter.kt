@@ -10,6 +10,9 @@ import com.mustafa.movieapp.view.viewholder.BaseViewHolder
 import com.mustafa.movieapp.view.viewholder.ReviewListViewHolder
 import com.mustafa.movieapp.view.viewholder.SectionRow
 
+/**
+ * https://github.com/skydoves/TheMovies
+ */
 class ReviewListAdapter : BaseAdapter() {
 
     init {

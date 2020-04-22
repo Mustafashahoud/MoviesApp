@@ -1,11 +1,8 @@
 package com.mustafa.movieapp
 
-import android.app.Activity
 import android.app.Application
-import com.facebook.stetho.Stetho
 import com.mustafa.movieapp.di.AppInjector
 import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import timber.log.Timber

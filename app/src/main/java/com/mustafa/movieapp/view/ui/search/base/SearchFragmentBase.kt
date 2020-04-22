@@ -39,8 +39,8 @@ import com.mustafa.movieapp.utils.FiltersConstants.Companion.languageFilters
 import com.mustafa.movieapp.utils.FiltersConstants.Companion.ratingFilters
 import com.mustafa.movieapp.utils.FiltersConstants.Companion.runtimeFilters
 import com.mustafa.movieapp.utils.FiltersConstants.Companion.yearFilters
-import com.mustafa.movieapp.view.adapter.filterSelectableAdapter.FilterMultiSelectableAdapter
-import com.mustafa.movieapp.view.adapter.filterSelectableAdapter.SelectableItem
+import com.mustafa.movieapp.view.adapter.FilterMultiSelectableAdapter
+import com.mustafa.movieapp.models.SelectableItem
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search_filter.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
@@ -312,21 +312,25 @@ abstract class SearchFragmentBase : Fragment() {
 
         for (item in listOfButtonFiltersTitles) {
             val wasItemSelected = filtersToReSelect.contains(item)
-            val selectableItem = SelectableItem(item, wasItemSelected)
+            val selectableItem =
+                SelectableItem(item, wasItemSelected)
             selectableItemList.add(selectableItem)
         }
 
         val filterAdapter =
-            FilterMultiSelectableAdapter(selectableItemList, context, {
-                filters.add(it)
-                hasAnyFilterBeenSelected.value = true
-            }, {
+            FilterMultiSelectableAdapter(selectableItemList,
+                context,
+                {
+                    filters.add(it)
+                    hasAnyFilterBeenSelected.value = true
+                },
+                {
 
-                if (filters.size > 0) filters.remove(it)
-                if (filtersToReSelect.contains(it)) filtersToReSelect.remove(it)
+                    if (filters.size > 0) filters.remove(it)
+                    if (filtersToReSelect.contains(it)) filtersToReSelect.remove(it)
 
-                this.hasAnyFilterBeenSelected.value = true
-            },
+                    this.hasAnyFilterBeenSelected.value = true
+                },
                 adapterName
             )
 

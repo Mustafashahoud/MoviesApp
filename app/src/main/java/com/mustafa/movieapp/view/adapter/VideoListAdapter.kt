@@ -9,6 +9,9 @@ import com.mustafa.movieapp.view.viewholder.BaseViewHolder
 import com.mustafa.movieapp.view.viewholder.SectionRow
 import com.mustafa.movieapp.view.viewholder.VideoListViewHolder
 
+/**
+ * Copied from https://github.com/skydoves/TheMovies
+ */
 class VideoListAdapter(private val delegate: VideoListViewHolder.Delegate) : BaseAdapter() {
 
     init {
