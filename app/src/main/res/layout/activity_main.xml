@@ -24,5 +24,7 @@
         android:foreground="?attr/selectableItemBackground"
         app:itemIconTint="@color/white"
         app:itemTextColor="@drawable/nav_item_color_state"
+        android:visibility="gone"
+        tools:visibility="visible"
         app:menu="@menu/menus" />
 </LinearLayout>

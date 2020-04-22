@@ -36,12 +36,13 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
         currentNavController?.observe(this, Observer { navController ->
             navController.addOnDestinationChangedListener { _, destination, _ ->
-                if (isSearchFragment(destination)) {
-                    findViewById<BottomNavigationView>(R.id.bottom_navigation).gone()
-                } else findViewById<BottomNavigationView>(R.id.bottom_navigation).visible()
+                if (isMainFragment(destination)) {
+                    findViewById<BottomNavigationView>(R.id.bottom_navigation).visible()
+                } else findViewById<BottomNavigationView>(R.id.bottom_navigation).gone()
             }
         })
     }
+
 
     override fun onBackPressed() {
 //    val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_container)
@@ -129,11 +130,11 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
             }
         }
     }
+    
 
-    private fun isSearchFragment(destination: NavDestination): Boolean =
-        destination.id == R.id.movieSearchFragment
-                || destination.id == R.id.tvSearchFragment
-                || destination.id == R.id.searchCelebritiesFragment
+    private fun isMainFragment(destination: NavDestination): Boolean =
+        destination.id == R.id.moviesFragment || destination.id == R.id.tvsFragment || destination.id == R.id.celebritiesFragment
+
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 }
