@@ -78,7 +78,8 @@
                         android:textColor="@color/preview"
                         android:src="@drawable/ic_imdb"
                         tools:text="2009"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="ContentDescription"/>
                     <TextView
                         android:id="@+id/rate_numerical"
                         android:layout_width="match_parent"

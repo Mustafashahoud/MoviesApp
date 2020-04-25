@@ -57,7 +57,8 @@
                     android:text="@{movie.title}"
                     tools:text="Vikings"
                     android:textSize="7sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:ignore="SmallSp" />
 
 
 
@@ -75,7 +76,8 @@
                         android:textColor="@color/preview"
                         android:src="@drawable/ic_imdb"
                         tools:text="2009"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:ignore="ContentDescription" />
                     <TextView
                         android:id="@+id/rate_numerical"
                         android:layout_width="match_parent"
@@ -88,6 +90,7 @@
                         android:text="@{String.valueOf(movie.vote_average)}"
                         tools:text="7.9"
                         android:textSize="7sp"
+                        tools:ignore="SmallSp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -101,6 +104,7 @@
                         android:text="@{StringUtils.formatReleaseDate(movie.release_date)}"
                         android:textColor="@color/preview"
                         android:textSize="7sp"
+                        tools:ignore="SmallSp"
                         tools:text="Release: 2009 " />
                 </LinearLayout>
 
@@ -116,7 +120,8 @@
                     android:singleLine="true"
                     android:textSize="7sp"
                     android:text="@{StringUtils.getMovieGenresById(movie.genre_ids)}"
-                    tools:text="Release: 2009 "/>
+                    tools:text="Release: 2009 "
+                    tools:ignore="SmallSp" />
 
             </LinearLayout>
 

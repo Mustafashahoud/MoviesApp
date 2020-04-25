@@ -4,14 +4,12 @@
     <string name="fragment_tvs">Series</string>
     <string name="fragment_celebrities">Celebrities</string>
     <string name="transition_profile">transition_profile</string>
-    <string name="main_fragment_movie">main_fragment_movie</string>
     <string name="retry">Retry</string>
     <string name="unknown_error">Unknown Error</string>
     <string name="empty_search_result">No results for <b>%s</b></string>
     <string name="recent">Recent</string>
     <string name="filter_movies_tab_name">Filter Your Movies</string>
     <string name="filter_series_tab_name">Filter Your Series</string>
-    <string name="filter_tvs">Filter Your Series</string>
     <string name="recent_searches">Recent Searches</string>
     <string name="clear">CLEAR</string>
     <string name="dialog_message">Clear recent searches and pages?</string>
@@ -30,11 +28,6 @@
     <string name="results">Results</string>
 
     <!-- Navigation Drawer menu labels -->
-    <string name="nav_movies">Movies</string>
-    <string name="nav_settings">Settings</string>
-    <string name="nav_about_us">About Us</string>
-    <string name="movie_list_fragment_name">MovieListFragment</string>
-    <string name="tv_list_fragment_name">TvListFragment</string>
     <string name="reviews">Reviews</string>
     <string name="trailers">Trailers</string>
 

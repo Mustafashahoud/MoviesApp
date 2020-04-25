@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -14,7 +14,6 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
@@ -54,7 +53,8 @@
                             android:transitionName="@string/transition_profile"
                             app:bindBackDrop="@{person}"
                             tools:src="@drawable/ic_tv_nav"
-                            tools:targetApi="LOLLIPOP" />
+                            tools:targetApi="LOLLIPOP"
+                            tools:ignore="ContentDescription" />
 
                         <TextView
                             android:id="@+id/person_detail_name"
@@ -85,11 +85,11 @@
                             android:layout_marginTop="5dp"
                             android:padding="5dp"
                             android:visibility="gone"
-                            app:nameTags="@{viewmodel.personLiveData}"
                             app:container_background_color="@color/background800"
                             app:container_border_color="@color/background800"
                             app:container_border_radius="6dp"
                             app:container_enable_drag="false"
+                            app:nameTags="@{viewmodel.personLiveData}"
                             app:tag_background_color="@color/colorPrimary"
                             app:tag_border_color="@color/colorPrimary"
                             app:tag_clickable="false"
@@ -110,9 +110,9 @@
                     android:text="@string/movies"
                     android:textSize="20sp"
                     android:visibility="gone"
-                    tools:visibility="visible"
                     app:visibilityByResource="@{viewmodel.moviesOfCelebrity}"
-                    tools:text="Movies" />
+                    tools:text="Movies"
+                    tools:visibility="visible" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view_celebrity_movies"
@@ -120,36 +120,36 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="5dp"
                     android:visibility="gone"
-                    tools:visibility="visible"
                     app:visibilityByResource="@{viewmodel.moviesOfCelebrity}"
                     tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_movie_for_celebrity"
-                    tools:orientation="horizontal" />
+                    tools:orientation="horizontal"
+                    tools:visibility="visible" />
 
                 <TextView
                     android:id="@+id/celebrity_tvs_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    tools:visibility="visible"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="20dp"
-                    app:visibilityByResource="@{viewmodel.tvsOfCelebrity}"
                     android:text="@string/tv_shows_and_series"
                     android:textSize="20sp"
-                    tools:text="Series" />
+                    android:visibility="gone"
+                    app:visibilityByResource="@{viewmodel.tvsOfCelebrity}"
+                    tools:text="Series"
+                    tools:visibility="visible" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view_celebrity_tvs"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
                     android:visibility="gone"
                     app:visibilityByResource="@{viewmodel.tvsOfCelebrity}"
-                    android:layout_marginTop="5dp"
                     tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:listitem="@layout/item_tv_for_celebrity"
-                    tools:visibility="visible"
-                    tools:orientation="horizontal" />
+                    tools:orientation="horizontal"
+                    tools:visibility="visible" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

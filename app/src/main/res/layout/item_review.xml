@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
-    android:background="@color/background"
     android:orientation="vertical">
 
     <TextView
@@ -31,9 +30,10 @@
             android:id="@id/expand_collapse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right|bottom"
+            android:layout_gravity="end|bottom"
             android:background="?android:attr/selectableItemBackground"
-            android:padding="6dp" />
+            android:padding="6dp"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@id/expandable_text"

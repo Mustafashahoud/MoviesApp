@@ -32,12 +32,15 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        multiDexEnabled false
+        multiDexEnabled true
         testInstrumentationRunner "com.mustafa.movieapp.util.MovieGuideTestRunner"
         buildConfigField "String", "TMDB_API_KEY", "\"${getProperty("local.properties", "tmdb_api_key")}\""
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+    lintOptions {
+        lintConfig rootProject.file('lint.xml')
     }
     kapt {
         correctErrorTypes = true
@@ -97,7 +100,7 @@ dependencies {
     def androidxVersion = '1.0.0'
     def appCompatVersion = '1.1.0'
     def androidFragment = '1.2.4'
-    def recyclerVersion = '1.2.0-alpha02'
+    def recyclerVersion = '1.1.0'
     def ankoVersion = '0.10.8'
     def archComponentVersion = '2.1.0'
     def roomVersion = '2.2.5'
@@ -116,9 +119,7 @@ dependencies {
     def junitVersion = '4.13'
     def espressoVersion = '3.2.0'
     def androidxTestRules = '1.2.0'
-    def nav_version = '2.3.0-alpha04'
-    def circleImageVersion = '3.1.0'
-    def constraintLayout = '2.0.0-beta4'
+    def nav_version = '2.3.0-alpha05'
 
     // support library
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
@@ -126,10 +127,10 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.1.0'
     implementation "androidx.fragment:fragment:$androidFragment"
     implementation "androidx.fragment:fragment-ktx:$androidFragment"
-    implementation 'com.google.android.material:material:1.2.0-alpha05'
+    implementation 'com.google.android.material:material:1.1.0'
     implementation "androidx.palette:palette:$androidxVersion"
     implementation "androidx.recyclerview:recyclerview:$recyclerVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintLayout"
+    implementation "androidx.constraintlayout:constraintlayout:1.1.3"
 
     // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
@@ -142,15 +143,12 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
     kapt "androidx.room:room-compiler:$roomVersion"
 
 
     // navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-
-    implementation "de.hdodenhof:circleimageview:$circleImageVersion"
 
     // dependency injection
     implementation "com.google.dagger:dagger:$daggerVersion"

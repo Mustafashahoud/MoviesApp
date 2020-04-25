@@ -15,43 +15,36 @@
 
             <include layout="@layout/toolbar_search_iconfied" />
 
-            <LinearLayout
-                android:id="@+id/linear_layout_tabs_recent_searches"
+            <RelativeLayout
+                android:id="@+id/recent_queries_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="50dp"
+                android:background="@color/tabItemsColor">
 
-                <RelativeLayout
-                    android:id="@+id/recent_queries_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@color/tabItemsColor">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="15dp"
+                    android:text="@string/recent_searches"
+                    tools:text="Recent Searches" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="15dp"
-                        android:text="@string/recent_searches"
-                        tools:text="Recent Searches" />
+                <TextView
+                    android:id="@+id/clear_recent_queries"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15dp"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:padding="10dp"
+                    android:text="@string/clear"
+                    android:textColor="@color/blueClearColor"
+                    android:textStyle="bold"
+                    tools:ignore="RelativeOverlap" />
 
-                    <TextView
-                        android:id="@+id/clear_recent_queries"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="15dp"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:padding="10dp"
-                        android:text="@string/clear"
-                        android:textColor="@color/blueClearColor"
-                        android:textStyle="bold"
-                        tools:ignore="RelativeOverlap" />
+            </RelativeLayout>
 
-                </RelativeLayout>
-
-            </LinearLayout>
 
             <FrameLayout
                 android:layout_width="match_parent"

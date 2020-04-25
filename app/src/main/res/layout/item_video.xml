@@ -17,14 +17,16 @@
             android:id="@+id/item_video_cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:layout_width="30dp"
             android:layout_height="20dp"
             android:layout_centerInParent="true"
             android:scaleType="fitXY"
-            android:src="@drawable/icon_youtube" />
+            android:src="@drawable/icon_youtube"
+            tools:ignore="ContentDescription" />
 
         <RelativeLayout
             android:layout_width="match_parent"
