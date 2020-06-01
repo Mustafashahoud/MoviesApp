@@ -11,6 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieapp.R
 import com.mustafa.movieapp.extension.*
 import com.mustafa.movieapp.utils.setupWithNavController
+import com.rbddevs.splashy.Splashy
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSplashy()
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
@@ -130,13 +132,28 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
             }
         }
     }
-    
+
 
     private fun isMainFragment(destination: NavDestination): Boolean =
         destination.id == R.id.moviesFragment || destination.id == R.id.tvsFragment || destination.id == R.id.celebritiesFragment
 
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
+
+    private fun setSplashy() {
+        Splashy(this)
+            .setLogo(R.mipmap.ic_launcher_foreground)
+            .setTitle("MovieGuide")
+            .setTitleColor(R.color.colorAccent)
+            .showProgress(true)
+            .setProgressColor(R.color.colorAccent)
+            .setSubTitle("Eng. Mustafa Shahoud")
+            .setProgressColor(R.color.colorAccent)
+            .setBackgroundResource(R.color.backgroundDarker)
+            .setFullScreen(true)
+            .setTime(3000)
+            .show()
+    }
 }
 
 

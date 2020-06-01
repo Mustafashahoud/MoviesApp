@@ -35,12 +35,6 @@
     </style>
 
 
-
-    <style name="splashScreenTheme" parent="AppTheme">
-        <item name="android:windowBackground">@drawable/splash</item>
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
     <!--  AlertDialogTheme Theme  -->
     <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
