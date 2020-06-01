@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.mustafa.movieapp">
+    package="com.mustafa.movieguideapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <application tools:ignore="GoogleAppIndexingWarning"
         android:fullBackupContent="true">
-        <activity android:name="com.mustafa.movieapp.testing.SingleFragmentActivity"/>
+        <activity android:name="com.mustafa.movieguideapp.testing.SingleFragmentActivity"/>
     </application>
 
 </manifest>

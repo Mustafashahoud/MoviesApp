@@ -7,11 +7,11 @@
 
     <variable
       name="tv"
-      type="com.mustafa.movieapp.models.entity.Tv" />
+      type="com.mustafa.movieguideapp.models.entity.Tv" />
 
     <variable
       name="viewModel"
-      type="com.mustafa.movieapp.view.ui.tv.tvdetail.TvDetailViewModel" />
+      type="com.mustafa.movieguideapp.view.ui.tv.tvdetail.TvDetailViewModel" />
   </data>
 
   <LinearLayout

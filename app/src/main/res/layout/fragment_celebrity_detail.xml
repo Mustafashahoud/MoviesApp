@@ -5,11 +5,11 @@
 
         <variable
             name="person"
-            type="com.mustafa.movieapp.models.entity.Person" />
+            type="com.mustafa.movieguideapp.models.entity.Person" />
 
         <variable
             name="viewmodel"
-            type="com.mustafa.movieapp.view.ui.person.detail.PersonDetailViewModel" />
+            type="com.mustafa.movieguideapp.view.ui.person.detail.PersonDetailViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

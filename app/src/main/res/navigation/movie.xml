@@ -6,7 +6,7 @@
     app:startDestination="@+id/moviesFragment">
     <fragment
         android:id="@+id/moviesFragment"
-        android:name="com.mustafa.movieapp.view.ui.movies.movielist.MovieListFragment"
+        android:name="com.mustafa.movieguideapp.view.ui.movies.movielist.MovieListFragment"
         android:label="MovieListFragment"
         tools:layout="@layout/fragment_movies">
         <action
@@ -20,18 +20,18 @@
 
     <fragment
         android:id="@+id/movieDetail"
-        android:name="com.mustafa.movieapp.view.ui.movies.moviedetail.MovieDetailFragment"
+        android:name="com.mustafa.movieguideapp.view.ui.movies.moviedetail.MovieDetailFragment"
         android:label="MovieDetailFragment"
         tools:layout="@layout/fragment_movie_detail">
         <argument
             android:name="movie"
-            app:argType="com.mustafa.movieapp.models.entity.Movie" />
+            app:argType="com.mustafa.movieguideapp.models.entity.Movie" />
 
     </fragment>
 
     <fragment
         android:id="@+id/movieSearchFragment"
-        android:name="com.mustafa.movieapp.view.ui.search.MovieSearchFragment"
+        android:name="com.mustafa.movieguideapp.view.ui.search.MovieSearchFragment"
         android:label="MovieSearchFragment"
         tools:layout="@layout/fragment_search">
         <action
@@ -54,7 +54,7 @@
     </fragment>
     <fragment
         android:id="@+id/movieSearchFragmentResult"
-        android:name="com.mustafa.movieapp.view.ui.search.result.MovieSearchResultFragment"
+        android:name="com.mustafa.movieguideapp.view.ui.search.result.MovieSearchResultFragment"
         android:label="MovieSearchResultFragment" >
         <action
             android:id="@+id/action_movieSearchFragmentResult_to_movieSearchFragment"
@@ -70,7 +70,7 @@
 
     <fragment
         android:id="@+id/movieSearchFragmentResultFilter"
-        android:name="com.mustafa.movieapp.view.ui.search.filter.MovieSearchResultFilterFragment"
+        android:name="com.mustafa.movieguideapp.view.ui.search.filter.MovieSearchResultFilterFragment"
         android:label="MovieSearchResultFilterFragment"
         tools:layout="@layout/fragment_search_filter">
 

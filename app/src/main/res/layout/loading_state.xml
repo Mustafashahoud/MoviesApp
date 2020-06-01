@@ -4,15 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="com.mustafa.movieapp.models.Resource"/>
-        <import type="com.mustafa.movieapp.models.Status"/>
+        <import type="com.mustafa.movieguideapp.models.Resource"/>
+        <import type="com.mustafa.movieguideapp.models.Status"/>
 
         <variable
             name="resource"
             type="Resource" />
         <variable
             name="callback"
-            type="com.mustafa.movieapp.view.ui.common.RetryCallback" />
+            type="com.mustafa.movieguideapp.view.ui.common.RetryCallback" />
     </data>
 
     <LinearLayout

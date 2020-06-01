@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/celebritiesFragment"
-        android:name="com.mustafa.movieapp.view.ui.person.celebrities.CelebritiesListFragment"
+        android:name="com.mustafa.movieguideapp.view.ui.person.celebrities.CelebritiesListFragment"
         android:label="celebritiesFragment"
         tools:layout="@layout/fragment_celebrities">
         <action
@@ -24,12 +24,12 @@
 
     <fragment
         android:id="@+id/celebrityDetail"
-        android:name="com.mustafa.movieapp.view.ui.person.detail.CelebrityDetailFragment"
+        android:name="com.mustafa.movieguideapp.view.ui.person.detail.CelebrityDetailFragment"
         android:label="celebrityDetail"
         tools:layout="@layout/fragment_celebrity_detail">
         <argument
             android:name="person"
-            app:argType="com.mustafa.movieapp.models.entity.Person" />
+            app:argType="com.mustafa.movieguideapp.models.entity.Person" />
 
         <action
             android:id="@+id/action_celebrityDetail_to_celebrityMovieDetail"
@@ -43,28 +43,28 @@
 
     <fragment
         android:id="@+id/celebrityMovieDetail"
-        android:name="com.mustafa.movieapp.view.ui.person.detail.MoviePersonDetailFragment"
+        android:name="com.mustafa.movieguideapp.view.ui.person.detail.MoviePersonDetailFragment"
         android:label="celebrityMovieDetail"
         tools:layout="@layout/fragment_movie_celebrity_detail">
         <argument
             android:name="movie"
-            app:argType="com.mustafa.movieapp.models.entity.MoviePerson" />
+            app:argType="com.mustafa.movieguideapp.models.entity.MoviePerson" />
     </fragment>
 
 
     <fragment
         android:id="@+id/celebrityTvDetail"
-        android:name="com.mustafa.movieapp.view.ui.person.detail.TvPersonDetailFragment"
+        android:name="com.mustafa.movieguideapp.view.ui.person.detail.TvPersonDetailFragment"
         android:label="celebrityTvDetail"
         tools:layout="@layout/fragment_tv_celebrity_detail">
         <argument
             android:name="tv"
-            app:argType="com.mustafa.movieapp.models.entity.TvPerson" />
+            app:argType="com.mustafa.movieguideapp.models.entity.TvPerson" />
     </fragment>
 
     <fragment
         android:id="@+id/searchCelebritiesFragment"
-        android:name="com.mustafa.movieapp.view.ui.person.search.SearchCelebritiesFragment"
+        android:name="com.mustafa.movieguideapp.view.ui.person.search.SearchCelebritiesFragment"
         android:label="searchCelebritiesFragment"
         tools:layout="@layout/fragment_celebrities_search">
 
@@ -83,7 +83,7 @@
 
     <fragment
         android:id="@+id/searchCelebritiesResultFragment"
-        android:name="com.mustafa.movieapp.view.ui.person.search.SearchCelebritiesResultFragment"
+        android:name="com.mustafa.movieguideapp.view.ui.person.search.SearchCelebritiesResultFragment"
         android:label="searchCelebritiesResultFragment"
         tools:layout="@layout/fragment_celebrities_search_result">
         <action

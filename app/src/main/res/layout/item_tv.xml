@@ -7,7 +7,7 @@
     <data>
         <variable
             name="tv"
-            type="com.mustafa.movieapp.models.entity.Tv" />
+            type="com.mustafa.movieguideapp.models.entity.Tv" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

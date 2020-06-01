@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="com.mustafa.movieapp.utils.StringUtils" />
+        <import type="com.mustafa.movieguideapp.utils.StringUtils" />
 
         <variable
             name="person"
-            type="com.mustafa.movieapp.models.entity.Person" />
+            type="com.mustafa.movieguideapp.models.entity.Person" />
     </data>
 
     <androidx.cardview.widget.CardView

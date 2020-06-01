@@ -7,11 +7,11 @@
 
         <variable
             name="movie"
-            type="com.mustafa.movieapp.models.entity.Movie" />
+            type="com.mustafa.movieguideapp.models.entity.Movie" />
 
         <variable
             name="viewModel"
-            type="com.mustafa.movieapp.view.ui.movies.moviedetail.MovieDetailViewModel" />
+            type="com.mustafa.movieguideapp.view.ui.movies.moviedetail.MovieDetailViewModel" />
     </data>
 
     <LinearLayout

@@ -5,13 +5,13 @@
 
     <data>
 
-        <import type="com.mustafa.movieapp.models.entity.Person" />
+        <import type="com.mustafa.movieguideapp.models.entity.Person" />
 
         <import type="androidx.lifecycle.LiveData" />
 
-        <import type="com.mustafa.movieapp.models.Resource" />
+        <import type="com.mustafa.movieguideapp.models.Resource" />
 
-        <import type="com.mustafa.movieapp.models.Status" />
+        <import type="com.mustafa.movieguideapp.models.Status" />
 
         <import type="java.util.List" />
 
@@ -21,7 +21,7 @@
 
         <variable
             name="callback"
-            type="com.mustafa.movieapp.view.ui.common.RetryCallback" />
+            type="com.mustafa.movieguideapp.view.ui.common.RetryCallback" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

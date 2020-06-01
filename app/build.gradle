@@ -22,7 +22,7 @@ def getProperty(String filename, String propName) {
 
 allOpen {
     // allows mocking for classes w/o directly opening them for release builds
-    annotation 'com.mustafa.movieapp.testing.OpenClass'
+    annotation 'com.mustafa.movieguideapp.testing.OpenClass'
 }
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -33,7 +33,7 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-        testInstrumentationRunner "com.mustafa.movieapp.util.MovieGuideTestRunner"
+        testInstrumentationRunner "com.mustafa.movieguideapp.util.MovieGuideTestRunner"
         buildConfigField "String", "TMDB_API_KEY", "\"${getProperty("local.properties", "tmdb_api_key")}\""
     }
     kotlinOptions {
