@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MovieApp</string>
+    <string name="app_name">MovieGuide</string>
     <string name="fragment_movies">Movies</string>
     <string name="fragment_tvs">Series</string>
     <string name="fragment_celebrities">Celebrities</string>

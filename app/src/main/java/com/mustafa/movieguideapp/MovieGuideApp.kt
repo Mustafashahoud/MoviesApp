@@ -9,7 +9,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @Suppress("unused")
-class MovieApp : Application(), HasAndroidInjector {
+class MovieGuideApp : Application(), HasAndroidInjector {
 
     @Inject
     lateinit var androidInjector: DispatchingAndroidInjector<Any>

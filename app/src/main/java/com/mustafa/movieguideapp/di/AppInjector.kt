@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
-import com.mustafa.movieguideapp.MovieApp
+import com.mustafa.movieguideapp.MovieGuideApp
 import dagger.android.AndroidInjection
 import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
@@ -15,11 +15,11 @@ import dagger.android.support.AndroidSupportInjection
  * Helper class to automatically inject fragments if they implement [Injectable].
  */
 object AppInjector {
-    fun init(movieApp: MovieApp) {
+    fun init(movieGuideApp: MovieGuideApp) {
 
-        DaggerAppComponent.builder().application(movieApp).build().inject(movieApp)
+        DaggerAppComponent.builder().application(movieGuideApp).build().inject(movieGuideApp)
 
-        movieApp.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
+        movieGuideApp.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) { handleActivity(activity) }
 
             override fun onActivityStarted(activity: Activity) {}
