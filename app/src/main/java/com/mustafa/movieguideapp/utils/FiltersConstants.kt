@@ -23,7 +23,6 @@ class FiltersConstants {
         val genreFilters = listOf(
             "Adventure",
             "Crime",
-            "History",
             "Drama",
             "History",
             "Thriller",
