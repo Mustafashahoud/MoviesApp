@@ -17,7 +17,7 @@
 - [Retrofit2 & Gson](https://github.com/square/retrofit) for REST API
 - [Glide](https://github.com/bumptech/glide) for loading images
 - [Mockito-kotlin](https://github.com/nhaarman/mockito-kotlin) for Junit mock test
-- [Esepresso](https://developer.android.com/training/testing/espressofor) for UI testing
+- [Espresso](https://developer.android.com/training/testing/espresso) for UI testing
 - [Timber](https://github.com/JakeWharton/timber) for logging
 
 ## App Demo
