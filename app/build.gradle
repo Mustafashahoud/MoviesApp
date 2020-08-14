@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: "kotlin-allopen"
+apply plugin: 'dagger.hilt.android.plugin'
 
 def getProperty(String filename, String propName) {
     def propsFile = rootProject.file(filename)
@@ -105,7 +106,8 @@ dependencies {
     def archComponentVersion = '2.1.0'
     def roomVersion = '2.2.5'
     def lifecycleVersion = '2.2.0'
-    def daggerVersion = '2.28.1'
+    def hiltVersion = '2.28.3-alpha'
+    def hiltViewModelVersion = '1.0.0-alpha02'
     def retrofitVersion = '2.9.0'
     def googleJsonVersion = '2.8.6'
     def okhttpVersion = '4.7.2'
@@ -153,11 +155,10 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     // dependency injection
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    implementation "com.google.dagger:dagger-android:$daggerVersion"
-    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    implementation "com.google.dagger:hilt-android:$hiltVersion"
+    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hiltViewModelVersion"
+    kapt "androidx.hilt:hilt-compiler:$hiltViewModelVersion"
 
     debugImplementation "androidx.fragment:fragment-testing:$androidFragment"
 
