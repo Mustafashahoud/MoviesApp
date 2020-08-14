@@ -12,34 +12,31 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentCelebritiesSearchResultBinding
-import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.extension.hideKeyboard
 import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.PeopleSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_celebrities_search_result.*
 import kotlinx.android.synthetic.main.fragment_celebrities_search_result.view.*
 import kotlinx.android.synthetic.main.toolbar_search_result.*
 import javax.inject.Inject
 
-class SearchCelebritiesResultFragment : Fragment(), Injectable {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+@AndroidEntryPoint
+class SearchCelebritiesResultFragment : Fragment() {
 
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    private val viewModel by viewModels<SearchCelebritiesResultViewModel> { viewModelFactory }
+    private val viewModel by viewModels<SearchCelebritiesResultViewModel>()
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentCelebritiesSearchResultBinding>()
     private var adapter by autoCleared<PeopleSearchListAdapter>()

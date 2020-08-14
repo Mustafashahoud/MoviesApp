@@ -16,33 +16,30 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentCelebritiesSearchBinding
-import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.extension.gone
 import com.mustafa.movieguideapp.extension.inVisible
 import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.PeopleSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
 import java.util.*
 import javax.inject.Inject
 
-class SearchCelebritiesFragment : Fragment(), Injectable {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+@AndroidEntryPoint
+class SearchCelebritiesFragment : Fragment() {
 
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    private val viewModel by viewModels<SearchCelebritiesResultViewModel> { viewModelFactory }
+    private val viewModel by viewModels<SearchCelebritiesResultViewModel>()
 
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
@@ -181,7 +178,7 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
      *
      */
     private fun setListViewOfRecentQueries(queries: List<String?>) {
-        arrayAdapter = ArrayAdapter<String>(
+        arrayAdapter = ArrayAdapter(
             requireContext(),
             R.layout.recent_query_item,
             queries.requireNoNulls()

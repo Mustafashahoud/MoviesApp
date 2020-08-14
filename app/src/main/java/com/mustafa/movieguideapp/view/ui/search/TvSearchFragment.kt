@@ -8,33 +8,30 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentSearchBinding
-import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.TvSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.search.base.SearchFragmentBase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search.view.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
 import javax.inject.Inject
 
 
-class TvSearchFragment : SearchFragmentBase(), Injectable {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+@AndroidEntryPoint
+class TvSearchFragment : SearchFragmentBase() {
 
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    private val viewModel by viewModels<TvSearchViewModel> { viewModelFactory }
+    private val viewModel by viewModels<TvSearchViewModel>()
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentSearchBinding>()
     private var tvAdapter by autoCleared<TvSearchListAdapter>()

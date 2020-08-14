@@ -10,29 +10,25 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.api.Api
 import com.mustafa.movieguideapp.databinding.FragmentTvDetailBinding
-import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.Video
 import com.mustafa.movieguideapp.models.entity.Tv
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.ReviewListAdapter
 import com.mustafa.movieguideapp.view.adapter.VideoListAdapter
 import com.mustafa.movieguideapp.view.viewholder.VideoListViewHolder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.layout_tv_detail_body.*
-import javax.inject.Inject
 
 
-class TvDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
+@AndroidEntryPoint
+class TvDetailFragment : Fragment(), VideoListViewHolder.Delegate {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by viewModels<TvDetailViewModel> { viewModelFactory }
+    private val viewModel by viewModels<TvDetailViewModel>()
     private var binding by autoCleared<FragmentTvDetailBinding>()
 
     override fun onCreateView(

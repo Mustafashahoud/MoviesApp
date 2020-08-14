@@ -1,5 +1,6 @@
 package com.mustafa.movieguideapp.view.ui.tv.tvlist
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -9,11 +10,11 @@ import com.mustafa.movieguideapp.models.entity.Tv
 import com.mustafa.movieguideapp.repository.DiscoverRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.AbsentLiveData
-import javax.inject.Inject
 
 @OpenForTesting
-class TvListViewModel @Inject
-constructor(private val discoverRepository: DiscoverRepository) : ViewModel() {
+class TvListViewModel @ViewModelInject constructor(
+    private val discoverRepository: DiscoverRepository
+) : ViewModel() {
 
     private var pageNumber = 1
 

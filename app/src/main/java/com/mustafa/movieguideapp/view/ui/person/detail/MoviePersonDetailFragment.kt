@@ -8,12 +8,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.databinding.FragmentMovieCelebrityDetailBinding
-import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.entity.MoviePerson
 import com.mustafa.movieguideapp.utils.autoCleared
+import dagger.hilt.android.AndroidEntryPoint
 
-
-class MoviePersonDetailFragment : Fragment(), Injectable {
+@AndroidEntryPoint
+class MoviePersonDetailFragment : Fragment() {
 
     private var binding by autoCleared<FragmentMovieCelebrityDetailBinding>()
 

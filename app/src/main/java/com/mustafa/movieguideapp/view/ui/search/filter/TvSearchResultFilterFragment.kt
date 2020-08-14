@@ -8,32 +8,29 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentSearchResultFilterBinding
-import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.TvSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_search_result_filter.*
 import kotlinx.android.synthetic.main.fragment_search_result_filter.view.*
 import javax.inject.Inject
 
-class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectable,
+@AndroidEntryPoint
+class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(),
     androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    private val viewModel by viewModels<TvSearchFilterViewModel> { viewModelFactory }
+    private val viewModel by viewModels<TvSearchFilterViewModel>()
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentSearchResultFilterBinding>()
     private var adapter by autoCleared<TvSearchListAdapter>()

@@ -12,19 +12,15 @@ import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.extension.*
 import com.mustafa.movieguideapp.utils.setupWithNavController
 import com.rbddevs.splashy.Splashy
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
 
 
 /**
  * An activity that inflates a layout that has a [BottomNavigationView].
  */
-class MainActivity : AppCompatActivity(), HasAndroidInjector {
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
     private var currentNavController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -137,8 +133,6 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
     private fun isMainFragment(destination: NavDestination): Boolean =
         destination.id == R.id.moviesFragment || destination.id == R.id.tvsFragment || destination.id == R.id.celebritiesFragment
 
-
-    override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 
     private fun setSplashy() {
         Splashy(this)

@@ -1,17 +1,18 @@
 package com.mustafa.movieguideapp.view.ui.movies.moviedetail
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.mustafa.movieguideapp.repository.MovieRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.AbsentLiveData
-import javax.inject.Inject
 
 
 @OpenForTesting
-class MovieDetailViewModel @Inject constructor(private val repository: MovieRepository) :
-    ViewModel() {
+class MovieDetailViewModel @ViewModelInject constructor(
+    private val repository: MovieRepository
+) : ViewModel() {
 
     private val movieIdLiveData: MutableLiveData<Int> = MutableLiveData()
 
