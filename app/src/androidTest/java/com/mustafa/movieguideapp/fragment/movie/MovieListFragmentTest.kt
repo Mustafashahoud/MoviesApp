@@ -68,7 +68,6 @@ class MovieListFragmentTest {
         val scenario = launchFragmentInContainer(themeResId = R.style.AppTheme) {
             MovieListFragment().apply {
                 appExecutors = countingAppExecutors.appExecutors
-                viewModelFactory = ViewModelUtil.createFor(viewModel)
                 dataBindingComponent = object : DataBindingComponent {
                     override fun getFragmentBindingAdapters(): FragmentBindingAdapters {
                         return mockBindingAdapter

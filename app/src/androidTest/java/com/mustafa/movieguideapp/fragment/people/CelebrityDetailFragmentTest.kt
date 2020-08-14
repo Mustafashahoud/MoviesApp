@@ -75,7 +75,6 @@ class CelebrityDetailFragmentTest {
             bundle, themeResId = R.style.AppTheme
         ) {
             CelebrityDetailFragment().apply {
-                viewModelFactory = ViewModelUtil.createFor(viewModel)
                 appExecutors = countingAppExecutors.appExecutors
             }
         }

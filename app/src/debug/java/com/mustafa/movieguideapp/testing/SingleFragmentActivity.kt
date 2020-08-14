@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentContainerView
 import com.mustafa.movieguideapp.R
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Used for testing fragments inside a fake activity.
  */
+@AndroidEntryPoint
 class SingleFragmentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

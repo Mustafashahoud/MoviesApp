@@ -81,9 +81,7 @@ class MovieDetailFragmentTest {
         val scenario = launchFragmentInContainer(
             bundle, themeResId = R.style.AppTheme
         ) {
-            MovieDetailFragment().apply {
-                viewModelFactory = ViewModelUtil.createFor(viewModel)
-            }
+            MovieDetailFragment()
         }
 
         dataBindingIdlingResourceRule.monitorFragment(scenario)
