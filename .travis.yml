@@ -4,19 +4,19 @@ jdk:
 android:
   components:
     - tools
-    - build-tools-30.0.0
-    - android-24
+    - build-tools-29.0.0
+    - android-29
     - Extra-android-support
     - extra-google-google_play_services
     - extra-android-m2repository
     - extra-google-m2repository
     - addon-google_apis-google-24
 BEFORE_INSTALL:
-  - ​​chmod + x gradlew
+  - ​​chmod +x gradlew
   - export JAVA8_HOME = / usr / lib / jvm / java-8-oracle
   - export JAVA_HOME = $ JAVA8_HOME
 after_success:
-  - chmod + x ./upload-gh-pages. sh
+  - chmod +x ./upload-gh-pages. sh
   - ./upload-apk.sh
 script:
   - ./gradlew build
