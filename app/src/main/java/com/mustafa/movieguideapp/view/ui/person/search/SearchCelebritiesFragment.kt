@@ -143,7 +143,7 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
     }
 
     private fun initRecyclerView() {
-        adapter = PeopleSearchListAdapter(appExecutors, dataBindingComponent) {
+        adapter = PeopleSearchListAdapter(dataBindingComponent) {
             findNavController().navigate(
                 SearchCelebritiesFragmentDirections.actionSearchCelebritiesFragmentToCelebrityDetail(
                     it
@@ -151,8 +151,8 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
             )
 
         }
-        recyclerView_suggestion.adapter = adapter
-        recyclerView_suggestion.layoutManager = LinearLayoutManager(context)
+        binding.recyclerViewSuggestion.adapter = adapter
+        binding.recyclerViewSuggestion.layoutManager = LinearLayoutManager(context)
     }
 
     private fun navigateToSearchCelebritiesResultFragment(query: String?) {
@@ -165,7 +165,7 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
 
 
     private fun subscribers() {
-        viewModel.getPeopleRecentQueries().observe(viewLifecycleOwner, Observer {
+        viewModel.getPeopleRecentQueries().observe(viewLifecycleOwner, {
             if (!it.isNullOrEmpty()) {
                 val queries = it.map { peopleRecentQuery -> peopleRecentQuery.query }
                 setListViewOfRecentQueries(queries)
@@ -187,10 +187,10 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
             queries.requireNoNulls()
         )
         hasRecentQueriesChanged.value = true
-        listView_recent_queries.setHeaderDividersEnabled(true)
-        listView_recent_queries.setFooterDividersEnabled(true)
-        listView_recent_queries.adapter = arrayAdapter
-        listView_recent_queries.setOnItemClickListener { parent, _, position, _ ->
+        binding.listViewRecentQueries.setHeaderDividersEnabled(true)
+        binding.listViewRecentQueries.setFooterDividersEnabled(true)
+        binding.listViewRecentQueries.adapter = arrayAdapter
+        binding.listViewRecentQueries.setOnItemClickListener { parent, _, position, _ ->
             val query = parent.getItemAtPosition(position) as String
             navigateToSearchCelebritiesResultFragment(query)
         }

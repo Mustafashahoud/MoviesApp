@@ -12,18 +12,22 @@ import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.DataBoundListAdapter
 
 class MovieListAdapter(
-    appExecutors: AppExecutors,
     private val dataBindingComponent: DataBindingComponent,
     private val movieOnClickCallback: ((Movie) -> Unit)?
 ) : DataBoundListAdapter<Movie, ItemMovieBinding>(
-    appExecutors = appExecutors,
     diffCallback = object : DiffUtil.ItemCallback<Movie>() {
         override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
             return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.backdrop_path == newItem.backdrop_path
+                    && oldItem.original_title == newItem.original_title
+                    && oldItem.original_language == newItem.original_language
+                    && oldItem.page == newItem.page
+                    && oldItem.vote_count == newItem.vote_count
+                    && oldItem.vote_average == newItem.vote_average
+                    && oldItem.id == newItem.id
         }
     }
 ) {

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +20,6 @@ import com.mustafa.movieguideapp.view.adapter.MovieSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.search.base.SearchFragmentBase
 import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.android.synthetic.main.fragment_search.view.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
 import javax.inject.Inject
 
@@ -65,7 +63,8 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
         tab?.text = getString(R.string.filter_movies_tab_name)
     }
 
-    override fun setBindingVariables() {/*DO nothing*/}
+    override fun setBindingVariables() {/*DO nothing*/
+    }
 
     override fun navigateFromSearchFragmentToSearchFragmentResultFilter(bundle: Bundle) {
         findNavController().navigate(
@@ -90,8 +89,7 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
 
     override fun observeSuggestions(newText: String?) {
         viewModel.movieSuggestions.observe(
-            viewLifecycleOwner,
-            Observer {
+            viewLifecycleOwner, {
                 if (!it.isNullOrEmpty() && tabs.getTabAt(0)?.isSelected!!) {
                     showSuggestionViewAndHideRecentSearches()
                 }
@@ -107,10 +105,7 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
     }
 
     override fun setRecyclerViewAdapter() {
-        movieAdapter = MovieSearchListAdapter(
-            appExecutors,
-            dataBindingComponent
-        ) {
+        movieAdapter = MovieSearchListAdapter(dataBindingComponent) {
             findNavController().navigate(
                 MovieSearchFragmentDirections.actionMovieSearchFragmentToMovieDetail(
                     it
@@ -118,14 +113,13 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
             )
         }
 
-        binding.root.recyclerView_suggestion.adapter = movieAdapter
-
-        recyclerView_suggestion.layoutManager = LinearLayoutManager(context)
+        binding.recyclerViewSuggestion.adapter = movieAdapter
+        binding.recyclerViewSuggestion.layoutManager = LinearLayoutManager(context)
     }
 
 
     override fun observeAndSetRecentQueries() {
-        viewModel.getMovieRecentQueries().observe(viewLifecycleOwner, Observer { it ->
+        viewModel.tvRecentQueries.observe(viewLifecycleOwner, { it ->
             if (!it.isNullOrEmpty()) {
                 val queries = it.mapNotNull { it.query }.filter { it.isNotEmpty() }
                 if (queries.isNotEmpty()) setListViewOfRecentQueries(queries)

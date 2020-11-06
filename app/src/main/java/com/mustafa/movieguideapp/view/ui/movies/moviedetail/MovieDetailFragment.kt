@@ -22,7 +22,6 @@ import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.ReviewListAdapter
 import com.mustafa.movieguideapp.view.adapter.VideoListAdapter
 import com.mustafa.movieguideapp.view.viewholder.VideoListViewHolder
-import kotlinx.android.synthetic.main.layout_movie_detail_body.*
 import javax.inject.Inject
 
 class MovieDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
@@ -66,21 +65,18 @@ class MovieDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable
 
 
     private fun initializeUI() {
-        detail_body_recyclerView_trailers.layoutManager =
+        binding.detailBody.detailBodyRecyclerViewTrailers.layoutManager =
             LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-        detail_body_recyclerView_trailers.adapter = VideoListAdapter(this)
-        detail_body_recyclerView_reviews.layoutManager =
+        binding.detailBody.detailBodyRecyclerViewTrailers.adapter = VideoListAdapter(this)
+        binding.detailBody.detailBodyRecyclerViewReviews.layoutManager =
             LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        detail_body_recyclerView_reviews.adapter = ReviewListAdapter()
-        detail_body_recyclerView_reviews.isNestedScrollingEnabled = false
-        detail_body_recyclerView_reviews.setHasFixedSize(true)
+        binding.detailBody.detailBodyRecyclerViewReviews.adapter = ReviewListAdapter()
+        binding.detailBody.detailBodyRecyclerViewReviews.isNestedScrollingEnabled = false
+        binding.detailBody.detailBodyRecyclerViewReviews.setHasFixedSize(true)
     }
 
     private fun getMovieSafeArgs(): Movie {
-        val params =
-            MovieDetailFragmentArgs.fromBundle(
-                requireArguments()
-            )
+        val params = MovieDetailFragmentArgs.fromBundle(requireArguments())
         return params.movie
     }
 

@@ -14,124 +14,65 @@ import com.mustafa.movieguideapp.models.entity.*
 @Dao
 abstract class MovieDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertMovieList(movies: List<Movie>)
+    @Query("SELECT * FROM Movie WHERE page in (:pages) AND search = 0 ")
+    abstract suspend fun loadDiscoveryMovieListByPage(pages: List<Int>): List<Movie>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertSearchMovieResult(result: SearchMovieResult)
+    @Query("SELECT * FROM Movie WHERE id in (:ids) AND search = 1 AND poster_path <> '' order by page ")
+    abstract suspend fun loadSearchMoviesList(ids: List<Int>): List<Movie>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertDiscoveryMovieResult(result: DiscoveryMovieResult)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertFilteredMovieResult(result: FilteredMovieResult)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertMovieRecentQuery(insertMovieRecentQuery: MovieRecentQueries)
-
-    @Query("SELECT * FROM MovieRecentQueries GROUP BY `query` ORDER BY id DESC LIMIT 30 ")
-    abstract fun loadMovieRecentQueries(): LiveData<List<MovieRecentQueries>>
-
-    @Query("DELETE FROM MovieRecentQueries")
-    abstract fun deleteAllMovieRecentQueries()
-
-    @Query("SELECT * FROM DiscoveryMovieResult WHERE page = :pageNumber")
-    abstract fun getDiscoveryMovieResultByPage(pageNumber: Int): DiscoveryMovieResult
-
-    @Query("SELECT * FROM DiscoveryMovieResult WHERE page = :pageNumber")
-    abstract fun getDiscoveryMovieResultByPageLiveData(pageNumber: Int): LiveData<DiscoveryMovieResult>
+    @Query("SELECT * FROM SearchMovieResult WHERE `query` = :query AND pageNumber = :page")
+    abstract suspend fun searchMovieResult(query: String, page: Int): SearchMovieResult?
 
     @Query("SELECT * FROM FilteredMovieResult WHERE page = :pageNumber")
-    abstract fun getFilteredMovieResultByPage(pageNumber: Int): FilteredMovieResult
-
-    @Query("SELECT * FROM FilteredMovieResult WHERE page = :pageNumber")
-    abstract fun getFilteredMovieResultByPageLiveData(pageNumber: Int): LiveData<FilteredMovieResult>
-
-    @Query("SELECT * FROM Movie WHERE id in (:movieIds) AND search = 0 ")
-    abstract fun loadDiscoveryMovieList(movieIds: List<Int>): LiveData<List<Movie>>
-
-    @Query("SELECT * FROM Movie WHERE id in (:movieIds) AND search = 0 AND filter = 1 AND poster_path <> ''")
-    abstract fun loadFilteredMovieList(movieIds: List<Int>): LiveData<List<Movie>>
-
-    @Query("SELECT * FROM Tv WHERE id in (:tvIds) AND search = 0 AND filter = 1 AND poster_path <> ''")
-    abstract fun loadFilteredTvList(tvIds: List<Int>): LiveData<List<Tv>>
+    abstract suspend fun getFilteredMovieResultByPage(pageNumber: Int): FilteredMovieResult?
 
     @Update
-    abstract fun updateMovie(movie: Movie)
+    abstract suspend fun updateMovie(movie: Movie)
 
     @Query("SELECT * FROM MOVIE WHERE id = :id_")
-    abstract fun getMovie(id_: Int): Movie
+    abstract suspend fun getMovie(id_: Int): Movie
 
-    @Query("SELECT * FROM Movie WHERE page = :page_ AND search = 0")
-    abstract fun loadDiscoveryMovieList(page_: Int): LiveData<List<Movie>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun insertMovieList(movies: List<Movie>)
 
-    @Query("SELECT id FROM Movie WHERE page = :page_ AND search = 0")
-    abstract fun loadMovieIdsMovieList(page_: Int): List<Int>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun insertSearchMovieResult(result: SearchMovieResult)
 
-    @Query("SELECT * FROM Movie WHERE id in (:movieIds) AND search = 0")
-    abstract fun loadMovieIdsMovieList(movieIds: List<Int>): LiveData<List<Movie>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun insertMovieRecentQuery(insertMovieRecentQuery: MovieRecentQueries)
 
-    @Query("SELECT * FROM SearchMovieResult WHERE `query` = :query AND pageNumber = :pageNumber ")
-    abstract fun searchMovieResultLiveData(
-        query: String,
-        pageNumber: Int
-    ): LiveData<SearchMovieResult>
+    @Query("SELECT * FROM Movie WHERE id in (:movieIds) AND search = 0 AND filter = 1 AND poster_path <> '' ORDER BY page")
+    abstract suspend fun loadFilteredMovieList(movieIds: List<Int>): List<Movie>
 
-    @Query("SELECT * FROM Movie WHERE title LIKE '%' || :query || '%' LIMIT 20" )
-    abstract fun searchMovieSuggestionResultLiveData(
-        query: String
-    ): LiveData<List<Movie>>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract suspend fun insertFilteredMovieResult(result: FilteredMovieResult)
 
-    @Query("SELECT * FROM SearchMovieResult WHERE `query` = :query AND pageNumber = :pageNumber ")
-    abstract fun searchMovieResult(query: String, pageNumber: Int): SearchMovieResult
+    @Query("SELECT * FROM MovieRecentQueries GROUP BY `query` ORDER BY id DESC LIMIT 30 ")
+    abstract suspend fun loadMovieRecentQueries(): List<MovieRecentQueries>
 
-    @Query("SELECT * FROM Movie WHERE id in (:movieIds) AND search = 1 AND poster_path <> '' ")
-    abstract fun loadSearchMovieList(movieIds: List<Int>): LiveData<List<Movie>>
+    @Query("DELETE FROM MovieRecentQueries")
+    abstract suspend fun deleteAllMovieRecentQueries()
 
-    fun loadSearchMovieListOrdered(movieIds: List<Int>): LiveData<List<Movie>> {
-        val order = SparseIntArray() // SparseArrayCompat can be used .. but it would need mocking
-        movieIds.withIndex().forEach {
-            order.put(it.value, it.index)
-        }
-        return Transformations.map(loadSearchMovieList(movieIds)) { movies ->
-            movies.sortedWith(compareBy { order.get(it.id) })
-        }
-    }
+    @Query("SELECT * FROM Movie JOIN movieSuggestionsFts ON Movie.id == movieSuggestionsFts.id WHERE movieSuggestionsFts.title MATCH '%' || :text || '%' LIMIT 20")
+    abstract suspend fun loadMovieSuggestions(text: String): List<Movie>
 
-    fun loadDiscoveryMovieListOrdered(movieIds: List<Int>): LiveData<List<Movie>> {
-        val order = SparseArrayCompat<Int>() // SparseArrayCompat can be used
-        movieIds.withIndex().forEach {
-            order.put(it.value, it.index)
-        }
-        return Transformations.map(
-            loadDiscoveryMovieList(movieIds)) { movies ->
-            movies.sortedWith(compareBy { order.get(it.id) })
-        }
-    }
+//    fun loadSearchMovieListOrdered(movieIds: List<Int>): LiveData<List<Movie>> {
+//        val order = SparseIntArray() // SparseArrayCompat can be used .. but it would need mocking
+//        movieIds.withIndex().forEach {
+//            order.put(it.value, it.index)
+//        }
+//        return Transformations.map(loadSearchMovieList(movieIds)) { movies ->
+//            movies.sortedWith(compareBy { order.get(it.id) })
+//        }
+//    }
 
-    fun loadFilteredMovieListOrdered(movieIds: List<Int>): LiveData<List<Movie>> {
-        val order = SparseIntArray() // SparseArrayCompat can be used
-        movieIds.withIndex().forEach {
-            order.put(it.value, it.index)
-        }
-        return Transformations.map(
-            loadFilteredMovieList(movieIds)) { movies ->
-            movies.sortedWith(compareBy { order.get(it.id) })
-        }
-    }
+//    fun loadDiscoveryMovieListOrdered2(movieIds: List<Int>): List<Movie> {
+//        val order = SparseArrayCompat<Int>() // SparseArrayCompat can be used
+//        movieIds.withIndex().forEach {
+//            order.put(it.value, it.index)
+//        }
+//        return loadDiscoveryMovieList2(movieIds).sortedWith(compareBy { order.get(it.id) })
+//    }
 
-    fun loadFilteredTvListOrdered(tvIds: List<Int>): LiveData<List<Tv>> {
-        val order = SparseIntArray() // SparseArrayCompat can be used
-        tvIds.withIndex().forEach {
-            order.put(it.value, it.index)
-        }
-        return Transformations.map(
-            loadFilteredTvList(tvIds)) { tvs ->
-            tvs.sortedWith(compareBy { order.get(it.id) })
-        }
-    }
-
-
-    @Query("SELECT * FROM Movie JOIN movieSuggestionsFts ON Movie.id == movieSuggestionsFts.id WHERE movieSuggestionsFts.title MATCH '%' || :text || '%' LIMIT 20" )
-    abstract fun loadMovieSuggestions(text: String): LiveData<List<Movie>>
 }
+

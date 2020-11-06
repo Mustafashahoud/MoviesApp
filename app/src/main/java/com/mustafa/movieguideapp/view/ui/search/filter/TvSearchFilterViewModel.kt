@@ -1,20 +1,20 @@
 package com.mustafa.movieguideapp.view.ui.search.filter
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.models.entity.Tv
 import com.mustafa.movieguideapp.repository.DiscoverRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.AbsentLiveData
+import com.mustafa.movieguideapp.view.ViewModelBase
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
 @OpenForTesting
 class TvSearchFilterViewModel @Inject constructor(
-    private val discoverRepository: DiscoverRepository
-) : ViewModel() {
+    private val discoverRepository: DiscoverRepository,
+    dispatcher: CoroutineDispatcher
+) : ViewModelBase(dispatcher) {
 
     // Filter variables
     ////////////////////////
@@ -30,21 +30,12 @@ class TvSearchFilterViewModel @Inject constructor(
 
     private val searchTvFilterPageLiveData: MutableLiveData<Int> = MutableLiveData()
 
-    val searchTvListFilterLiveData: LiveData<Resource<List<Tv>>> = Transformations
-        .switchMap(searchTvFilterPageLiveData) {
-            if (it == null) {
-                AbsentLiveData.create()
-            } else {
+    val searchTvListFilterLiveData: LiveData<Resource<List<Tv>>> =
+        searchTvFilterPageLiveData.switchMap {
+            launchOnViewModelScope {
                 discoverRepository.loadFilteredTvs(
-                    rating,
-                    sort,
-                    year,
-                    keyword,
-                    genres,
-                    language,
-                    runtime,
-                    it
-                )
+                    rating, sort, year, keyword, genres, language, runtime, it
+                ).asLiveData()
             }
         }
 

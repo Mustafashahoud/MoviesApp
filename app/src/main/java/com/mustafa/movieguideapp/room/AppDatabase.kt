@@ -32,7 +32,7 @@ import com.mustafa.movieguideapp.utils.VideoListConverter
         (SearchPeopleResult::class),
         (PeopleRecentQueries::class),
         (PeopleSuggestionsFts::class)],
-    version = 30, exportSchema = false
+    version = 32, exportSchema = false
 )
 @TypeConverters(
     value = [(StringListConverter::class), (IntegerListConverter::class),

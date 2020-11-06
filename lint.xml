@@ -4,6 +4,7 @@
     <issue id="Overdraw" severity="ignore" />
     <issue id="UselessParent" severity="ignore" />
     <issue id="SmallSp" severity="ignore" />
+    <issue id="IconLocation" severity="ignore" />
 
 </lint>
 

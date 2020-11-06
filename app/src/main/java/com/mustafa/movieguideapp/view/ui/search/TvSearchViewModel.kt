@@ -1,36 +1,36 @@
 package com.mustafa.movieguideapp.view.ui.search
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import com.mustafa.movieguideapp.models.Resource
-import com.mustafa.movieguideapp.models.entity.Tv
-import com.mustafa.movieguideapp.models.entity.TvRecentQueries
+import androidx.lifecycle.*
 import com.mustafa.movieguideapp.repository.DiscoverRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.AbsentLiveData
+import com.mustafa.movieguideapp.view.ViewModelBase
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 @OpenForTesting
 class TvSearchViewModel @Inject constructor(
-    private val discoverRepository: DiscoverRepository
-) : ViewModel() {
+    private val discoverRepository: DiscoverRepository,
+    dispatcher: CoroutineDispatcher
+) : ViewModelBase(dispatcher) {
 
     private val searchTvPageLiveData: MutableLiveData<Int> = MutableLiveData()
     private var tvsPageNumber = 1
-
     private val _tvQuery = MutableLiveData<String>()
     val queryTvLiveData: LiveData<String> = _tvQuery
-    val searchTvListLiveData: LiveData<Resource<List<Tv>>> = Transformations
-        .switchMap(searchTvPageLiveData) {
-            if (it == null || queryTvLiveData.value.isNullOrEmpty()) {
+
+
+    val searchTvListLiveData = searchTvPageLiveData.switchMap { pageNumber ->
+        launchOnViewModelScope {
+            if (pageNumber == null || queryTvLiveData.value.isNullOrEmpty()) {
                 AbsentLiveData.create()
             } else {
-                discoverRepository.searchTvs(queryTvLiveData.value!!, it)
+                discoverRepository.searchTvs(queryTvLiveData.value!!, pageNumber).asLiveData()
             }
         }
+    }
 
 
     fun refresh() {
@@ -55,11 +55,9 @@ class TvSearchViewModel @Inject constructor(
 
     private val _tvSuggestionsQuery = MutableLiveData<String>()
     private val tvSuggestionsQuery: LiveData<String> = _tvSuggestionsQuery
-    val tvSuggestions: LiveData<List<Tv>> = Transformations
-        .switchMap(tvSuggestionsQuery) {
-            if (it == null) {
-                AbsentLiveData.create()
-            } else {
+    val tvSuggestions = tvSuggestionsQuery
+        .switchMap {
+            launchOnViewModelScope {
                 discoverRepository.getTvSuggestionsFromRoom(tvSuggestionsQuery.value!!)
             }
         }
@@ -68,10 +66,13 @@ class TvSearchViewModel @Inject constructor(
         _tvSuggestionsQuery.value = newText
     }
 
-    fun getTvRecentQueries(): LiveData<List<TvRecentQueries>> =
+    val tvRecentQueries = launchOnViewModelScope {
         discoverRepository.getTvRecentQueries()
+    }
 
     fun deleteAllTvRecentQueries() {
-        discoverRepository.deleteAllTvRecentQueries()
+        viewModelScope.launch {
+            discoverRepository.deleteAllTvRecentQueries()
+        }
     }
 }

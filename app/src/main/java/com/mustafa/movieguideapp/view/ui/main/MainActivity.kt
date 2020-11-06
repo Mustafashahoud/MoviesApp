@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSplashy()
+//        setSplashy()
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
@@ -140,20 +140,20 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 
-    private fun setSplashy() {
-        Splashy(this)
-            .setLogo(R.mipmap.ic_launcher_foreground)
-            .setTitle("MovieGuide")
-            .setTitleColor(R.color.colorAccent)
-            .showProgress(true)
-            .setProgressColor(R.color.colorAccent)
-            .setSubTitle("Eng. Mustafa Shahoud")
-            .setProgressColor(R.color.colorAccent)
-            .setBackgroundResource(R.color.backgroundDarker)
-            .setFullScreen(true)
-            .setTime(3000)
-            .show()
-    }
+//    private fun setSplashy() {
+//        Splashy(this)
+//            .setLogo(R.mipmap.ic_launcher_foreground)
+//            .setTitle("MovieGuide")
+//            .setTitleColor(R.color.colorAccent)
+//            .showProgress(true)
+//            .setProgressColor(R.color.colorAccent)
+//            .setSubTitle("Eng. Mustafa Shahoud")
+//            .setProgressColor(R.color.colorAccent)
+//            .setBackgroundResource(R.color.backgroundDarker)
+//            .setFullScreen(true)
+//            .setTime(3000)
+//            .show()
+//    }
 }
 
 

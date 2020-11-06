@@ -8,11 +8,9 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentTvSearchResultBinding
@@ -22,10 +20,9 @@ import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.TvSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
+import com.mustafa.movieguideapp.view.ui.common.InfinitePager
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
 import com.mustafa.movieguideapp.view.ui.search.TvSearchViewModel
-import kotlinx.android.synthetic.main.fragment_tv_search_result.*
-import kotlinx.android.synthetic.main.fragment_tv_search_result.view.*
 import kotlinx.android.synthetic.main.toolbar_search_result.*
 import javax.inject.Inject
 
@@ -76,7 +73,7 @@ class TvSearchResultFragment : Fragment(), Injectable {
     }
 
     private fun subscribers() {
-        viewModel.searchTvListLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.searchTvListLiveData.observe(viewLifecycleOwner, {
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }
@@ -93,32 +90,26 @@ class TvSearchResultFragment : Fragment(), Injectable {
     }
 
     private fun initializeUI() {
-        adapter = TvSearchListAdapter(
-            appExecutors,
-            dataBindingComponent
-        ) {
+        adapter = TvSearchListAdapter(dataBindingComponent) {
             findNavController().navigate(
                 TvSearchResultFragmentDirections.actionTvSearchFragmentResultToTvDetail(it)
             )
         }
 
         hideKeyboard()
-        binding.root.recyclerView_search_result_tvs.adapter = adapter
-
-        recyclerView_search_result_tvs.layoutManager = LinearLayoutManager(context)
-
-        recyclerView_search_result_tvs.addOnScrollListener(object :
-            RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val lastPosition = layoutManager.findLastVisibleItemPosition()
-                if (lastPosition == adapter.itemCount - 1
-                    && viewModel.searchTvListLiveData.value?.status != Status.LOADING
-                ) {
-                    if (viewModel.searchTvListLiveData.value?.hasNextPage!!) {
-                        viewModel.loadMore()
-                    }
+        binding.recyclerViewSearchResultTvs.adapter = adapter
+        binding.recyclerViewSearchResultTvs.layoutManager = LinearLayoutManager(context)
+        binding.recyclerViewSearchResultTvs.addOnScrollListener(object :
+            InfinitePager(adapter) {
+            override fun loadMorecondition(): Boolean {
+                viewModel.searchTvListLiveData.value?.let { resource ->
+                    return resource.hasNextPage && resource.status != Status.LOADING
                 }
+                return false
+            }
+
+            override fun loadMore() {
+                viewModel.loadMore()
             }
         })
 

@@ -8,12 +8,9 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentCelebritiesBinding
@@ -22,8 +19,8 @@ import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.PeopleAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
+import com.mustafa.movieguideapp.view.ui.common.InfinitePager
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
-import kotlinx.android.synthetic.main.fragment_celebrities.*
 import kotlinx.android.synthetic.main.toolbar_search.*
 import javax.inject.Inject
 
@@ -37,9 +34,7 @@ class CelebritiesListFragment : Fragment(), Injectable {
 
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
-    private val viewModel by viewModels<CelebritiesListViewModel> {
-        viewModelFactory
-    }
+    private val viewModel by viewModels<CelebritiesListViewModel> { viewModelFactory }
     private var binding by autoCleared<FragmentCelebritiesBinding>()
 
     private var adapter by autoCleared<PeopleAdapter>()
@@ -76,26 +71,24 @@ class CelebritiesListFragment : Fragment(), Injectable {
 
     private fun initializeUI() {
         intiToolbar(getString(R.string.fragment_celebrities))
-        adapter = PeopleAdapter(appExecutors, dataBindingComponent) {
+        adapter = PeopleAdapter(dataBindingComponent) {
             findNavController().navigate(
-                CelebritiesListFragmentDirections.actionCelebritiesToCelebrity(
-                    it
-                )
+                CelebritiesListFragmentDirections.actionCelebritiesToCelebrity(it)
             )
         }
-        recyclerView_list_celebrities.adapter = adapter
-
-        recyclerView_list_celebrities.layoutManager = GridLayoutManager(context, 3)
-        recyclerView_list_celebrities.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val lastPosition = layoutManager.findLastVisibleItemPosition()
-                if (lastPosition == adapter.itemCount - 1
-                    && viewModel.peopleLiveData.value?.status != Status.LOADING
-                    && viewModel.peopleLiveData.value?.hasNextPage!!
-                ) {
-                    viewModel.loadMore()
+        binding.recyclerViewListCelebrities.adapter = adapter
+        binding.recyclerViewListCelebrities.layoutManager = GridLayoutManager(context, 3)
+        binding.recyclerViewListCelebrities.addOnScrollListener(object :
+            InfinitePager(adapter) {
+            override fun loadMorecondition(): Boolean {
+                viewModel.peopleLiveData.value?.let { resource ->
+                    return resource.hasNextPage && resource.status != Status.LOADING
                 }
+                return false
+            }
+
+            override fun loadMore() {
+                viewModel.loadMore()
             }
         })
 
@@ -106,7 +99,7 @@ class CelebritiesListFragment : Fragment(), Injectable {
 
 
     private fun subscribers() {
-        viewModel.peopleLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.peopleLiveData.observe(viewLifecycleOwner, {
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }

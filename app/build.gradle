@@ -41,6 +41,8 @@ android {
     }
     lintOptions {
         lintConfig rootProject.file('lint.xml')
+        disable "UnsafeExperimentalUsageError",
+                "UnsafeExperimentalUsageWarning"
     }
     kapt {
         correctErrorTypes = true
@@ -66,6 +68,7 @@ android {
 //        androidTest.java.srcDirs += "src/test-common/java"
 //        test.java.srcDirs += "src/test-common/java"
     }
+
     buildTypes {
         debug {
             minifyEnabled false
@@ -94,7 +97,17 @@ android {
             }
         }
     }
+
+    if (hasProperty('buildScan')) {
+        buildScan {
+            termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+            termsOfServiceAgree = 'yes'
+        }
+    }
+
 }
+
+
 
 dependencies {
     def androidxVersion = '1.0.0'
@@ -105,32 +118,33 @@ dependencies {
     def archComponentVersion = '2.1.0'
     def roomVersion = '2.2.5'
     def lifecycleVersion = '2.2.0'
-    def daggerVersion = '2.28.1'
+    def daggerVersion = '2.29.1'
     def retrofitVersion = '2.9.0'
     def googleJsonVersion = '2.8.6'
-    def okhttpVersion = '4.7.2'
+    def okhttpVersion = '4.9.0'
     def timberVersion = '4.7.1'
     def stethoVersion = '1.5.1'
     def glideVersion = '4.11.0'
+    def mockitoAndroid = '3.3.3'
     def glidePaletteVersion = '2.1.2'
+    def archTestVersion = '2.1.0'
     def androidTagViewVersion = '1.1.4'
+    def androidxTestCoreVersion = '1.3.0'
     def expandableTextViewVersion = '0.1.4'
     def mockitoKotlinVersion = '2.2.0'
-    def junitVersion = '4.13'
-    def espressoVersion = '3.2.0'
-    def androidxTestRules = '1.2.0'
-    def nav_version = '2.3.0'
+    def junitVersion = '4.13.1'
+    def espressoVersion = '3.3.0'
+    def nav_version = '2.3.1'
+    def coroutinesVersion = '1.3.9'
 
     // support library
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
-    implementation 'androidx.activity:activity:1.1.0'
     implementation 'androidx.activity:activity-ktx:1.1.0'
-    implementation "androidx.fragment:fragment:$androidFragment"
     implementation "androidx.fragment:fragment-ktx:$androidFragment"
     implementation 'com.google.android.material:material:1.1.0'
-    implementation "androidx.palette:palette:$androidxVersion"
+    implementation "androidx.palette:palette-ktx:$androidxVersion"
     implementation "androidx.recyclerview:recyclerview:$recyclerVersion"
-    implementation "androidx.constraintlayout:constraintlayout:1.1.3"
+    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
 
     // kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
@@ -139,14 +153,15 @@ dependencies {
     // architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleVersion"
     implementation "androidx.room:room-runtime:$roomVersion"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
 
     //Splash Screen Library
-    implementation 'com.rbddevs.splashy:splashy:1.2.0'
+    implementation 'com.rbddevs.splashy:splashy:1.3.0'
 
     // navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
@@ -160,6 +175,8 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 
     debugImplementation "androidx.fragment:fragment-testing:$androidFragment"
+    debugImplementation "androidx.test:core:$androidxTestCoreVersion"
+    debugImplementation "androidx.test:monitor:$androidxTestCoreVersion"
 
     // network
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
@@ -183,21 +200,35 @@ dependencies {
     implementation "co.lujun:androidtagview:$androidTagViewVersion"
     implementation "com.ms-square:expandableTextView:$expandableTextViewVersion"
 
+    // coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+
     // unit test
     testImplementation "junit:junit:$junitVersion"
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
     testImplementation "androidx.arch.core:core-testing:$archComponentVersion"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttpVersion"
 
-    // Android test
-    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+    //Core Library
+    androidTestImplementation "androidx.test:core:$androidxTestCoreVersion"
+
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation "androidx.test:rules:1.3.0"
+    androidTestImplementation "androidx.test:runner:1.3.0"
+
+    // Assertions
+    androidTestImplementation "androidx.test.ext:junit:1.1.2"
+    androidTestImplementation 'androidx.test.ext:truth:1.3.0'
+    androidTestImplementation 'com.google.truth:truth:1.1'
+
+    androidTestImplementation "androidx.arch.core:core-testing:$archTestVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
     androidTestImplementation "androidx.test.espresso:espresso-contrib:$espressoVersion"
-    androidTestImplementation "androidx.test.ext:junit:1.1.1"
-    androidTestImplementation "androidx.test:core:1.2.0"
-    androidTestImplementation "androidx.test:rules:$androidxTestRules"
-    androidTestImplementation "androidx.test:runner:$androidxTestRules"
-    androidTestImplementation "org.mockito:mockito-android:3.3.3"
+
+    androidTestImplementation "org.mockito:mockito-android:$mockitoAndroid"
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 

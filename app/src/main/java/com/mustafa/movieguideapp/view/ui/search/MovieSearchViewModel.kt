@@ -1,36 +1,36 @@
 package com.mustafa.movieguideapp.view.ui.search
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import com.mustafa.movieguideapp.models.Resource
-import com.mustafa.movieguideapp.models.entity.Movie
-import com.mustafa.movieguideapp.models.entity.MovieRecentQueries
+import androidx.lifecycle.*
 import com.mustafa.movieguideapp.repository.DiscoverRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.AbsentLiveData
+import com.mustafa.movieguideapp.view.ViewModelBase
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 @OpenForTesting
 class MovieSearchViewModel @Inject constructor(
-    private val discoverRepository: DiscoverRepository
-) : ViewModel() {
+    private val discoverRepository: DiscoverRepository,
+    dispatcherIO: CoroutineDispatcher
+) : ViewModelBase(dispatcherIO) {
 
     private val searchMoviePageLiveData: MutableLiveData<Int> = MutableLiveData()
     private var moviesPageNumber = 1
     private val _movieQuery = MutableLiveData<String>()
 
     val queryMovieLiveData: LiveData<String> = _movieQuery
-    val searchMovieListLiveData: LiveData<Resource<List<Movie>>> = Transformations
-        .switchMap(searchMoviePageLiveData) {
-            if (it == null || queryMovieLiveData.value.isNullOrEmpty()) {
+
+    val searchMovieListLiveData = searchMoviePageLiveData.switchMap { pageNumber ->
+        launchOnViewModelScope {
+            if (pageNumber == null || queryMovieLiveData.value.isNullOrEmpty()) {
                 AbsentLiveData.create()
             } else {
-                discoverRepository.searchMovies(queryMovieLiveData.value!!, it)
+                discoverRepository.searchMovies(queryMovieLiveData.value!!, pageNumber).asLiveData()
             }
         }
+    }
 
 
     fun setSearchMovieQueryAndPage(query: String?, page: Int) {
@@ -56,11 +56,10 @@ class MovieSearchViewModel @Inject constructor(
 
     private val _movieSuggestionsQuery = MutableLiveData<String>()
     private val movieSuggestionsQuery: LiveData<String> = _movieSuggestionsQuery
-    val movieSuggestions: LiveData<List<Movie>> = Transformations
-        .switchMap(movieSuggestionsQuery) {
-            if (it.isNullOrBlank()) {
-                AbsentLiveData.create()
-            } else {
+
+    val movieSuggestions = movieSuggestionsQuery
+        .switchMap {
+            launchOnViewModelScope {
                 discoverRepository.getMovieSuggestionsFromRoom(movieSuggestionsQuery.value!!)
             }
         }
@@ -70,10 +69,14 @@ class MovieSearchViewModel @Inject constructor(
     }
 
 
-    fun getMovieRecentQueries(): LiveData<List<MovieRecentQueries>> =
+    val tvRecentQueries = launchOnViewModelScope {
         discoverRepository.getMovieRecentQueries()
+    }
+
 
     fun deleteAllMovieRecentQueries() {
-        discoverRepository.deleteAllMovieRecentQueries()
+        viewModelScope.launch {
+            discoverRepository.deleteAllMovieRecentQueries()
+        }
     }
 }

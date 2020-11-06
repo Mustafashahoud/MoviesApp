@@ -1,17 +1,15 @@
 package com.mustafa.movieguideapp.utils
 
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 /**
- * Copied from https://github.com/android/architecture-components-samples/tree/master/GithubBrowserSample
- */
-/**
- * A lazy property that gets cleaned up when the fragment is destroyed.
+ * A lazy property that gets cleaned up when the fragment's view is destroyed.
  *
- * Accessing this variable in a destroyed fragment will throw NPE.
+ * Accessing this variable while the fragment's view is destroyed will throw NPE.
  */
 class AutoClearedValue<T : Any>(val fragment: Fragment) : ReadWriteProperty<Fragment, T> {
     private var _value: T? = null

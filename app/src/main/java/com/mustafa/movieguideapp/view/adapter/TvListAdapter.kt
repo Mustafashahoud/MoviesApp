@@ -13,10 +13,8 @@ import com.mustafa.movieguideapp.view.ui.common.DataBoundListAdapter
 
 class TvListAdapter(
     private val dataBindingComponent: DataBindingComponent,
-    appExecutors: AppExecutors,
     private val tvOnClickCallback: ((Tv) -> Unit)?
 ) : DataBoundListAdapter<Tv, ItemTvBinding>(
-    appExecutors = appExecutors,
     diffCallback = object : DiffUtil.ItemCallback<Tv>() {
         override fun areItemsTheSame(oldItem: Tv, newItem: Tv): Boolean {
             return oldItem.id == newItem.id

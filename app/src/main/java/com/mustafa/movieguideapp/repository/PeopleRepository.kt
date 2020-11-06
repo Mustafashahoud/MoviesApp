@@ -2,18 +2,15 @@ package com.mustafa.movieguideapp.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import com.mustafa.movieguideapp.api.ApiResponse
 import com.mustafa.movieguideapp.api.PeopleService
-import com.mustafa.movieguideapp.mappers.*
 import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.models.entity.*
-import com.mustafa.movieguideapp.models.network.*
-import com.mustafa.movieguideapp.room.AppDatabase
+import com.mustafa.movieguideapp.models.network.PersonDetail
 import com.mustafa.movieguideapp.room.PeopleDao
 import com.mustafa.movieguideapp.testing.OpenForTesting
-import com.mustafa.movieguideapp.utils.AbsentLiveData
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,108 +19,58 @@ import javax.inject.Singleton
 class PeopleRepository @Inject constructor(
     private val peopleService: PeopleService,
     private val peopleDao: PeopleDao,
-    private val db: AppDatabase,
-    private val appExecutors: AppExecutors
-)  {
+    private val dispatcherIO: CoroutineDispatcher
+) {
 
-    fun loadPeople(page: Int): LiveData<Resource<List<Person>>> {
-        return object :
-            NetworkBoundResource<List<Person>, PeopleResponse, PeoplePagingChecker>(
-                appExecutors
-            ) {
-            override fun saveCallResult(items: PeopleResponse) {
-
-                val ids = arrayListOf<Int>()
-                val personIds: List<Int> = items.results.map { it.id }
-
-                for (item in items.results) {
+    suspend fun loadPeople(page: Int): Flow<Resource<List<Person>>> {
+        return networkBoundResource(
+            loadFromDb = { peopleDao.loadPeopleList((1..page).toList()) },
+            fetchFromNetwork = { peopleService.fetchPopularPeople(page) },
+            dispatcherIO = dispatcherIO,
+            pagingChecker = { it.page < it.total_pages },
+            saveFetchResult = { items ->
+                items.results.forEach { item ->
                     item.page = page
                     item.search = false
                 }
-                if (page != 1) {
-                    val prevPageNumber = page - 1
-                    val peopleResult =
-                        peopleDao.getPeopleResultByPage(prevPageNumber)
-                    ids.addAll(peopleResult.ids)
-                }
-
-                ids.addAll(personIds)
-
-                val peopleResult = PeopleResult(
-                    ids = ids,
-                    page = page
-                )
-                db.run {
-                    peopleDao.insertPeopleResult(peopleResult)
-                    peopleDao.insertPeople(people = items.results)
-                }
-
+                peopleDao.insertPeople(people = items.results)
             }
-
-            override fun shouldFetch(data: List<Person>?): Boolean {
-                return true
-            }
-
-            override fun loadFromDb(): LiveData<List<Person>> {
-                return Transformations.switchMap(peopleDao.getPeopleResultByPageLiveData(page)) { searchData ->
-                    if (searchData == null) {
-                        AbsentLiveData.create()
-                    } else {
-                        peopleDao.loadPeopleListOrdered(searchData.ids)
-                    }
-                }
-            }
-
-            override fun pageChecker(): PeoplePagingChecker {
-                return PeoplePagingChecker()
-            }
-
-            override fun createCall(): LiveData<ApiResponse<PeopleResponse>> {
-                return peopleService.fetchPopularPeople(page = page)
-            }
-        }.asLiveData()
+        )
     }
 
-    fun loadPersonDetail(id: Int): LiveData<Resource<PersonDetail>> {
-        return object : NetworkBoundResource<
-                PersonDetail,
-                PersonDetail,
-                PersonDetailPagingChecker
-                >(appExecutors) {
-            override fun saveCallResult(items: PersonDetail) {
+    suspend fun loadPersonDetail(id: Int): Flow<Resource<PersonDetail>> {
+        return networkBoundResource(
+            loadFromDb = {
                 val person = peopleDao.getPerson(id_ = id)
-                person.personDetail = items
+                if (person?.personDetail != null){
+                    person.personDetail!!
+                } else {
+                    PersonDetail(known_for_department = "",biography = "")
+                }
+            },
+            fetchFromNetwork = { peopleService.fetchPersonDetail(id = id) },
+            dispatcherIO = dispatcherIO,
+            pagingChecker = { false },
+            saveFetchResult = { items ->
+                val person = peopleDao.getPerson(id_ = id)
+                person?.personDetail = items
                 peopleDao.updatePerson(person = person)
             }
-
-            override fun shouldFetch(data: PersonDetail?): Boolean {
-                return data == null || data.biography.isEmpty()
-            }
-
-            override fun loadFromDb(): LiveData<PersonDetail> {
-                val person = peopleDao.getPerson(id_ = id)
-                val data: MutableLiveData<PersonDetail> = MutableLiveData()
-                data.value = person.personDetail
-                return data
-            }
-
-            override fun pageChecker(): PersonDetailPagingChecker {
-                return PersonDetailPagingChecker()
-            }
-
-            override fun createCall(): LiveData<ApiResponse<PersonDetail>> {
-                return peopleService.fetchPersonDetail(id = id)
-            }
-        }.asLiveData()
+        )
     }
 
-    fun searchPeople(query: String, page: Int): LiveData<Resource<List<Person>>> {
-        return object :
-            NetworkBoundResource<List<Person>, PeopleResponse, PeoplePagingChecker>(
-                appExecutors
-            ) {
-            override fun saveCallResult(items: PeopleResponse) {
-
+    suspend fun searchPeople(query: String, page: Int): Flow<Resource<List<Person>>> {
+        return networkBoundResource(
+            loadFromDb = {
+                val searchPeopleResult = peopleDao.searchPeopleResult(query, page)
+                searchPeopleResult?.let {
+                    peopleDao.loadSearchPeopleList(searchPeopleResult.ids)
+                } ?: ArrayList()
+            },
+            fetchFromNetwork = { peopleService.searchPeople(query, page = page) },
+            dispatcherIO = dispatcherIO,
+            pagingChecker = { it.page < it.total_pages },
+            saveFetchResult = { items ->
                 val ids = arrayListOf<Int>()
                 val personIds: List<Int> = items.results.map { it.id }
 
@@ -134,156 +81,90 @@ class PeopleRepository @Inject constructor(
                 if (page > 1) {
                     val prevPageNumber = page - 1
                     val peopleSearchResult = peopleDao.searchPeopleResult(query, prevPageNumber)
-                    ids.addAll(peopleSearchResult.ids)
+                    peopleSearchResult?.ids?.let { ids.addAll(it) }
                 }
 
                 ids.addAll(personIds)
 
-                val searchPeopleResult = SearchPeopleResult(
-                query = query,
-                ids = ids,
-                page = page
-                )
+                val searchPeopleResult = SearchPeopleResult(query, ids, page)
                 val recentQueries = PeopleRecentQueries(query)
 
-                db.runInTransaction {
-                    peopleDao.insertPeopleRecentQuery(recentQueries)
-                    peopleDao.insertSearchPeopleResult(searchPeopleResult)
-                    peopleDao.insertPeople(people = items.results)
-                }
-
+                peopleDao.insertPeopleRecentQuery(recentQueries)
+                peopleDao.insertSearchPeopleResult(searchPeopleResult)
+                peopleDao.insertPeople(people = items.results)
             }
-
-            override fun shouldFetch(data: List<Person>?): Boolean {
-                return true
-            }
-
-            override fun loadFromDb(): LiveData<List<Person>> {
-                return Transformations.switchMap(peopleDao.searchPeopleResultLiveData(query, page)) { searchData ->
-                    if (searchData == null) {
-                        AbsentLiveData.create()
-                    } else {
-                        peopleDao.loadSearchPeopleListOrdered(searchData.ids)
-                    }
-                }
-            }
-
-            override fun pageChecker(): PeoplePagingChecker {
-                return PeoplePagingChecker()
-            }
-
-            override fun createCall(): LiveData<ApiResponse<PeopleResponse>> {
-                return peopleService.searchPeople(query, page = page)
-            }
-        }.asLiveData()
+        )
     }
 
-
-    fun loadMoviesForPerson(personId: Int): LiveData<Resource<List<MoviePerson>>> {
-        return object :
-            NetworkBoundResource<List<MoviePerson>, MoviePersonResponse, MoviePersonPagingChecker>(
-                appExecutors
-            ) {
-            override fun saveCallResult(items: MoviePersonResponse) {
-
+    suspend fun loadMoviesForPerson(personId: Int): Flow<Resource<List<MoviePerson>>> {
+        return networkBoundResource(
+            loadFromDb = {
+                val moviePersonResult = peopleDao.getMoviePersonResultByPersonId(personId)
+                moviePersonResult?.let {
+                    peopleDao.loadMoviesForPerson(moviePersonResult.moviesIds)
+                } ?: ArrayList()
+            },
+            fetchFromNetwork = { peopleService.fetchPersonMovies(id = personId) },
+            dispatcherIO = dispatcherIO,
+            pagingChecker = { false },
+            saveFetchResult = { items ->
                 val movieIds: List<Int> = items.cast.map { it.id }
-
+                val moviePersonResult = MoviePersonResult(movieIds, personId)
                 peopleDao.insertMovieForPerson(movies = items.cast)
-                val moviePersonResult = MoviePersonResult(
-                    moviesIds = movieIds,
-                    personId = personId
-                )
                 peopleDao.insertMoviePersonResult(moviePersonResult)
             }
-
-            override fun shouldFetch(data: List<MoviePerson>?): Boolean {
-                return true
-            }
-
-            override fun loadFromDb(): LiveData<List<MoviePerson>> {
-                return Transformations.switchMap(
-                    peopleDao.getMoviePersonResultByPersonIdLiveData(
-                        personId
-                    )
-                ) { searchData ->
-                    if (searchData == null) {
-                        AbsentLiveData.create()
-                    } else {
-                        peopleDao.loadMoviesForPerson(searchData.moviesIds)
-                    }
-                }
-            }
-
-            override fun pageChecker(): MoviePersonPagingChecker {
-                return MoviePersonPagingChecker()
-            }
-
-            override fun createCall(): LiveData<ApiResponse<MoviePersonResponse>> {
-                return peopleService.fetchPersonMovies(id = personId)
-            }
-        }.asLiveData()
+        )
     }
 
-    fun loadTvsForPerson(personId: Int): LiveData<Resource<List<TvPerson>>> {
-        return object :
-            NetworkBoundResource<List<TvPerson>, TvPersonResponse, TvPersonPagingChecker>(
-                appExecutors
-            ) {
-            override fun saveCallResult(items: TvPersonResponse) {
-
-                val movieIds: List<Int> = items.cast.map { it.id }
+    suspend fun loadTvsForPerson(personId: Int): Flow<Resource<List<TvPerson>>> {
+        return networkBoundResource(
+            loadFromDb = {
+                val tvPersonResult = peopleDao.getTvPersonResultByPersonId(personId)
+                tvPersonResult?.let {
+                    peopleDao.loadTvsForPerson(tvPersonResult.tvsIds)
+                } ?: ArrayList()
+            },
+            fetchFromNetwork = { peopleService.fetchPersonTvs(id = personId) },
+            dispatcherIO = dispatcherIO,
+            pagingChecker = { false },
+            saveFetchResult = { items ->
+                val tvIds: List<Int> = items.cast.map { it.id }
 
                 peopleDao.insertTvForPerson(tvs = items.cast)
                 val tvPersonResult = TvPersonResult(
-                    tvsIds = movieIds,
+                    tvsIds = tvIds,
                     personId = personId
                 )
                 peopleDao.insertTvPersonResult(tvPersonResult)
             }
-
-            override fun shouldFetch(data: List<TvPerson>?): Boolean {
-                return true
-            }
-
-            override fun loadFromDb(): LiveData<List<TvPerson>> {
-                return Transformations.switchMap(
-                    peopleDao.getTvPersonResultByPersonIdLiveData(
-                        personId
-                    )
-                ) { searchData ->
-                    if (searchData == null) {
-                        AbsentLiveData.create()
-                    } else {
-                        peopleDao.loadTvsForPerson(searchData.tvsIds)
-                    }
-                }
-            }
-
-            override fun pageChecker(): TvPersonPagingChecker {
-                return TvPersonPagingChecker()
-            }
-
-            override fun createCall(): LiveData<ApiResponse<TvPersonResponse>> {
-                return peopleService.fetchPersonTvs(id = personId)
-            }
-        }.asLiveData()
+        )
     }
 
-    fun getPeopleSuggestionsFromRoom(query: String?): LiveData<List<Person>> {
-        val peopleQuery = MutableLiveData<String>()
-        peopleQuery.value = query
-        return Transformations.switchMap(peopleQuery) {
-            if (it.isNullOrBlank()) {
-                AbsentLiveData.create()
-            } else {
-                peopleDao.loadPeopleSuggestions(it)
+    suspend fun getPeopleSuggestionsFromRoom(query: String?): LiveData<List<Person>> {
+        val peopleSuggestions = MutableLiveData<List<Person>>()
+        withContext(dispatcherIO) {
+            query?.let {
+                val people = peopleDao.loadPeopleSuggestions(it)
+                if (!people.isNullOrEmpty()) peopleSuggestions.postValue(people)
             }
         }
-
+        return peopleSuggestions
     }
 
+    suspend fun getPeopleRecentQueries(): LiveData<List<PeopleRecentQueries>> {
+        val peopleRecentQueriesLiveData = MutableLiveData<List<PeopleRecentQueries>>()
+        withContext(dispatcherIO) {
+            val peopleRecentQueries = peopleDao.loadPeopleRecentQueries()
+            if (!peopleRecentQueries.isNullOrEmpty()) {
+                peopleRecentQueriesLiveData.postValue(peopleRecentQueries)
+            }
+        }
+        return peopleRecentQueriesLiveData
+    }
 
-    fun getPeopleRecentQueries() = peopleDao.loadPeopleRecentQueries()
-    fun deleteAllPeopleRecentQueries() =
-        peopleDao.deleteAllPeopleRecentQueries()
+    suspend fun deleteAllPeopleRecentQueries() {
+        withContext(dispatcherIO) {
+            peopleDao.deleteAllPeopleRecentQueries()
+        }
+    }
 }

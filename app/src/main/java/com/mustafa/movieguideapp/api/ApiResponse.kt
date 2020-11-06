@@ -1,46 +1,65 @@
 package com.mustafa.movieguideapp.api
 
+
 import retrofit2.Response
 
 /**
  * Common class used by API responses.
- * @param <T> the type of the response object
-</T> */
-@Suppress("unused") // T is used in extending classes
-sealed class ApiResponse<T> {
+ */
+sealed class ApiResponse<out T> {
+
+    /**
+     * API Success response class from retrofit.
+     *
+     * [data] is optional. (There are responses without data)
+     */
+    data class ApiSuccessResponse<T>(val response: Response<T>) : ApiResponse<T>() {
+        val data: T? = response.body()
+    }
+
+    /**
+     * Failure class represents two types of Failure:
+     * 1) ### Error response e.g. server error
+     * 2) ### Exception response e.g. network connection error
+     */
+    sealed class ApiFailureResponse {
+        data class Error<T>(val response: Response<T>) : ApiResponse<T>()
+
+        data class Exception<T>(val exception: Throwable) : ApiResponse<T>() {
+            val message: String? = exception.localizedMessage
+        }
+    }
 
     companion object {
-        fun <T> create(error: Throwable): ApiErrorResponse<T> {
-            return ApiErrorResponse(error.message ?: "unknown error")
-        }
 
-        fun <T> create(response: Response<T>): ApiResponse<T> {
-            return if (response.isSuccessful) {
-                val body = response.body()
-                if (body == null || response.code() == 204) {
-                    ApiEmptyResponse()
-                } else {
-                    ApiSuccessResponse(body)
-                }
+
+        /**
+         * ApiResponse error Factory.
+         *
+         * [ApiFailureResponse] factory function. Only receives [Throwable] as an argument.
+         */
+        fun <T> exception(ex: Throwable) = ApiFailureResponse.Exception<T>(ex)
+
+
+        /**
+         * ApiResponse Factory.
+         *
+         * [create] Create [ApiResponse] from [retrofit2.Response] returning from the block.
+         * If [retrofit2.Response] has no errors, it creates [ApiResponse.ApiSuccessResponse].
+         * If [retrofit2.Response] has errors, it creates [ApiResponse.ApiFailureResponse.Error].
+         * If [retrofit2.Response] has occurred exceptions, it creates [ApiResponse.ApiFailureResponse.Exception].
+         */
+        fun <T> create(
+            successCodeRange: IntRange = 200..299,
+            response: Response<T>
+        ): ApiResponse<T> = try {
+            if (response.raw().code in successCodeRange) {
+                ApiSuccessResponse(response)
             } else {
-                val msg = response.errorBody()?.string()
-                val errorMsg = if (msg.isNullOrEmpty()) {
-                    response.message()
-                } else {
-                    msg
-                }
-                ApiErrorResponse(errorMsg ?: "unknown error")
+                ApiFailureResponse.Error(response)
             }
+        } catch (ex: Exception) {
+            ApiFailureResponse.Exception(ex)
         }
     }
 }
-
-
-data class ApiSuccessResponse<T>(val body: T) : ApiResponse<T>()
-
-data class ApiErrorResponse<T>(val errorMessage: String) : ApiResponse<T>()
-
-/**
- * separate class for HTTP 204 responses so that we can make ApiSuccessResponse's body non-null.
- */
-class ApiEmptyResponse<T> : ApiResponse<T>()

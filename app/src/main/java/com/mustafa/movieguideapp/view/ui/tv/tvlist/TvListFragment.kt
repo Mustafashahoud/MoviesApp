@@ -8,11 +8,9 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentTvsBinding
@@ -21,8 +19,8 @@ import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.TvListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
+import com.mustafa.movieguideapp.view.ui.common.InfinitePager
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
-import kotlinx.android.synthetic.main.fragment_tvs.*
 import kotlinx.android.synthetic.main.toolbar_search.*
 import javax.inject.Inject
 
@@ -77,27 +75,26 @@ class TvListFragment : Fragment(), Injectable {
 
     private fun initializeUI() {
         intiToolbar(getString(R.string.fragment_tvs))
-        adapter = TvListAdapter(dataBindingComponent, appExecutors) {
+        adapter = TvListAdapter(dataBindingComponent) {
             findNavController().navigate(
                 TvListFragmentDirections.actionTvsToTvDetail(
                     it
                 )
             )
         }
-//        adapter.setHasStableIds(true)
-        recyclerView_list_tvs.adapter = adapter
-        recyclerView_list_tvs.layoutManager = GridLayoutManager(context, 3)
-        recyclerView_list_tvs.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as GridLayoutManager
-                val lastPosition = layoutManager.findLastVisibleItemPosition()
-                if (lastPosition == adapter.itemCount - 1
-                    && viewModel.tvListLiveData.value?.status != Status.LOADING
-                ) {
-                    viewModel.tvListLiveData.value?.let {
-                        if (it.hasNextPage) viewModel.loadMore()
-                    }
+        binding.recyclerViewListTvs.adapter = adapter
+        binding.recyclerViewListTvs.layoutManager = GridLayoutManager(context, 3)
+        binding.recyclerViewListTvs.addOnScrollListener(object :
+            InfinitePager(adapter) {
+            override fun loadMorecondition(): Boolean {
+                viewModel.tvListLiveData.value?.let { resource ->
+                    return resource.hasNextPage && resource.status != Status.LOADING
                 }
+                return false
+            }
+
+            override fun loadMore() {
+                viewModel.loadMore()
             }
         })
 
@@ -109,7 +106,7 @@ class TvListFragment : Fragment(), Injectable {
     }
 
     private fun subscribers() {
-        viewModel.tvListLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.tvListLiveData.observe(viewLifecycleOwner, {
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }

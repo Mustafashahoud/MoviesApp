@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,7 +20,6 @@ import com.mustafa.movieguideapp.view.adapter.TvSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.search.base.SearchFragmentBase
 import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.android.synthetic.main.fragment_search.view.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
 import javax.inject.Inject
 
@@ -90,7 +88,7 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
     override fun observeSuggestions(newText: String?) {
         viewModel.tvSuggestions.observe(
             viewLifecycleOwner,
-            Observer {
+            {
                 if (!it.isNullOrEmpty() && tabs.getTabAt(0)?.isSelected!!) {
                     showSuggestionViewAndHideRecentSearches()
                 }
@@ -107,7 +105,6 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
 
     override fun setRecyclerViewAdapter() {
         tvAdapter = TvSearchListAdapter(
-            appExecutors,
             dataBindingComponent
         ) {
             findNavController().navigate(
@@ -117,14 +114,13 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
             )
         }
 
-        binding.root.recyclerView_suggestion.adapter = tvAdapter
-
-        recyclerView_suggestion.layoutManager = LinearLayoutManager(context)
+        binding.recyclerViewSuggestion.adapter = tvAdapter
+        binding.recyclerViewSuggestion.layoutManager = LinearLayoutManager(context)
     }
 
 
     override fun observeAndSetRecentQueries() {
-        viewModel.getTvRecentQueries().observe(viewLifecycleOwner, Observer { it ->
+        viewModel.tvRecentQueries.observe(viewLifecycleOwner, { it ->
             if (!it.isNullOrEmpty()) {
                 val queries = it.mapNotNull { it.query }.filter { it.isNotEmpty() }
                 if (queries.isNotEmpty()) setListViewOfRecentQueries(queries)

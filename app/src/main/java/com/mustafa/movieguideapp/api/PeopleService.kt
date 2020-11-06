@@ -1,6 +1,5 @@
 package com.mustafa.movieguideapp.api
 
-import androidx.lifecycle.LiveData
 import com.mustafa.movieguideapp.models.network.MoviePersonResponse
 import com.mustafa.movieguideapp.models.network.PeopleResponse
 import com.mustafa.movieguideapp.models.network.PersonDetail
@@ -12,21 +11,22 @@ import retrofit2.http.Query
 interface PeopleService {
 
     @GET("/3/person/popular?language=en")
-    fun fetchPopularPeople(@Query("page") page: Int): LiveData<ApiResponse<PeopleResponse>>
+    suspend fun fetchPopularPeople(@Query("page") page: Int): ApiResponse<PeopleResponse>
 
     @GET("/3/person/{person_id}")
-    fun fetchPersonDetail(@Path("person_id") id: Int): LiveData<ApiResponse<PersonDetail>>
+    suspend fun fetchPersonDetail(@Path("person_id") id: Int): ApiResponse<PersonDetail>
 
-    @GET("/3/person/{person_id}/movie_credits")
-    fun fetchPersonMovies(@Path("person_id") id: Int): LiveData<ApiResponse<MoviePersonResponse>>
-
-    @GET("/3/person/{person_id}/tv_credits")
-    fun fetchPersonTvs(@Path("person_id") id: Int): LiveData<ApiResponse<TvPersonResponse>>
 
     @GET("/3/search/person")
-    fun searchPeople(
+    suspend fun searchPeople(
         @Query("query") query: String,
         @Query("page") page: Int
-    ): LiveData<ApiResponse<PeopleResponse>>
+    ): ApiResponse<PeopleResponse>
+
+    @GET("/3/person/{person_id}/movie_credits")
+    suspend fun fetchPersonMovies(@Path("person_id") id: Int): ApiResponse<MoviePersonResponse>
+
+    @GET("/3/person/{person_id}/tv_credits")
+    suspend fun fetchPersonTvs(@Path("person_id") id: Int): ApiResponse<TvPersonResponse>
 
 }

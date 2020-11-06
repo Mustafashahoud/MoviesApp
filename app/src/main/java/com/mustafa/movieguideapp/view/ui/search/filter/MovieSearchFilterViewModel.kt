@@ -1,20 +1,20 @@
 package com.mustafa.movieguideapp.view.ui.search.filter
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.models.entity.Movie
 import com.mustafa.movieguideapp.repository.DiscoverRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.AbsentLiveData
+import com.mustafa.movieguideapp.view.ViewModelBase
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
 @OpenForTesting
 class MovieSearchFilterViewModel @Inject constructor(
-    private val discoverRepository: DiscoverRepository
-) : ViewModel() {
+    private val discoverRepository: DiscoverRepository,
+    dispatcher: CoroutineDispatcher
+) : ViewModelBase(dispatcher) {
 
     // Filter variables
     ////////////////////////
@@ -31,24 +31,14 @@ class MovieSearchFilterViewModel @Inject constructor(
 
     private val searchMovieFilterPageLiveData: MutableLiveData<Int> = MutableLiveData()
 
-    val searchMovieListFilterLiveData: LiveData<Resource<List<Movie>>> = Transformations
-        .switchMap(searchMovieFilterPageLiveData) {
-            if (it == null) {
-                AbsentLiveData.create()
-            } else {
-                discoverRepository.loadFilteredMovies(
-                    rating,
-                    sort,
-                    year,
-                    keyword,
-                    genres,
-                    language,
-                    runtime,
-                    region,
-                    it
-                )
-            }
+    val searchMovieListFilterLiveData = searchMovieFilterPageLiveData.switchMap {
+        launchOnViewModelScope {
+            discoverRepository.loadFilteredMovies(
+                rating, sort, year, keyword, genres, language, runtime, region, it
+            ).asLiveData()
         }
+    }
+
 
     fun setFilters(
         rating: Int?,
@@ -92,7 +82,7 @@ class MovieSearchFilterViewModel @Inject constructor(
         this.pageFiltersNumber = 1
     }
 
-    val totalFilterResult = Transformations.switchMap(searchMovieFilterPageLiveData) {
+    val totalFilterResult = searchMovieFilterPageLiveData.switchMap {
         it?.let {
             discoverRepository.getTotalFilteredResults()
         } ?: AbsentLiveData.create()

@@ -9,8 +9,11 @@ import com.mustafa.movieguideapp.room.AppDatabase
 import com.mustafa.movieguideapp.room.MovieDao
 import com.mustafa.movieguideapp.room.PeopleDao
 import com.mustafa.movieguideapp.room.TvDao
+import com.mustafa.movieguideapp.utils.ApiResponseCallAdapterFactory
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -65,8 +68,14 @@ class AppModule {
             .client(okHttpClient)
             .baseUrl("https://api.themoviedb.org/")
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(LiveDataCallAdapterFactory())
+            .addCallAdapterFactory(ApiResponseCallAdapterFactory())
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDispatcher(): CoroutineDispatcher {
+        return Dispatchers.IO
     }
 
     @Provides

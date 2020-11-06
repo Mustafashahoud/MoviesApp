@@ -8,7 +8,6 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,8 +20,6 @@ import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MovieSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
-import kotlinx.android.synthetic.main.fragment_search_result_filter.*
-import kotlinx.android.synthetic.main.fragment_search_result_filter.view.*
 import javax.inject.Inject
 
 class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectable,
@@ -73,7 +70,7 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
     }
 
     override fun observeSubscribers() {
-        viewModel.searchMovieListFilterLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.searchMovieListFilterLiveData.observe(viewLifecycleOwner, {
             binding.resource = viewModel.searchMovieListFilterLiveData.value
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
@@ -82,10 +79,7 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
     }
 
     override fun setRecyclerViewAdapter() {
-        adapter = MovieSearchListAdapter(
-            appExecutors,
-            dataBindingComponent
-        ) {
+        adapter = MovieSearchListAdapter(dataBindingComponent) {
             findNavController().navigate(
                 MovieSearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieDetail(
                     it
@@ -93,9 +87,8 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
             )
         }
 
-        binding.root.filtered_items_recycler_view.adapter = adapter
-
-        filtered_items_recycler_view.layoutManager = LinearLayoutManager(
+        binding.filteredItemsRecyclerView.adapter = adapter
+        binding.filteredItemsRecyclerView.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.VERTICAL,
             false

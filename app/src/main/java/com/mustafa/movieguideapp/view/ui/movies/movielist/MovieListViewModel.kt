@@ -1,21 +1,20 @@
 package com.mustafa.movieguideapp.view.ui.movies.movielist
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import com.mustafa.movieguideapp.models.Resource
-import com.mustafa.movieguideapp.models.entity.Movie
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.switchMap
 import com.mustafa.movieguideapp.repository.DiscoverRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
-import com.mustafa.movieguideapp.utils.AbsentLiveData
+import com.mustafa.movieguideapp.view.ViewModelBase
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
 @OpenForTesting
 class MovieListViewModel @Inject constructor(
-    private val discoverRepository: DiscoverRepository
-) : ViewModel() {
+    private val discoverRepository: DiscoverRepository,
+    dispatcher: CoroutineDispatcher
+) : ViewModelBase(dispatcher) {
 
     private var pageNumber = 1
     private val moviePageLiveData: MutableLiveData<Int> = MutableLiveData()
@@ -23,14 +22,11 @@ class MovieListViewModel @Inject constructor(
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    val movieListLiveData: LiveData<Resource<List<Movie>>> = Transformations
-        .switchMap(moviePageLiveData) {
-            if (it == null) {
-                AbsentLiveData.create()
-            } else {
-                discoverRepository.loadMovies(it)
-            }
+    val movieListLiveData = moviePageLiveData.switchMap { pageNumber ->
+        launchOnViewModelScope {
+            discoverRepository.loadMovies(pageNumber).asLiveData()
         }
+    }
 
     init {
         moviePageLiveData.value = 1

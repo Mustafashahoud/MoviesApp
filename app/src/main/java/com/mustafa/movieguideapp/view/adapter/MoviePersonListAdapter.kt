@@ -14,11 +14,9 @@ import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.DataBoundListAdapter
 
 class MoviePersonListAdapter(
-    appExecutors: AppExecutors,
     private val dataBindingComponent: DataBindingComponent,
     private val movieOnClickCallback: ((MoviePerson) -> Unit)?
 ) : DataBoundListAdapter<MoviePerson, ItemMovieForCelebrityBinding>(
-    appExecutors = appExecutors,
     diffCallback = object : DiffUtil.ItemCallback<MoviePerson>() {
         override fun areItemsTheSame(oldItem: MoviePerson, newItem: MoviePerson): Boolean {
             return oldItem.id == newItem.id

@@ -8,15 +8,12 @@ import androidx.recyclerview.widget.DiffUtil
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.databinding.ItemTvSearchBinding
 import com.mustafa.movieguideapp.models.entity.Tv
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.DataBoundListAdapter
 
 class TvSearchListAdapter(
-    appExecutors: AppExecutors,
     private val dataBindingComponent: DataBindingComponent,
     private val tvOnClickCallback: ((Tv) -> Unit)?
 ) : DataBoundListAdapter<Tv, ItemTvSearchBinding>(
-    appExecutors = appExecutors,
     diffCallback = object : DiffUtil.ItemCallback<Tv>() {
         override fun areItemsTheSame(oldItem: Tv, newItem: Tv): Boolean {
             return oldItem.id == newItem.id

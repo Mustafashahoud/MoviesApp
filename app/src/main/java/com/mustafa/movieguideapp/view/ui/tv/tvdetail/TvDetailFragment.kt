@@ -66,14 +66,15 @@ class TvDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
 
 
     private fun initializeUI() {
-        detail_body_recyclerView_trailers.layoutManager =
+        binding.detailBody.detailBodyRecyclerViewTrailers
+        binding.detailBody.detailBodyRecyclerViewTrailers.layoutManager =
             LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
-        detail_body_recyclerView_trailers.adapter = VideoListAdapter(this)
-        detail_body_recyclerView_reviews.layoutManager =
+        binding.detailBody.detailBodyRecyclerViewTrailers.adapter = VideoListAdapter(this)
+        binding.detailBody.detailBodyRecyclerViewReviews.layoutManager =
             LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        detail_body_recyclerView_reviews.adapter = ReviewListAdapter()
-        detail_body_recyclerView_reviews.isNestedScrollingEnabled = false
-        detail_body_recyclerView_reviews.setHasFixedSize(true)
+        binding.detailBody.detailBodyRecyclerViewReviews.adapter = ReviewListAdapter()
+        binding.detailBody.detailBodyRecyclerViewReviews.isNestedScrollingEnabled = false
+        binding.detailBody.detailBodyRecyclerViewReviews.setHasFixedSize(true)
     }
 
     private fun getTvFromIntent(): Tv {

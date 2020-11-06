@@ -1,36 +1,39 @@
 package com.mustafa.movieguideapp.view.ui.movies.moviedetail
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.switchMap
 import com.mustafa.movieguideapp.repository.MovieRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
-import com.mustafa.movieguideapp.utils.AbsentLiveData
+import com.mustafa.movieguideapp.view.ViewModelBase
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
 
 @OpenForTesting
-class MovieDetailViewModel @Inject constructor(private val repository: MovieRepository) :
-    ViewModel() {
+class MovieDetailViewModel @Inject constructor(
+    private val repository: MovieRepository,
+    dispatcher: CoroutineDispatcher
+) : ViewModelBase(dispatcher) {
 
     private val movieIdLiveData: MutableLiveData<Int> = MutableLiveData()
 
-    val keywordListLiveData = Transformations.switchMap(movieIdLiveData) {
-        movieIdLiveData.value?.let {
-            repository.loadKeywordList(it)
-        } ?: AbsentLiveData.create()
+    val keywordListLiveData = movieIdLiveData.switchMap { pageNumber ->
+        launchOnViewModelScope {
+            repository.loadKeywords(pageNumber).asLiveData()
+        }
     }
 
-    val videoListLiveData = Transformations.switchMap(movieIdLiveData) {
-        movieIdLiveData.value?.let {
-            repository.loadVideoList(it)
-        } ?: AbsentLiveData.create()
+    val videoListLiveData = movieIdLiveData.switchMap { pageNumber ->
+        launchOnViewModelScope {
+            repository.loadVideos(pageNumber).asLiveData()
+        }
     }
 
-    val reviewListLiveData = Transformations.switchMap(movieIdLiveData) {
-        movieIdLiveData.value?.let {
-            repository.loadReviewsList(it)
-        } ?: AbsentLiveData.create()
+    val reviewListLiveData = movieIdLiveData.switchMap { pageNumber ->
+        launchOnViewModelScope {
+            repository.loadReviews(pageNumber).asLiveData()
+        }
     }
 
 

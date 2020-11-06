@@ -11,7 +11,6 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,8 +25,6 @@ import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.PeopleSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
-import kotlinx.android.synthetic.main.fragment_celebrities_search_result.*
-import kotlinx.android.synthetic.main.fragment_celebrities_search_result.view.*
 import kotlinx.android.synthetic.main.toolbar_search_result.*
 import javax.inject.Inject
 
@@ -79,7 +76,7 @@ class SearchCelebritiesResultFragment : Fragment(), Injectable {
     }
 
     private fun subscribers() {
-        viewModel.searchPeopleListLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.searchPeopleListLiveData.observe(viewLifecycleOwner, {
             binding.searchResult = viewModel.searchPeopleListLiveData
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
@@ -98,10 +95,7 @@ class SearchCelebritiesResultFragment : Fragment(), Injectable {
 
     private fun initializeUI() {
 
-        adapter = PeopleSearchListAdapter(
-            appExecutors,
-            dataBindingComponent
-        ) {
+        adapter = PeopleSearchListAdapter(dataBindingComponent) {
             findNavController().navigate(
                 SearchCelebritiesResultFragmentDirections.actionSearchCelebritiesResultFragmentToCelebrityDetail(
                     it
@@ -110,9 +104,9 @@ class SearchCelebritiesResultFragment : Fragment(), Injectable {
         }
 
         hideKeyboard()
-        binding.root.recyclerView_search_result_people.adapter = adapter
-        recyclerView_search_result_people.layoutManager = LinearLayoutManager(context)
-        recyclerView_search_result_people.addOnScrollListener(object :
+        binding.recyclerViewSearchResultPeople.adapter = adapter
+        binding.recyclerViewSearchResultPeople.layoutManager = LinearLayoutManager(context)
+        binding.recyclerViewSearchResultPeople.addOnScrollListener(object :
             RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager

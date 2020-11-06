@@ -1,34 +1,38 @@
 package com.mustafa.movieguideapp.view.ui.person.search
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.models.entity.PeopleRecentQueries
 import com.mustafa.movieguideapp.models.entity.Person
 import com.mustafa.movieguideapp.repository.PeopleRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.AbsentLiveData
+import com.mustafa.movieguideapp.view.ViewModelBase
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 
 @OpenForTesting
-class SearchCelebritiesResultViewModel @Inject
-constructor(private val peopleRepository: PeopleRepository) : ViewModel() {
+class SearchCelebritiesResultViewModel @Inject constructor(
+    private val peopleRepository: PeopleRepository,
+    dispatcher: CoroutineDispatcher
+) : ViewModelBase(dispatcher) {
 
     private val searchPeoplePageLiveData: MutableLiveData<Int> = MutableLiveData()
     private var peoplePageNumber = 1
 
     private val _personQuery = MutableLiveData<String>()
     val queryPersonLiveData: LiveData<String> = _personQuery
-    val searchPeopleListLiveData: LiveData<Resource<List<Person>>> = Transformations
-        .switchMap(searchPeoplePageLiveData) {
-            if (it == null || queryPersonLiveData.value == null) {
-                AbsentLiveData.create()
-            } else {
-                peopleRepository.searchPeople(queryPersonLiveData.value!!, it)
+    val searchPeopleListLiveData: LiveData<Resource<List<Person>>> =
+        searchPeoplePageLiveData.switchMap {
+            launchOnViewModelScope {
+                if (it == null || queryPersonLiveData.value == null) {
+                    AbsentLiveData.create()
+                } else {
+                    peopleRepository.searchPeople(queryPersonLiveData.value!!, it).asLiveData()
+                }
             }
         }
 
@@ -54,28 +58,29 @@ constructor(private val peopleRepository: PeopleRepository) : ViewModel() {
         }
     }
 
-    fun resetPageNumber() {
-        peoplePageNumber = 1
-    }
-
-
-    private val _peopleSuggestionsQuery = MutableLiveData<String>()
-    private val peopleSuggestionsQuery: LiveData<String> = _peopleSuggestionsQuery
-    val peopleSuggestions: LiveData<List<Person>> = Transformations
-        .switchMap(peopleSuggestionsQuery) {
+    private val peopleSuggestionsQuery = MutableLiveData<String>()
+    val peopleSuggestions: LiveData<List<Person>> = peopleSuggestionsQuery.switchMap {
+        launchOnViewModelScope {
             if (it.isNullOrBlank()) {
                 AbsentLiveData.create()
             } else {
                 peopleRepository.getPeopleSuggestionsFromRoom(peopleSuggestionsQuery.value!!)
             }
         }
+    }
 
     fun setPeopleSuggestionsQuery(newText: String) {
-        _peopleSuggestionsQuery.value = newText
+        peopleSuggestionsQuery.value = newText
     }
 
     fun getPeopleRecentQueries(): LiveData<List<PeopleRecentQueries>> =
-        peopleRepository.getPeopleRecentQueries()
+        launchOnViewModelScope {
+            peopleRepository.getPeopleRecentQueries()
+        }
 
-    fun deleteAllPeopleRecentQueries() = peopleRepository.deleteAllPeopleRecentQueries()
+    fun deleteAllPeopleRecentQueries() {
+        viewModelScope.launch {
+            peopleRepository.deleteAllPeopleRecentQueries()
+        }
+    }
 }

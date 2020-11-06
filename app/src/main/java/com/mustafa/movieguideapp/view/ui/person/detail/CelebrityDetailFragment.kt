@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +19,6 @@ import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MoviePersonListAdapter
 import com.mustafa.movieguideapp.view.adapter.TvPersonListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
-import kotlinx.android.synthetic.main.fragment_celebrity_detail.*
 import kotlinx.android.synthetic.main.toolbar_detail.*
 import javax.inject.Inject
 
@@ -82,7 +80,6 @@ class CelebrityDetailFragment : Fragment(), Injectable {
         toolbar_title.text = getSelectedPerson().name
         viewModel.setPersonId(getSelectedPerson().id)
         adapterMoviesForCelebrity = MoviePersonListAdapter(
-            appExecutors,
             dataBindingComponent
         ) {
             findNavController().navigate(
@@ -92,15 +89,14 @@ class CelebrityDetailFragment : Fragment(), Injectable {
             )
 
         }
-        recycler_view_celebrity_movies.adapter = adapterMoviesForCelebrity
-        recycler_view_celebrity_movies.layoutManager = LinearLayoutManager(
+        binding.recyclerViewCelebrityMovies.adapter = adapterMoviesForCelebrity
+        binding.recyclerViewCelebrityMovies.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.HORIZONTAL,
             false
         )
 
         adapterTvsForCelebrity = TvPersonListAdapter(
-            appExecutors,
             dataBindingComponent
         ) {
             findNavController().navigate(
@@ -109,8 +105,8 @@ class CelebrityDetailFragment : Fragment(), Injectable {
                 )
             )
         }
-        recycler_view_celebrity_tvs.adapter = adapterTvsForCelebrity
-        recycler_view_celebrity_tvs.layoutManager = LinearLayoutManager(
+        binding.recyclerViewCelebrityTvs.adapter = adapterTvsForCelebrity
+        binding.recyclerViewCelebrityTvs.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.HORIZONTAL,
             false
@@ -128,14 +124,14 @@ class CelebrityDetailFragment : Fragment(), Injectable {
 
     private fun observeMoviesAndTvsForCelebrity() {
 
-        viewModel.moviesOfCelebrity.observe(viewLifecycleOwner, Observer {
+        viewModel.moviesOfCelebrity.observe(viewLifecycleOwner, {
             if (!it.data.isNullOrEmpty()) {
                 val moviesPerson = it.data.filter { moviePerson -> moviePerson.poster_path != null }
                 adapterMoviesForCelebrity.submitList(moviesPerson)
             }
         })
 
-        viewModel.tvsOfCelebrity.observe(viewLifecycleOwner, Observer {
+        viewModel.tvsOfCelebrity.observe(viewLifecycleOwner, {
             if (!it.data.isNullOrEmpty()) {
                 val tvsPerson = it.data.filter { tvPerson -> tvPerson.poster_path != null }
                 adapterTvsForCelebrity.submitList(tvsPerson)

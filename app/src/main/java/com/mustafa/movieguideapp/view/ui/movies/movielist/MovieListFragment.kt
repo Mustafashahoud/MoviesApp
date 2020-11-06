@@ -9,11 +9,9 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentMoviesBinding
@@ -22,8 +20,8 @@ import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MovieListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
+import com.mustafa.movieguideapp.view.ui.common.InfinitePager
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
-import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.toolbar_search.*
 import javax.inject.Inject
 
@@ -77,7 +75,7 @@ class MovieListFragment : Fragment(), Injectable {
             }
         }
 
-        adapter = MovieListAdapter(appExecutors, dataBindingComponent) {
+        adapter = MovieListAdapter(dataBindingComponent) {
             findNavController().navigate(
                 MovieListFragmentDirections.actionMoviesFragmentToMovieDetail(
                     it
@@ -85,26 +83,26 @@ class MovieListFragment : Fragment(), Injectable {
             )
         }
 
-        recyclerView_list_movies.setHasFixedSize(true)
-        recyclerView_list_movies.adapter = adapter
-        recyclerView_list_movies.layoutManager = GridLayoutManager(context, 3)
-        recyclerView_list_movies.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as GridLayoutManager
-                val lastPosition = layoutManager.findLastVisibleItemPosition()
-                if (lastPosition == adapter.itemCount - 1
-                    && viewModel.movieListLiveData.value?.status != Status.LOADING
-                ) {
-                    viewModel.movieListLiveData.value?.let {
-                        if (it.hasNextPage) viewModel.loadMore()
-                    }
+        binding.recyclerViewListMovies.setHasFixedSize(true)
+        binding.recyclerViewListMovies.adapter = adapter
+        binding.recyclerViewListMovies.layoutManager = GridLayoutManager(context, 3)
+        binding.recyclerViewListMovies.addOnScrollListener(object :
+            InfinitePager(adapter) {
+            override fun loadMorecondition(): Boolean {
+                viewModel.movieListLiveData.value?.let { resource ->
+                    return resource.hasNextPage && resource.status != Status.LOADING
                 }
+                return false
+            }
+
+            override fun loadMore() {
+                viewModel.loadMore()
             }
         })
     }
 
     private fun subscribers() {
-        viewModel.movieListLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.movieListLiveData.observe(viewLifecycleOwner, {
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }
@@ -116,7 +114,7 @@ class MovieListFragment : Fragment(), Injectable {
      * Init the toolbar
      * @param titleIn
      */
-    fun intiToolbar(titleIn: String) {
+    private fun intiToolbar(titleIn: String) {
         val title: TextView = toolbar_title
         title.text = titleIn
 
