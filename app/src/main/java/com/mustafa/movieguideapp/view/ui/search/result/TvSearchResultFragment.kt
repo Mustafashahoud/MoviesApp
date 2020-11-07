@@ -101,7 +101,7 @@ class TvSearchResultFragment : Fragment(), Injectable {
         binding.recyclerViewSearchResultTvs.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewSearchResultTvs.addOnScrollListener(object :
             InfinitePager(adapter) {
-            override fun loadMorecondition(): Boolean {
+            override fun loadMoreCondition(): Boolean {
                 viewModel.searchTvListLiveData.value?.let { resource ->
                     return resource.hasNextPage && resource.status != Status.LOADING
                 }

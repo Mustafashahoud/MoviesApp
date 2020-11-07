@@ -86,7 +86,7 @@ class TvListFragment : Fragment(), Injectable {
         binding.recyclerViewListTvs.layoutManager = GridLayoutManager(context, 3)
         binding.recyclerViewListTvs.addOnScrollListener(object :
             InfinitePager(adapter) {
-            override fun loadMorecondition(): Boolean {
+            override fun loadMoreCondition(): Boolean {
                 viewModel.tvListLiveData.value?.let { resource ->
                     return resource.hasNextPage && resource.status != Status.LOADING
                 }

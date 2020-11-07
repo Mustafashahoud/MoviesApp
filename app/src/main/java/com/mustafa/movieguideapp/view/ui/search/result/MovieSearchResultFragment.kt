@@ -100,7 +100,7 @@ class MovieSearchResultFragment : Fragment(), Injectable {
         binding.recyclerViewSearchResultMovies.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewSearchResultMovies.addOnScrollListener(object :
             InfinitePager(adapter) {
-            override fun loadMorecondition(): Boolean {
+            override fun loadMoreCondition(): Boolean {
                 viewModel.searchMovieListLiveData.value?.let { resource ->
                     return resource.hasNextPage && resource.status != Status.LOADING
                 }

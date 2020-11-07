@@ -41,8 +41,6 @@ android {
     }
     lintOptions {
         lintConfig rootProject.file('lint.xml')
-        disable "UnsafeExperimentalUsageError",
-                "UnsafeExperimentalUsageWarning"
     }
     kapt {
         correctErrorTypes = true

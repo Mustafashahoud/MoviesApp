@@ -21,7 +21,7 @@ abstract class InfinitePager(val adapter: RecyclerView.Adapter<*>) :
         val lastPosition = layoutManager.findLastVisibleItemPosition()
         if (lastPosition == adapter.itemCount - 1) {
             if (isScrolling) {
-                if (loadMorecondition()) {
+                if (loadMoreCondition()) {
                     loadMore()
                     isScrolling = false
                 }
@@ -38,6 +38,6 @@ abstract class InfinitePager(val adapter: RecyclerView.Adapter<*>) :
 
 
 
-    abstract fun loadMorecondition(): Boolean
+    abstract fun loadMoreCondition(): Boolean
     abstract fun loadMore()
 }

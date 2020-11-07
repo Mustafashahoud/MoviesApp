@@ -1,20 +1,16 @@
 package com.mustafa.movieguideapp.room
 
-import android.util.SparseIntArray
 import androidx.collection.SparseArrayCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
-import com.mustafa.movieguideapp.models.entity.*
+import androidx.room.*
+import com.mustafa.movieguideapp.models.entity.FilteredMovieResult
+import com.mustafa.movieguideapp.models.entity.Movie
+import com.mustafa.movieguideapp.models.entity.MovieRecentQueries
+import com.mustafa.movieguideapp.models.entity.SearchMovieResult
 
 @Dao
 abstract class MovieDao {
 
-    @Query("SELECT * FROM Movie WHERE page in (:pages) AND search = 0 ")
+    @Query("SELECT * FROM Movie WHERE page in (:pages) AND search = 0 order by page")
     abstract suspend fun loadDiscoveryMovieListByPage(pages: List<Int>): List<Movie>
 
     @Query("SELECT * FROM Movie WHERE id in (:ids) AND search = 1 AND poster_path <> '' order by page ")
@@ -56,23 +52,17 @@ abstract class MovieDao {
     @Query("SELECT * FROM Movie JOIN movieSuggestionsFts ON Movie.id == movieSuggestionsFts.id WHERE movieSuggestionsFts.title MATCH '%' || :text || '%' LIMIT 20")
     abstract suspend fun loadMovieSuggestions(text: String): List<Movie>
 
-//    fun loadSearchMovieListOrdered(movieIds: List<Int>): LiveData<List<Movie>> {
-//        val order = SparseIntArray() // SparseArrayCompat can be used .. but it would need mocking
-//        movieIds.withIndex().forEach {
-//            order.put(it.value, it.index)
-//        }
-//        return Transformations.map(loadSearchMovieList(movieIds)) { movies ->
-//            movies.sortedWith(compareBy { order.get(it.id) })
-//        }
-//    }
 
-//    fun loadDiscoveryMovieListOrdered2(movieIds: List<Int>): List<Movie> {
-//        val order = SparseArrayCompat<Int>() // SparseArrayCompat can be used
-//        movieIds.withIndex().forEach {
-//            order.put(it.value, it.index)
-//        }
-//        return loadDiscoveryMovieList2(movieIds).sortedWith(compareBy { order.get(it.id) })
-//    }
+
+    suspend fun loadDiscoveryMovieListOrdered(pages: List<Int>): List<Movie> {
+        val movies = loadDiscoveryMovieListByPage(pages)
+        val indexes = movies.map { it.id }
+        val order = SparseArrayCompat<Int>() // SparseArrayCompat can be used
+        indexes.withIndex().forEach {
+            order.put(it.value, it.index)
+        }
+        return movies.sortedWith(compareBy { order.get(it.id) })
+    }
 
 }
 

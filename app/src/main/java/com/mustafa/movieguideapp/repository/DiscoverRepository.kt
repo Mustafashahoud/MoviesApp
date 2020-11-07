@@ -8,7 +8,6 @@ import com.mustafa.movieguideapp.models.entity.*
 import com.mustafa.movieguideapp.room.MovieDao
 import com.mustafa.movieguideapp.room.TvDao
 import com.mustafa.movieguideapp.testing.OpenForTesting
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -21,14 +20,13 @@ class DiscoverRepository @Inject constructor(
     private val discoverService: TheDiscoverService,
     private val movieDao: MovieDao,
     private val tvDao: TvDao,
-    private val appExecutors: AppExecutors,
     private val dispatcherIO: CoroutineDispatcher
 ) {
 
     suspend fun loadMovies(page: Int): Flow<Resource<List<Movie>>> {
         return networkBoundResource(
             loadFromDb = {
-                movieDao.loadDiscoveryMovieListByPage((1..page).toList())
+                movieDao.loadDiscoveryMovieListOrdered((1..page).toList())
             },
             fetchFromNetwork = { discoverService.fetchMovies(page) },
             dispatcherIO = dispatcherIO,

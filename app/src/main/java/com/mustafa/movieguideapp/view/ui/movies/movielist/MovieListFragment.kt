@@ -88,7 +88,7 @@ class MovieListFragment : Fragment(), Injectable {
         binding.recyclerViewListMovies.layoutManager = GridLayoutManager(context, 3)
         binding.recyclerViewListMovies.addOnScrollListener(object :
             InfinitePager(adapter) {
-            override fun loadMorecondition(): Boolean {
+            override fun loadMoreCondition(): Boolean {
                 viewModel.movieListLiveData.value?.let { resource ->
                     return resource.hasNextPage && resource.status != Status.LOADING
                 }

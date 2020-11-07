@@ -80,7 +80,7 @@ class CelebritiesListFragment : Fragment(), Injectable {
         binding.recyclerViewListCelebrities.layoutManager = GridLayoutManager(context, 3)
         binding.recyclerViewListCelebrities.addOnScrollListener(object :
             InfinitePager(adapter) {
-            override fun loadMorecondition(): Boolean {
+            override fun loadMoreCondition(): Boolean {
                 viewModel.peopleLiveData.value?.let { resource ->
                     return resource.hasNextPage && resource.status != Status.LOADING
                 }
