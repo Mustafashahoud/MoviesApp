@@ -20,6 +20,16 @@
 - [Espresso](https://developer.android.com/training/testing/espresso) for UI testing
 - [Timber](https://github.com/JakeWharton/timber) for logging
 
+## Variations
+
+This project hosts two branches.
+
+### Stable samples - Kotlin
+|     Sample     | Description |
+| ------------- | ------------- |
+| [master](https://github.com/Mustafashahoud/MoviesApp/tree/master) | The base for the rest of the other branch. <br/>Uses Kotlin, Architecture Components, AppExecutors, Dagger, Retrofit Data Binding, etc. and uses Room as source of truth, with a reactive UI. |
+| [MoviesApp-coroutines](https://github.com/Mustafashahoud/MoviesApp/tree/MoviesApp-coroutines)| Same like master but much better as it uses coroutines Flow. |
+
 ## App Demo
 
 <p float="left">
