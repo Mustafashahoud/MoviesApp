@@ -1,9 +1,9 @@
 # MovieGuide
 
-* This App is written with the help of  [GithubBrowserSample](https://github.com/android/architecture-components-samples/tree/master/GithubBrowserSample) and [skydoves](https://github.com/skydoves/TheMovies).
 * A Movie Application uses [TheMovie API](https://www.themoviedb.org) based on Kotlin MVVM architecture and material design.
-* A single-activity architecture, using the Navigation component to manage fragment operations.
+* A single-activity pattern, using the Navigation component to manage fragment operations.
 * Reactive UIs using LiveData observables and Data Binding.
+* Handles background tasks using coroutines + Flow.
 * It consists of 16 fragments which are fully tested by Espresso.
 
 
