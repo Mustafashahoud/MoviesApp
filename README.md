@@ -8,10 +8,9 @@
 
 
 ## Libraries
-- 100% Kotlin
+- 100% Kotlin + [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) + [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/)
 - MVVM Architecture
-- Architecture Components (Lifecycle, LiveData, ViewModel, Navigation, Room with FTS4)
-- DataBinding
+- Architecture Components (Lifecycle, LiveData, ViewModel, DataBinding, Navigation, Room with FTS4)
 - [TheMovie API](https://www.themoviedb.org)
 - [Dagger2](https://github.com/google/dagger) for dependency injection
 - [Retrofit2 & Gson](https://github.com/square/retrofit) for REST API
@@ -19,6 +18,12 @@
 - [Mockito-kotlin](https://github.com/nhaarman/mockito-kotlin) for Junit mock test
 - [Espresso](https://developer.android.com/training/testing/espresso) for UI testing
 - [Timber](https://github.com/JakeWharton/timber) for logging
+
+### Stable samples - Kotlin
+|     Sample     | Description |
+| ------------- | ------------- |
+| [master](https://github.com/Mustafashahoud/MoviesApp/tree/master) | The base for the rest of the other branch. <br/>Uses Kotlin, Architecture Components, AppExecutors, Dagger, Retrofit Data Binding, etc. and uses Room as source of truth, with a reactive UI. |
+| [MoviesApp-coroutines](https://github.com/Mustafashahoud/MoviesApp/tree/MoviesApp-coroutines)| Same like the master branch but much better as it uses coroutines Flow (single source of truth with Flow). |
 
 ## App Demo
 
@@ -36,10 +41,7 @@
 ## License
 
 Copyright 2019 The Android Open Source Project, Inc.
-
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
-
 http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
