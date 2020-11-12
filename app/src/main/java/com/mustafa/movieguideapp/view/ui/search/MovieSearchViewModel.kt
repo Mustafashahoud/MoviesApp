@@ -1,5 +1,6 @@
 package com.mustafa.movieguideapp.view.ui.search
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -11,10 +12,9 @@ import com.mustafa.movieguideapp.repository.DiscoverRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.AbsentLiveData
 import java.util.*
-import javax.inject.Inject
 
 @OpenForTesting
-class MovieSearchViewModel @Inject constructor(
+class MovieSearchViewModel @ViewModelInject constructor(
     private val discoverRepository: DiscoverRepository
 ) : ViewModel() {
 

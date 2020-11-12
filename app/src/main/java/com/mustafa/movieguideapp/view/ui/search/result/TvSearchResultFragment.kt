@@ -9,14 +9,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentTvSearchResultBinding
-import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.extension.hideKeyboard
 import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
@@ -24,20 +22,19 @@ import com.mustafa.movieguideapp.view.adapter.TvSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
 import com.mustafa.movieguideapp.view.ui.search.TvSearchViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_tv_search_result.*
 import kotlinx.android.synthetic.main.fragment_tv_search_result.view.*
 import kotlinx.android.synthetic.main.toolbar_search_result.*
 import javax.inject.Inject
 
-class TvSearchResultFragment : Fragment(), Injectable {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+@AndroidEntryPoint
+class TvSearchResultFragment : Fragment() {
 
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    private val viewModel by viewModels<TvSearchViewModel> { viewModelFactory }
+    private val viewModel by viewModels<TvSearchViewModel>()
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     var binding by autoCleared<FragmentTvSearchResultBinding>()
     var adapter by autoCleared<TvSearchListAdapter>()

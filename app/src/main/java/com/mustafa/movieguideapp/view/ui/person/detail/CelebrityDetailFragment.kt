@@ -8,34 +8,30 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentCelebrityDetailBinding
-import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.entity.Person
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MoviePersonListAdapter
 import com.mustafa.movieguideapp.view.adapter.TvPersonListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_celebrity_detail.*
 import kotlinx.android.synthetic.main.toolbar_detail.*
 import javax.inject.Inject
 
-class CelebrityDetailFragment : Fragment(), Injectable {
-
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+@AndroidEntryPoint
+class CelebrityDetailFragment : Fragment() {
 
     @Inject
     lateinit var appExecutors: AppExecutors
 
     var dataBindingComponent = FragmentDataBindingComponent(this)
 
-    private val viewModel by viewModels<PersonDetailViewModel> { viewModelFactory }
+    private val viewModel by viewModels<PersonDetailViewModel>()
 
     private var binding by autoCleared<FragmentCelebrityDetailBinding>()
 

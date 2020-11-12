@@ -9,28 +9,24 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.api.Api
 import com.mustafa.movieguideapp.databinding.FragmentMovieDetailBinding
-import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.Video
 import com.mustafa.movieguideapp.models.entity.Movie
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.ReviewListAdapter
 import com.mustafa.movieguideapp.view.adapter.VideoListAdapter
 import com.mustafa.movieguideapp.view.viewholder.VideoListViewHolder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.layout_movie_detail_body.*
-import javax.inject.Inject
 
-class MovieDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
+@AndroidEntryPoint
+class MovieDetailFragment : Fragment(), VideoListViewHolder.Delegate {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by viewModels<MovieDetailViewModel> { viewModelFactory }
+    private val viewModel by viewModels<MovieDetailViewModel>()
 
     private var binding by autoCleared<FragmentMovieDetailBinding>()
 

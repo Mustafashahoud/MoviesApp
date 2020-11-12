@@ -68,7 +68,6 @@ class TvListFragmentTest {
         val scenario = launchFragmentInContainer(themeResId = R.style.AppTheme) {
             TvListFragment().apply {
                 appExecutors = countingAppExecutors.appExecutors
-                viewModelFactory = ViewModelUtil.createFor(viewModel)
                 dataBindingComponent = object : DataBindingComponent {
                     override fun getFragmentBindingAdapters(): FragmentBindingAdapters {
                         return mockBindingAdapter

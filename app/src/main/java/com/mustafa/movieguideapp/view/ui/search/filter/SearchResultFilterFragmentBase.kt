@@ -8,13 +8,12 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import com.mustafa.movieguideapp.R
-import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.utils.FiltersConstants
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.RATINGS
 import com.mustafa.movieguideapp.utils.StringUtils
 import kotlinx.android.synthetic.main.fragment_search_result_filter.*
 
-abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
+abstract class SearchResultFilterFragmentBase : Fragment(),
     PopupMenu.OnMenuItemClickListener {
 
 

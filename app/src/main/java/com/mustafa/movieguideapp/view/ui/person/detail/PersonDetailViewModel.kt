@@ -1,5 +1,6 @@
 package com.mustafa.movieguideapp.view.ui.person.detail
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.models.entity.MoviePerson
@@ -7,11 +8,10 @@ import com.mustafa.movieguideapp.models.entity.TvPerson
 import com.mustafa.movieguideapp.repository.PeopleRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.AbsentLiveData
-import javax.inject.Inject
 
 
 @OpenForTesting
-class PersonDetailViewModel @Inject
+class PersonDetailViewModel @ViewModelInject
 constructor(private val repository: PeopleRepository) : ViewModel() {
 
     private val personIdLiveData: MutableLiveData<Int> = MutableLiveData()

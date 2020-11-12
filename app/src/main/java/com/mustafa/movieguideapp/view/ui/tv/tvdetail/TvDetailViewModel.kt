@@ -1,15 +1,16 @@
 package com.mustafa.movieguideapp.view.ui.tv.tvdetail
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.mustafa.movieguideapp.repository.TvRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.AbsentLiveData
-import javax.inject.Inject
 
 
 @OpenForTesting
-class TvDetailViewModel @Inject
-constructor(private val repository: TvRepository) : ViewModel() {
+class TvDetailViewModel @ViewModelInject constructor(
+    private val repository: TvRepository
+) : ViewModel() {
 
     private val tvIdLiveData: MutableLiveData<Int> = MutableLiveData()
 

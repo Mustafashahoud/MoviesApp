@@ -78,9 +78,7 @@ class TvDetailFragmentTest {
         val scenario = launchFragmentInContainer(
             bundle, themeResId = R.style.AppTheme
         ) {
-            TvDetailFragment().apply {
-                viewModelFactory = ViewModelUtil.createFor(viewModel)
-            }
+            TvDetailFragment()
         }
 
         dataBindingIdlingResourceRule.monitorFragment(scenario)

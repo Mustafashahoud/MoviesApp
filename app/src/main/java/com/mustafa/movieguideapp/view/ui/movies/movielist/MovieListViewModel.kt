@@ -1,5 +1,6 @@
 package com.mustafa.movieguideapp.view.ui.movies.movielist
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -13,7 +14,7 @@ import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import javax.inject.Inject
 
 @OpenForTesting
-class MovieListViewModel @Inject constructor(
+class MovieListViewModel @ViewModelInject constructor(
     private val discoverRepository: DiscoverRepository
 ) : ViewModel() {
 

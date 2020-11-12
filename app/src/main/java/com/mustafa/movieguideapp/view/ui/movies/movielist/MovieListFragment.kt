@@ -10,33 +10,29 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentMoviesBinding
-import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MovieListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.toolbar_search.*
 import javax.inject.Inject
 
-class MovieListFragment : Fragment(), Injectable {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+@AndroidEntryPoint
+class MovieListFragment : Fragment() {
 
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    private val viewModel by viewModels<MovieListViewModel> { viewModelFactory }
-
+    private val viewModel by viewModels<MovieListViewModel>()
 
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 

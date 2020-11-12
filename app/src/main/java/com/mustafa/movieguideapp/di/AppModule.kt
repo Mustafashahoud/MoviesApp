@@ -1,6 +1,7 @@
 package com.mustafa.movieguideapp.di
 
 import android.app.Application
+import android.content.Context
 import androidx.annotation.NonNull
 import androidx.room.Room
 import com.facebook.stetho.okhttp3.StethoInterceptor
@@ -11,17 +12,21 @@ import com.mustafa.movieguideapp.room.PeopleDao
 import com.mustafa.movieguideapp.room.TvDao
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-@Module(includes = [ViewModelModule::class])
+@InstallIn(ApplicationComponent::class)
+@Module
 class AppModule {
     @Provides
     @Singleton
-    fun provideDatabase(@NonNull application: Application): AppDatabase {
+    fun provideDatabase(@ApplicationContext application: Context): AppDatabase {
         return Room
             .databaseBuilder(application, AppDatabase::class.java, "Movie.db")
             .allowMainThreadQueries()

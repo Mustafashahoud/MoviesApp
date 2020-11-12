@@ -81,7 +81,6 @@ class MovieSearchResultFilterFragmentTest {
         ) {
             MovieSearchResultFilterFragment().apply {
                 appExecutors = countingAppExecutors.appExecutors
-                viewModelFactory = ViewModelUtil.createFor(viewModel)
                 dataBindingComponent = object : DataBindingComponent {
                     override fun getFragmentBindingAdapters(): FragmentBindingAdapters {
                         return mockBindingAdapter

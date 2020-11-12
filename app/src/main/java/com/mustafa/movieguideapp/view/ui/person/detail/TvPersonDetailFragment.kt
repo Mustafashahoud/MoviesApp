@@ -11,13 +11,14 @@ import androidx.fragment.app.Fragment
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.api.Api
 import com.mustafa.movieguideapp.databinding.FragmentTvCelebrityDetailBinding
-import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.Video
 import com.mustafa.movieguideapp.models.entity.TvPerson
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.viewholder.VideoListViewHolder
+import dagger.hilt.android.AndroidEntryPoint
 
-class TvPersonDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
+@AndroidEntryPoint
+class TvPersonDetailFragment : Fragment(), VideoListViewHolder.Delegate {
 
     private var binding by autoCleared<FragmentTvCelebrityDetailBinding>()
 
