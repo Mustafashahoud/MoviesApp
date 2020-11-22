@@ -5,7 +5,6 @@
 
     <data>
         <import type="com.mustafa.movieguideapp.models.Resource"/>
-        <import type="com.mustafa.movieguideapp.models.Status"/>
 
         <variable
             name="resource"

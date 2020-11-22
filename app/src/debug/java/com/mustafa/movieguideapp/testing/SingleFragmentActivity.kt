@@ -11,6 +11,7 @@ import com.mustafa.movieguideapp.R
 /**
  * Used for testing fragments inside a fake activity.
  */
+@Suppress("unused")
 class SingleFragmentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

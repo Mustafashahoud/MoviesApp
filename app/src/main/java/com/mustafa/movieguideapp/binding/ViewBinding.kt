@@ -101,12 +101,6 @@ fun bindAirDate(view: TextView, tv: Tv) {
 }
 
 @SuppressLint("SetTextI18n")
-@BindingAdapter("bindPersonBirthday")
-fun bindPersonBirthday(view: TextView, person: Person) {
-    person.personDetail?.birthday?.let { view.text = "Birthday: ${person.personDetail?.birthday}" }
-}
-
-@SuppressLint("SetTextI18n")
 @BindingAdapter("bindAirDate")
 fun bindAirDateForTvPerson(view: TextView, tv: TvPerson) {
     tv.first_air_date?.let { view.text = "First Air Date: ${tv.first_air_date}" }

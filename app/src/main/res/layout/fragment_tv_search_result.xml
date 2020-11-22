@@ -6,7 +6,6 @@
         <import type="com.mustafa.movieguideapp.models.Tv" />
         <import type="androidx.lifecycle.LiveData" />
         <import type="com.mustafa.movieguideapp.models.Resource" />
-        <import type="com.mustafa.movieguideapp.models.Status" />
         <import type="java.util.List" />
 
     </data>

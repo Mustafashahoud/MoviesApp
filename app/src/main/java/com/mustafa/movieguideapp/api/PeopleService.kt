@@ -13,16 +13,6 @@ interface PeopleService {
     @GET("/3/person/popular?language=en")
     suspend fun fetchPopularPeople2(@Query("page") page: Int): PeopleResponse
 
-
-    @GET("/3/search/person")
-    suspend fun searchPeople2(
-        @Query("query") query: String,
-        @Query("page") page: Int
-    ): PeopleResponse
-
-
-    ///////////////////////////////////
-
     @GET("/3/person/{person_id}")
     suspend fun fetchPersonDetail(@Path("person_id") id: Int): ApiResponse<PersonDetail>
 

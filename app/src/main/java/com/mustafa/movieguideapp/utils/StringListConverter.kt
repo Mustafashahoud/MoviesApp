@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mustafa.movieguideapp.models.entity.MovieRecentQueries
 
+@Suppress("unused")
 open class StringListConverter {
     @TypeConverter
     fun fromString(value: String): List<String>? {

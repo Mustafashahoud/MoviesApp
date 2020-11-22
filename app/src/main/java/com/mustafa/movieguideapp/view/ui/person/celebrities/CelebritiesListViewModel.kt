@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @OpenForTesting
 class CelebritiesListViewModel @Inject constructor(
-    private val repository: PeopleRepository,
+    repository: PeopleRepository,
 ) : ViewModel() {
 
     val peopleStream = repository.loadPopularPeople()

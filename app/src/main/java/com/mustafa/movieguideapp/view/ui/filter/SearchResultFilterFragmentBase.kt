@@ -19,7 +19,7 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
     PopupMenu.OnMenuItemClickListener {
 
     private var filtersMap: HashMap<String, ArrayList<String>>? = null
-    lateinit var filtersData: FilterData
+    private lateinit var filtersData: FilterData
 
     companion object {
         const val popularity = "popularity.desc"

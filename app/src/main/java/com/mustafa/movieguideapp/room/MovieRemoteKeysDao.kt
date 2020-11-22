@@ -6,6 +6,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.mustafa.movieguideapp.models.entity.MovieRemoteKeys
 
+
+@Suppress("unused")
 @Dao
 interface MovieRemoteKeysDao {
 

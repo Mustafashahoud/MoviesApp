@@ -350,7 +350,7 @@ abstract class SearchFragmentBase : Fragment() {
      */
     protected fun setListViewOfRecentQueries(queries: List<String?>) {
         arrayAdapter =
-            ArrayAdapter<String>(
+            ArrayAdapter(
                 requireContext(),
                 R.layout.recent_query_item,
                 queries.requireNoNulls()

@@ -19,8 +19,6 @@ abstract class BaseViewHolder(
         view.setOnLongClickListener(this)
     }
 
-    /** binds data to the view holder class. */
-    @Throws(Exception::class)
     abstract fun bindData(data: Any)
 
     /** gets the view of the [RecyclerView.ViewHolder]. */

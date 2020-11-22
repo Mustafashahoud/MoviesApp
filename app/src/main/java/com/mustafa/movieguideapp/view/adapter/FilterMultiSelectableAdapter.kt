@@ -80,16 +80,16 @@ class FilterMultiSelectableAdapter(
         notifyDataSetChanged()
     }
 
-    fun selectItems(itemsToSelect: List<String>) {
-        for (itemToSelect in itemsToSelect) {
-            for (item in items) {
-                if (item.title == itemToSelect) {
-                    item.isSelected = true
-                }
-            }
-        }
-        notifyDataSetChanged()
-    }
+//    fun selectItems(itemsToSelect: List<String>) {
+//        for (itemToSelect in itemsToSelect) {
+//            for (item in items) {
+//                if (item.title == itemToSelect) {
+//                    item.isSelected = true
+//                }
+//            }
+//        }
+//        notifyDataSetChanged()
+//    }
 
     private fun getSelectedButtonColor(context: Context?) =
         context?.resources?.getColor(R.color.colorAccent, context.theme)!!

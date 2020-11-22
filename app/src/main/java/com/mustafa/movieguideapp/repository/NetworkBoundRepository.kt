@@ -6,7 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
-
+@Suppress("unused")
 inline fun <ResultType, RequestType> networkBoundResource(
     crossinline loadFromDb: suspend () -> ResultType,
     crossinline fetchFromNetwork: suspend () -> ApiResponse<RequestType>,
@@ -14,7 +14,7 @@ inline fun <ResultType, RequestType> networkBoundResource(
     crossinline shouldFetch: (ResultType) -> Boolean = { true },
     crossinline pagingChecker: (RequestType) -> Boolean = { true },
     dispatcherIO: CoroutineDispatcher
-) = flow<Resource<ResultType>> {
+) = flow {
     emit(Resource.Loading())
     val data = loadFromDb()
 

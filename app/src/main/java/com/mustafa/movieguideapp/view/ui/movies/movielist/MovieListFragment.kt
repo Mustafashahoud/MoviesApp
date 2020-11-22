@@ -59,11 +59,11 @@ class MovieListFragment : Fragment(R.layout.fragment_movies), Injectable {
         }
     }
 
-
-    /**
-     * Init the toolbar
-     * @param titleIn
-     */
+//
+//    /**
+//     * Init the toolbar
+//     * @param titleIn
+//     */
 /*    private fun intiToolbar(titleIn: String) {
         val title: TextView = toolbar_title
         title.text = titleIn

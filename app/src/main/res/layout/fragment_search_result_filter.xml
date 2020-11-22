@@ -11,8 +11,6 @@
 
         <import type="com.mustafa.movieguideapp.models.Resource" />
 
-        <import type="com.mustafa.movieguideapp.models.Status" />
-
         <import type="java.util.List" />
 
         <variable
