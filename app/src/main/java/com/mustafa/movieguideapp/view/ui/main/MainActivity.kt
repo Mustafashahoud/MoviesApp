@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -36,13 +35,13 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         } // Else, need to wait for onRestoreInstanceState
         setOnNavigationItemReselected()
 
-        currentNavController?.observe(this, Observer { navController ->
+        currentNavController?.observe(this) { navController ->
             navController.addOnDestinationChangedListener { _, destination, _ ->
                 if (isMainFragment(destination)) {
                     findViewById<BottomNavigationView>(R.id.bottom_navigation).visible()
                 } else findViewById<BottomNavigationView>(R.id.bottom_navigation).gone()
             }
-        })
+        }
     }
 
 
@@ -151,7 +150,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
             .setProgressColor(R.color.colorAccent)
             .setBackgroundResource(R.color.backgroundDarker)
             .setFullScreen(true)
-            .setTime(3000)
+            .setDuration(3000)
             .show()
     }
 }

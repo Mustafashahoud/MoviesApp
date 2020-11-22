@@ -12,7 +12,7 @@ import org.junit.runner.Description
 /**
  * A JUnit rule that registers an idling resource for all fragment views that use data binding.
  */
-class DataBindingIdlingResourceRule() : TestWatcher() {
+class DataBindingIdlingResourceRule : TestWatcher() {
     private val idlingResource = DataBindingIdlingResource()
     
     fun monitorFragment(fragmentScenario: FragmentScenario<out Fragment>) {

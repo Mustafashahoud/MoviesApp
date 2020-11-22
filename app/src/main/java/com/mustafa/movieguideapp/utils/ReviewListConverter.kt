@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mustafa.movieguideapp.models.Review
 
+@Suppress("unused")
 open class ReviewListConverter {
     @TypeConverter
     fun fromString(value: String): List<Review>? {

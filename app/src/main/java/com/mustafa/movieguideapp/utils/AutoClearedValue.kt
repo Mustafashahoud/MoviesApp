@@ -1,13 +1,12 @@
 package com.mustafa.movieguideapp.utils
 
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-/**
- * Copied from https://github.com/android/architecture-components-samples/tree/master/GithubBrowserSample
- */
+//Copied from https://github.com/android/architecture-components-samples/tree/master/GithubBrowserSample
 /**
  * A lazy property that gets cleaned up when the fragment is destroyed.
  *

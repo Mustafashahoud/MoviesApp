@@ -24,12 +24,14 @@ class SingleFragmentActivity : AppCompatActivity() {
         setContentView(content)
     }
 
+    @Suppress("unused")
     fun setFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
                 .add(R.id.container, fragment, "TEST")
                 .commit()
     }
 
+    @Suppress("unused")
     fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)

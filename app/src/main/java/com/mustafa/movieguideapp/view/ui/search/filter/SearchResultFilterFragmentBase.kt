@@ -18,7 +18,7 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
     PopupMenu.OnMenuItemClickListener {
 
 
-    protected var filtersMap: HashMap<String, ArrayList<String>>? = null
+    private var filtersMap: HashMap<String, ArrayList<String>>? = null
     protected var filtersData: FilterData? = null
 
     companion object {

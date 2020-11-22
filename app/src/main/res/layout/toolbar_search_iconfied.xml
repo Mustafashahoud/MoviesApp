@@ -4,8 +4,7 @@
     android:layout_height="?attr/actionBarSize"
     android:background="@color/colorPrimary"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ImageView
         android:id="@+id/arrow_back"
@@ -29,7 +28,7 @@
             android:layout_height="wrap_content"
             tools:ignore="RelativeOverlap" />
         <ImageButton
-            android:id="@+id/voiceSearch"
+            android:id="@+id/voice_search"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:background="?attr/actionBarItemBackground"
@@ -49,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:layoutDirection="rtl"
-            android:layout_toStartOf="@+id/voiceSearch">
+            android:layout_toStartOf="@+id/voice_search">
         </androidx.appcompat.widget.SearchView>
     </RelativeLayout>
 </androidx.appcompat.widget.Toolbar>

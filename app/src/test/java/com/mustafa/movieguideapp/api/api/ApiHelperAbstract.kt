@@ -5,7 +5,6 @@ import com.mustafa.movieguideapp.api.LiveDataCallAdapterFactory
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import okio.Okio
 import okio.buffer
 import okio.source
 import org.hamcrest.CoreMatchers
@@ -19,6 +18,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.nio.charset.StandardCharsets
+import kotlin.jvm.Throws
 
 /**
  * Copied form https://github.com/skydoves/TheMovies

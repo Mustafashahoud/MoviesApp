@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mustafa.movieguideapp.models.Keyword
 
+@Suppress("unused")
 open class  KeywordListConverter {
     @TypeConverter
     fun fromString(value: String): List<Keyword>? {

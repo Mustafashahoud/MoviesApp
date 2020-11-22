@@ -65,22 +65,11 @@ abstract class MovieDao {
     @Query("SELECT * FROM Movie WHERE page = :page_ AND search = 0")
     abstract fun loadDiscoveryMovieList(page_: Int): LiveData<List<Movie>>
 
-    @Query("SELECT id FROM Movie WHERE page = :page_ AND search = 0")
-    abstract fun loadMovieIdsMovieList(page_: Int): List<Int>
-
-    @Query("SELECT * FROM Movie WHERE id in (:movieIds) AND search = 0")
-    abstract fun loadMovieIdsMovieList(movieIds: List<Int>): LiveData<List<Movie>>
-
     @Query("SELECT * FROM SearchMovieResult WHERE `query` = :query AND pageNumber = :pageNumber ")
     abstract fun searchMovieResultLiveData(
         query: String,
         pageNumber: Int
     ): LiveData<SearchMovieResult>
-
-    @Query("SELECT * FROM Movie WHERE title LIKE '%' || :query || '%' LIMIT 20" )
-    abstract fun searchMovieSuggestionResultLiveData(
-        query: String
-    ): LiveData<List<Movie>>
 
     @Query("SELECT * FROM SearchMovieResult WHERE `query` = :query AND pageNumber = :pageNumber ")
     abstract fun searchMovieResult(query: String, pageNumber: Int): SearchMovieResult

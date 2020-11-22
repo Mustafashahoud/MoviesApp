@@ -54,6 +54,7 @@ constructor(private val peopleRepository: PeopleRepository) : ViewModel() {
         }
     }
 
+    @Suppress("unused")
     fun resetPageNumber() {
         peoplePageNumber = 1
     }

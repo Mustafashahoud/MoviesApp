@@ -4,11 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.mustafa.movieguideapp.models.entity.*
-import com.mustafa.movieguideapp.utils.IntegerListConverter
-import com.mustafa.movieguideapp.utils.KeywordListConverter
-import com.mustafa.movieguideapp.utils.ReviewListConverter
-import com.mustafa.movieguideapp.utils.StringListConverter
-import com.mustafa.movieguideapp.utils.VideoListConverter
+import com.mustafa.movieguideapp.utils.*
 
 @Database(
     entities = [(Movie::class),
@@ -35,8 +31,12 @@ import com.mustafa.movieguideapp.utils.VideoListConverter
     version = 30, exportSchema = false
 )
 @TypeConverters(
-    value = [(StringListConverter::class), (IntegerListConverter::class),
-        (KeywordListConverter::class), (VideoListConverter::class), (ReviewListConverter::class)]
+    value = [
+        (StringListConverter::class),
+        (KeywordListConverter::class),
+        (VideoListConverter::class),
+        (ReviewListConverter::class),
+        (IntegerListConverter::class)]
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun movieDao(): MovieDao

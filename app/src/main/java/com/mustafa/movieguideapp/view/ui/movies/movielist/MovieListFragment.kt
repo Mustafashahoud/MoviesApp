@@ -9,7 +9,6 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -38,7 +37,7 @@ class MovieListFragment : Fragment(), Injectable {
     private val viewModel by viewModels<MovieListViewModel> { viewModelFactory }
 
 
-    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
     private var binding by autoCleared<FragmentMoviesBinding>()
 
@@ -104,11 +103,11 @@ class MovieListFragment : Fragment(), Injectable {
     }
 
     private fun subscribers() {
-        viewModel.movieListLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.movieListLiveData.observe(viewLifecycleOwner) {
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }
-        })
+        }
     }
 
 
@@ -116,7 +115,7 @@ class MovieListFragment : Fragment(), Injectable {
      * Init the toolbar
      * @param titleIn
      */
-    fun intiToolbar(titleIn: String) {
+    private fun intiToolbar(titleIn: String) {
         val title: TextView = toolbar_title
         title.text = titleIn
 

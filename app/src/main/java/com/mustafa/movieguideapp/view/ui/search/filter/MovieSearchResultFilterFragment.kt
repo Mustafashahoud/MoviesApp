@@ -8,7 +8,6 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,7 +34,7 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
     lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<MovieSearchFilterViewModel> { viewModelFactory }
-    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentSearchResultFilterBinding>()
     private var adapter by autoCleared<MovieSearchListAdapter>()
 
@@ -73,12 +72,12 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
     }
 
     override fun observeSubscribers() {
-        viewModel.searchMovieListFilterLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.searchMovieListFilterLiveData.observe(viewLifecycleOwner) {
             binding.resource = viewModel.searchMovieListFilterLiveData.value
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }
-        })
+        }
     }
 
     override fun setRecyclerViewAdapter() {

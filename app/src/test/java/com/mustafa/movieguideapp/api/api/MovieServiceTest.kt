@@ -1,17 +1,14 @@
 package com.mustafa.movieguideapp.api.api
 
 import com.mustafa.movieguideapp.api.ApiSuccessResponse
-import com.mustafa.movieguideapp.api.LiveDataCallAdapterFactory
 import com.mustafa.movieguideapp.api.MovieService
-import com.mustafa.movieguideapp.api.TvService
 import com.mustafa.movieguideapp.utils.LiveDataTestUtil.getValue
-import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.*
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import org.junit.Before
+import org.junit.Test
 import java.io.IOException
+import kotlin.jvm.Throws
 
 class MovieServiceTest : ApiHelperAbstract<MovieService>() {
 

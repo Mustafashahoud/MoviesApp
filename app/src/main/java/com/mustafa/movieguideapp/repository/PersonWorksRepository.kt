@@ -19,6 +19,7 @@ import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@Suppress("unused")
 @Singleton
 class PersonWorksRepository @Inject constructor(
     private val peopleService: PeopleService,

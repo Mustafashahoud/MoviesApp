@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,7 +34,7 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
     lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<TvSearchViewModel> { viewModelFactory }
-    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentSearchBinding>()
     private var tvAdapter by autoCleared<TvSearchListAdapter>()
 
@@ -88,21 +87,19 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
     }
 
     override fun observeSuggestions(newText: String?) {
-        viewModel.tvSuggestions.observe(
-            viewLifecycleOwner,
-            Observer {
-                if (!it.isNullOrEmpty() && tabs.getTabAt(0)?.isSelected!!) {
-                    showSuggestionViewAndHideRecentSearches()
-                }
-                tvAdapter.submitList(it)
+        viewModel.tvSuggestions.observe(viewLifecycleOwner) {
+            if (!it.isNullOrEmpty() && tabs.getTabAt(0)?.isSelected!!) {
+                showSuggestionViewAndHideRecentSearches()
+            }
+            tvAdapter.submitList(it)
 
-                if (newText != null) {
-                    if ((newText.isEmpty() || newText.isBlank()) && tabs.getTabAt(0)?.isSelected!!) {
-                        hideSuggestionViewAndShowRecentSearches()
-                        tvAdapter.submitList(null)
-                    }
+            if (newText != null) {
+                if ((newText.isEmpty() || newText.isBlank()) && tabs.getTabAt(0)?.isSelected!!) {
+                    hideSuggestionViewAndShowRecentSearches()
+                    tvAdapter.submitList(null)
                 }
-            })
+            }
+        }
     }
 
     override fun setRecyclerViewAdapter() {
@@ -124,12 +121,12 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
 
 
     override fun observeAndSetRecentQueries() {
-        viewModel.getTvRecentQueries().observe(viewLifecycleOwner, Observer { it ->
+        viewModel.getTvRecentQueries().observe(viewLifecycleOwner) { it ->
             if (!it.isNullOrEmpty()) {
                 val queries = it.mapNotNull { it.query }.filter { it.isNotEmpty() }
                 if (queries.isNotEmpty()) setListViewOfRecentQueries(queries)
             }
-        })
+        }
     }
 
     override fun deleteAllRecentQueries() {

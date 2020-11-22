@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -34,11 +33,9 @@ class TvListFragment : Fragment(), Injectable {
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
-    private val viewModel by viewModels<TvListViewModel> {
-        viewModelFactory
-    }
+    private val viewModel by viewModels<TvListViewModel> { viewModelFactory }
     private var binding by autoCleared<FragmentTvsBinding>()
 
     private var adapter by autoCleared<TvListAdapter>()
@@ -109,11 +106,11 @@ class TvListFragment : Fragment(), Injectable {
     }
 
     private fun subscribers() {
-        viewModel.tvListLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.tvListLiveData.observe(viewLifecycleOwner) {
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }
-        })
+        }
     }
 
     private fun intiToolbar(title: String) {

@@ -11,13 +11,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
@@ -25,6 +26,8 @@ import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.extension.gone
 import com.mustafa.movieguideapp.extension.inVisible
 import com.mustafa.movieguideapp.extension.visible
+import com.mustafa.movieguideapp.models.SelectableItem
+import com.mustafa.movieguideapp.utils.Constants.Companion.VOICE_REQUEST_CODE
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.COUNTRIES
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.GENRES
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.KEYWORDS
@@ -40,7 +43,6 @@ import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.ratingFilters
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.runtimeFilters
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.yearFilters
 import com.mustafa.movieguideapp.view.adapter.FilterMultiSelectableAdapter
-import com.mustafa.movieguideapp.models.SelectableItem
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search_filter.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
@@ -89,9 +91,9 @@ abstract class SearchFragmentBase : Fragment() {
     }
 
     private fun observeRecentQueriesChanged() {
-        hasRecentQueriesChanged.observe(viewLifecycleOwner, Observer {
+        hasRecentQueriesChanged.observe(viewLifecycleOwner) {
             arrayAdapter?.let { adapter -> clear_recent_queries.isClickable = !adapter.isEmpty }
-        })
+        }
     }
 
 
@@ -203,7 +205,7 @@ abstract class SearchFragmentBase : Fragment() {
     }
 
     private fun subscribers() {
-        hasAnyFilterBeenSelected.observe(viewLifecycleOwner, Observer {
+        hasAnyFilterBeenSelected.observe(viewLifecycleOwner) {
             if (it != null && it == true) {
                 if (!checkIfAllFiltersEmpty()) {
                     clear_filter.isEnabled = true
@@ -215,7 +217,7 @@ abstract class SearchFragmentBase : Fragment() {
                         context?.resources?.getColor(R.color.clearFilterColor, context?.theme)!!
                 }
             }
-        })
+        }
     }
 
     private fun initTabLayout(tabs: TabLayout) {
@@ -250,6 +252,7 @@ abstract class SearchFragmentBase : Fragment() {
                     }
                 }
             }
+
             override fun onTabReselected(tab: TabLayout.Tab?) {}
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
         })
@@ -318,7 +321,8 @@ abstract class SearchFragmentBase : Fragment() {
         }
 
         val filterAdapter =
-            FilterMultiSelectableAdapter(selectableItemList,
+            FilterMultiSelectableAdapter(
+                selectableItemList,
                 context,
                 {
                     filters.add(it)
@@ -350,7 +354,7 @@ abstract class SearchFragmentBase : Fragment() {
      */
     protected fun setListViewOfRecentQueries(queries: List<String?>) {
         arrayAdapter =
-            ArrayAdapter<String>(
+            ArrayAdapter(
                 requireContext(),
                 R.layout.recent_query_item,
                 queries.requireNoNulls()
@@ -375,23 +379,23 @@ abstract class SearchFragmentBase : Fragment() {
      */
     private fun initToolbar() {
 
-        voiceSearch.setOnClickListener {
+        voice_search.setOnClickListener {
             val voiceIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-            voiceIntent.putExtra(
-                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-            )
+            voiceIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
             voiceIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-            if (activity?.packageManager?.let { it1 -> voiceIntent.resolveActivity(it1) } != null) {
+            if (activity?.packageManager?.let { packageManager -> voiceIntent.resolveActivity(packageManager) } != null) {
                 startActivityForResult(voiceIntent, 10)
+
             } else {
-                Toast.makeText(
-                    context,
-                    "your device does not support Speech Input",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, "your device does not support Speech Input", Toast.LENGTH_SHORT).show()
             }
         }
+
+//        val startForResult : ActivityResultLauncher<Intent> = registerForActivityResult(
+//            ActivityResultContracts.StartActivityForResult()) {
+//            val intent = it.data
+//            }
+//
 
 
         arrow_back.setOnClickListener {
@@ -415,13 +419,10 @@ abstract class SearchFragmentBase : Fragment() {
 
     /**
      * Receiving Voice Query
-     * @param requestCode
-     * @param resultCode
-     * @param data
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            10 -> if (resultCode == Activity.RESULT_OK && data != null) {
+            VOICE_REQUEST_CODE -> if (resultCode == Activity.RESULT_OK && data != null) {
                 val voiceQuery = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 dismissKeyboard(search_view.windowToken)
                 search_view.setQuery(voiceQuery?.let { it[0] }, true)
@@ -436,7 +437,7 @@ abstract class SearchFragmentBase : Fragment() {
         search_view.requestFocus()
         hideFiltersLayout()
         search_view.visible()
-        voiceSearch.visible()
+        voice_search.visible()
         filter_label.gone()
         if (search_view.query.isEmpty() || search_view.query.isBlank()) {
             showRecentSearchesBar()
@@ -453,7 +454,7 @@ abstract class SearchFragmentBase : Fragment() {
     private fun renderViewsWhenFiltersTabSelected() {
         hideListViewAndRecyclerView()
         search_view.gone()
-        voiceSearch.gone()
+        voice_search.gone()
         filter_label.text = getString(R.string.filters)
         filter_label.visible()
         showFiltersLayout()

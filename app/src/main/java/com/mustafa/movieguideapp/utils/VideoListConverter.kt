@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mustafa.movieguideapp.models.Video
 
+@Suppress("unused")
 open class VideoListConverter {
     @TypeConverter
     fun fromString(value: String): List<Video>? {

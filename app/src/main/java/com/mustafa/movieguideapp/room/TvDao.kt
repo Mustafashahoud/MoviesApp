@@ -74,11 +74,6 @@ abstract class TvDao {
     }
   }
 
-  @Query("SELECT * FROM Tv WHERE name LIKE :query || '%' OR name LIKE '%' || :query || '%' LIMIT 20" )
-  abstract fun searchTvSuggestionResultLiveData(
-    query: String
-  ): LiveData<List<Tv>>
-
   @Query(
     "SELECT * FROM TvRecentQueries GROUP BY `query` ORDER BY id DESC LIMIT 30 ")
   abstract fun loadTvRecentQueries(): LiveData<List<TvRecentQueries>>

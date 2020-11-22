@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,7 +34,7 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
 
     private val viewModel by viewModels<MovieSearchViewModel> { viewModelFactory }
 
-    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
     private var binding by autoCleared<FragmentSearchBinding>()
 
@@ -65,7 +64,8 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
         tab?.text = getString(R.string.filter_movies_tab_name)
     }
 
-    override fun setBindingVariables() {/*DO nothing*/}
+    override fun setBindingVariables() {/*DO nothing*/
+    }
 
     override fun navigateFromSearchFragmentToSearchFragmentResultFilter(bundle: Bundle) {
         findNavController().navigate(
@@ -89,21 +89,19 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
     }
 
     override fun observeSuggestions(newText: String?) {
-        viewModel.movieSuggestions.observe(
-            viewLifecycleOwner,
-            Observer {
-                if (!it.isNullOrEmpty() && tabs.getTabAt(0)?.isSelected!!) {
-                    showSuggestionViewAndHideRecentSearches()
-                }
-                movieAdapter.submitList(it)
+        viewModel.movieSuggestions.observe(viewLifecycleOwner) {
+            if (!it.isNullOrEmpty() && tabs.getTabAt(0)?.isSelected!!) {
+                showSuggestionViewAndHideRecentSearches()
+            }
+            movieAdapter.submitList(it)
 
-                if (newText != null) {
-                    if ((newText.isEmpty() || newText.isBlank()) && tabs.getTabAt(0)?.isSelected!!) {
-                        hideSuggestionViewAndShowRecentSearches()
-                        movieAdapter.submitList(null)
-                    }
+            if (newText != null) {
+                if ((newText.isEmpty() || newText.isBlank()) && tabs.getTabAt(0)?.isSelected!!) {
+                    hideSuggestionViewAndShowRecentSearches()
+                    movieAdapter.submitList(null)
                 }
-            })
+            }
+        }
     }
 
     override fun setRecyclerViewAdapter() {
@@ -125,12 +123,12 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
 
 
     override fun observeAndSetRecentQueries() {
-        viewModel.getMovieRecentQueries().observe(viewLifecycleOwner, Observer { it ->
+        viewModel.getMovieRecentQueries().observe(viewLifecycleOwner) { it ->
             if (!it.isNullOrEmpty()) {
                 val queries = it.mapNotNull { it.query }.filter { it.isNotEmpty() }
                 if (queries.isNotEmpty()) setListViewOfRecentQueries(queries)
             }
-        })
+        }
     }
 
     override fun deleteAllRecentQueries() {

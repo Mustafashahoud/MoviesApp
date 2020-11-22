@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,9 +37,9 @@ class TvSearchResultFragment : Fragment(), Injectable {
     lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<TvSearchViewModel> { viewModelFactory }
-    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
-    var binding by autoCleared<FragmentTvSearchResultBinding>()
-    var adapter by autoCleared<TvSearchListAdapter>()
+    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    private var binding by autoCleared<FragmentTvSearchResultBinding>()
+    private var adapter by autoCleared<TvSearchListAdapter>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,11 +75,11 @@ class TvSearchResultFragment : Fragment(), Injectable {
     }
 
     private fun subscribers() {
-        viewModel.searchTvListLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.searchTvListLiveData.observe(viewLifecycleOwner) {
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }
-        })
+        }
     }
 
 

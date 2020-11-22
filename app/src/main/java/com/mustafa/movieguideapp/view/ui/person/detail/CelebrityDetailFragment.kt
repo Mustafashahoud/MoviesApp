@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,7 +32,7 @@ class CelebrityDetailFragment : Fragment(), Injectable {
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    var dataBindingComponent = FragmentDataBindingComponent(this)
+    private val dataBindingComponent = FragmentDataBindingComponent(this)
 
     private val viewModel by viewModels<PersonDetailViewModel> { viewModelFactory }
 
@@ -128,18 +127,18 @@ class CelebrityDetailFragment : Fragment(), Injectable {
 
     private fun observeMoviesAndTvsForCelebrity() {
 
-        viewModel.moviesOfCelebrity.observe(viewLifecycleOwner, Observer {
+        viewModel.moviesOfCelebrity.observe(viewLifecycleOwner) {
             if (!it.data.isNullOrEmpty()) {
                 val moviesPerson = it.data.filter { moviePerson -> moviePerson.poster_path != null }
                 adapterMoviesForCelebrity.submitList(moviesPerson)
             }
-        })
+        }
 
-        viewModel.tvsOfCelebrity.observe(viewLifecycleOwner, Observer {
+        viewModel.tvsOfCelebrity.observe(viewLifecycleOwner) {
             if (!it.data.isNullOrEmpty()) {
                 val tvsPerson = it.data.filter { tvPerson -> tvPerson.poster_path != null }
                 adapterTvsForCelebrity.submitList(tvsPerson)
             }
-        })
+        }
     }
 }

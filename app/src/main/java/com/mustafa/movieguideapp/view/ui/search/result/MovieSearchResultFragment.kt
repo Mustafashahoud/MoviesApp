@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,9 +37,9 @@ class MovieSearchResultFragment : Fragment(), Injectable {
     lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<MovieSearchViewModel> { viewModelFactory }
-    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
-    var binding by autoCleared<FragmentMovieSearchResultBinding>()
-    var adapter by autoCleared<MovieSearchListAdapter>()
+    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    private var binding by autoCleared<FragmentMovieSearchResultBinding>()
+    private var adapter by autoCleared<MovieSearchListAdapter>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,11 +74,11 @@ class MovieSearchResultFragment : Fragment(), Injectable {
     }
 
     private fun subscribers() {
-        viewModel.searchMovieListLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.searchMovieListLiveData.observe(viewLifecycleOwner) {
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }
-        })
+        }
     }
 
 
@@ -124,11 +123,15 @@ class MovieSearchResultFragment : Fragment(), Injectable {
         })
 
         search_view.setOnSearchClickListener {
-            findNavController().navigate(MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieSearchFragment())
+            findNavController().navigate(
+                MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieSearchFragment()
+            )
         }
 
         arrow_back.setOnClickListener {
-            findNavController().navigate(MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieSearchFragment())
+            findNavController().navigate(
+                MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieSearchFragment()
+            )
         }
     }
 

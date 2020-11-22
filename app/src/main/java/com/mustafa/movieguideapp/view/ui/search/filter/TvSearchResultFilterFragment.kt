@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,7 +33,7 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
     lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<TvSearchFilterViewModel> { viewModelFactory }
-    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentSearchResultFilterBinding>()
     private var adapter by autoCleared<TvSearchListAdapter>()
 
@@ -72,12 +71,12 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
     }
 
     override fun observeSubscribers() {
-        viewModel.searchTvListFilterLiveData.observe(viewLifecycleOwner, Observer {
+        viewModel.searchTvListFilterLiveData.observe(viewLifecycleOwner) {
             binding.resource = viewModel.searchTvListFilterLiveData.value
             if (it.data != null && it.data.isNotEmpty()) {
                 adapter.submitList(it.data)
             }
-        })
+        }
     }
 
     override fun setRecyclerViewAdapter() {
