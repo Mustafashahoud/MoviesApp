@@ -3,6 +3,7 @@ package com.mustafa.movieguideapp.utils
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -17,13 +18,14 @@ class AutoClearedValue<T : Any>(val fragment: Fragment) : ReadWriteProperty<Frag
     init {
         fragment.lifecycle.addObserver(object: DefaultLifecycleObserver {
             override fun onCreate(owner: LifecycleOwner) {
-                fragment.viewLifecycleOwnerLiveData.observe(fragment) { viewLifecycleOwner ->
+                fragment.viewLifecycleOwnerLiveData.observe(fragment, Observer {
+                        viewLifecycleOwner ->
                     viewLifecycleOwner?.lifecycle?.addObserver(object: DefaultLifecycleObserver {
                         override fun onDestroy(owner: LifecycleOwner) {
                             _value = null
                         }
                     })
-                }
+                })
             }
         })
     }

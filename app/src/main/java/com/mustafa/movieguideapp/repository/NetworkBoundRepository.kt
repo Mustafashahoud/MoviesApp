@@ -15,26 +15,26 @@ inline fun <ResultType, RequestType> networkBoundResource(
     crossinline pagingChecker: (RequestType) -> Boolean = { true },
     dispatcherIO: CoroutineDispatcher
 ) = flow<Resource<ResultType>> {
-    emit(Resource.loading(null))
+    emit(Resource.Loading())
     val data = loadFromDb()
 
     if (shouldFetch(data)) {
-        emit(Resource.loading(data))
+        emit(Resource.Loading())
         fetchFromNetwork().apply {
             this.onSuccessSuspend {
                 this.data?.let {
                     saveFetchResult(it)
-                    emit(Resource.success(loadFromDb(), pagingChecker(it)))
+                    emit(Resource.Success(loadFromDb(), pagingChecker(it)))
                 }
 
             }.onErrorSuspend {
-                emit(Resource.error(message(), null))
+                emit(Resource.Error(message()))
             }.onExceptionSuspend {
-                emit(Resource.error(message(), null))
+                emit(Resource.Error(message()))
             }
         }
     } else {
-        Resource.success(data, true)
+        Resource.Success(data, true)
     }
 }.flowOn(dispatcherIO)
 

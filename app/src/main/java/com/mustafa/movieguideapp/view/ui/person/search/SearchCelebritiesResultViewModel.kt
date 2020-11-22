@@ -1,16 +1,18 @@
 package com.mustafa.movieguideapp.view.ui.person.search
 
-import androidx.lifecycle.*
-import com.mustafa.movieguideapp.models.Resource
-import com.mustafa.movieguideapp.models.entity.PeopleRecentQueries
-import com.mustafa.movieguideapp.models.entity.Person
-import com.mustafa.movieguideapp.repository.PeopleRepository
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.filter
+import com.mustafa.movieguideapp.models.Person
+import com.mustafa.movieguideapp.repository.people.PeopleRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
-import com.mustafa.movieguideapp.utils.AbsentLiveData
 import com.mustafa.movieguideapp.view.ViewModelBase
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 
@@ -20,63 +22,36 @@ class SearchCelebritiesResultViewModel @Inject constructor(
     dispatcher: CoroutineDispatcher
 ) : ViewModelBase(dispatcher) {
 
-    private val searchPeoplePageLiveData: MutableLiveData<Int> = MutableLiveData()
-    private var peoplePageNumber = 1
+    private var currentQueryValue: String? = null
 
-    private val _personQuery = MutableLiveData<String>()
-    val queryPersonLiveData: LiveData<String> = _personQuery
-    val searchPeopleListLiveData: LiveData<Resource<List<Person>>> =
-        searchPeoplePageLiveData.switchMap {
-            launchOnViewModelScope {
-                if (it == null || queryPersonLiveData.value == null) {
-                    AbsentLiveData.create()
-                } else {
-                    peopleRepository.searchPeople(queryPersonLiveData.value!!, it).asLiveData()
-                }
-            }
+    private var currentSearchResult: Flow<PagingData<Person>>? = null
+
+
+    fun searchPeople(queryString: String): Flow<PagingData<Person>> {
+        val lastResult = currentSearchResult
+        if (queryString == currentQueryValue && lastResult != null) {
+            return lastResult
         }
-
-
-    fun setSearchPeopleQueryAndPage(query: String?, page: Int) {
-        val input = query?.toLowerCase(Locale.getDefault())?.trim()
-        if (input == queryPersonLiveData.value) {
-            return
-        }
-        _personQuery.value = input
-        searchPeoplePageLiveData.value = page
+        currentQueryValue = queryString
+        val newResult = peopleRepository
+            .searchPeople(queryString)
+            .map { pagingData -> pagingData.filter { it.profile_path != null } }
+            .cachedIn(viewModelScope)
+        currentSearchResult = newResult
+        return newResult
     }
 
 
-    fun loadMore() {
-        peoplePageNumber++
-        searchPeoplePageLiveData.value = peoplePageNumber
+    fun getSuggestions(queryString: String): Flow<PagingData<Person>> {
+        return peopleRepository.getPeopleSuggestions(queryString).cachedIn(viewModelScope)
     }
 
-    fun refresh() {
-        searchPeoplePageLiveData.value?.let {
-            searchPeoplePageLiveData.value = it
-        }
+
+    val peopleRecentQueries = liveData(viewModelScope.coroutineContext) {
+        val movieRecentQueries = peopleRepository.getPeopleRecentQueries()
+        emit(movieRecentQueries)
     }
 
-    private val peopleSuggestionsQuery = MutableLiveData<String>()
-    val peopleSuggestions: LiveData<List<Person>> = peopleSuggestionsQuery.switchMap {
-        launchOnViewModelScope {
-            if (it.isNullOrBlank()) {
-                AbsentLiveData.create()
-            } else {
-                peopleRepository.getPeopleSuggestionsFromRoom(peopleSuggestionsQuery.value!!)
-            }
-        }
-    }
-
-    fun setPeopleSuggestionsQuery(newText: String) {
-        peopleSuggestionsQuery.value = newText
-    }
-
-    fun getPeopleRecentQueries(): LiveData<List<PeopleRecentQueries>> =
-        launchOnViewModelScope {
-            peopleRepository.getPeopleRecentQueries()
-        }
 
     fun deleteAllPeopleRecentQueries() {
         viewModelScope.launch {

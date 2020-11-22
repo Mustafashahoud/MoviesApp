@@ -1,19 +1,19 @@
 package com.mustafa.movieguideapp.di
 
-import com.mustafa.movieguideapp.view.ui.search.MovieSearchFragment
+import com.mustafa.movieguideapp.view.ui.filter.MovieSearchResultFilterFragment
+import com.mustafa.movieguideapp.view.ui.filter.TvSearchResultFilterFragment
 import com.mustafa.movieguideapp.view.ui.movies.moviedetail.MovieDetailFragment
 import com.mustafa.movieguideapp.view.ui.movies.movielist.MovieListFragment
-import com.mustafa.movieguideapp.view.ui.search.filter.MovieSearchResultFilterFragment
-import com.mustafa.movieguideapp.view.ui.search.result.MovieSearchResultFragment
-import com.mustafa.movieguideapp.view.ui.search.result.TvSearchResultFragment
 import com.mustafa.movieguideapp.view.ui.person.celebrities.CelebritiesListFragment
 import com.mustafa.movieguideapp.view.ui.person.detail.CelebrityDetailFragment
 import com.mustafa.movieguideapp.view.ui.person.detail.MoviePersonDetailFragment
 import com.mustafa.movieguideapp.view.ui.person.detail.TvPersonDetailFragment
 import com.mustafa.movieguideapp.view.ui.person.search.SearchCelebritiesFragment
 import com.mustafa.movieguideapp.view.ui.person.search.SearchCelebritiesResultFragment
-import com.mustafa.movieguideapp.view.ui.search.TvSearchFragment
-import com.mustafa.movieguideapp.view.ui.search.filter.TvSearchResultFilterFragment
+import com.mustafa.movieguideapp.view.ui.search.movies.MovieSearchFragment
+import com.mustafa.movieguideapp.view.ui.search.movies.MovieSearchResultFragment
+import com.mustafa.movieguideapp.view.ui.search.tvs.TvSearchFragment
+import com.mustafa.movieguideapp.view.ui.search.tvs.TvSearchResultFragment
 import com.mustafa.movieguideapp.view.ui.tv.tvdetail.TvDetailFragment
 import com.mustafa.movieguideapp.view.ui.tv.tvlist.TvListFragment
 import dagger.Module

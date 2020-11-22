@@ -1,21 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <import type="com.mustafa.movieguideapp.models.entity.Tv" />
-        <import type="androidx.lifecycle.LiveData" />
-        <import type="com.mustafa.movieguideapp.models.Resource"/>
-        <import type="com.mustafa.movieguideapp.models.Status"/>
-        <import type="java.util.List" />
-        <variable
-            name="searchResult"
-            type="LiveData&lt;Resource&lt;List&lt;Tv>>>" />
-        <variable
-            name="callback"
-            type="com.mustafa.movieguideapp.view.ui.common.RetryCallback" />
-    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -34,21 +20,6 @@
                 tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 tools:listitem="@layout/item_tv" />
         </LinearLayout>
-
-        <include
-            layout="@layout/loading_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:callback="@{() -> callback.retry()}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:resource="@{(Resource) searchResult}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

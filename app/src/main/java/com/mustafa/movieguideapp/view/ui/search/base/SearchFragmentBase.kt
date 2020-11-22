@@ -25,6 +25,7 @@ import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.extension.gone
 import com.mustafa.movieguideapp.extension.inVisible
 import com.mustafa.movieguideapp.extension.visible
+import com.mustafa.movieguideapp.models.SelectableItem
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.COUNTRIES
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.GENRES
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.KEYWORDS
@@ -40,7 +41,6 @@ import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.ratingFilters
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.runtimeFilters
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.yearFilters
 import com.mustafa.movieguideapp.view.adapter.FilterMultiSelectableAdapter
-import com.mustafa.movieguideapp.models.SelectableItem
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search_filter.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*

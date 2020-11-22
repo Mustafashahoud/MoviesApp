@@ -1,12 +1,10 @@
 package com.mustafa.movieguideapp.view.ui.person.detail
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,24 +12,20 @@ import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentCelebrityDetailBinding
 import com.mustafa.movieguideapp.di.Injectable
-import com.mustafa.movieguideapp.models.entity.Person
+import com.mustafa.movieguideapp.models.Person
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MoviePersonListAdapter
 import com.mustafa.movieguideapp.view.adapter.TvPersonListAdapter
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import kotlinx.android.synthetic.main.toolbar_detail.*
 import javax.inject.Inject
 
-class CelebrityDetailFragment : Fragment(), Injectable {
+class CelebrityDetailFragment : Fragment(R.layout.fragment_celebrity_detail), Injectable {
 
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject
-    lateinit var appExecutors: AppExecutors
-
-    var dataBindingComponent = FragmentDataBindingComponent(this)
+    private val dataBindingComponent = FragmentDataBindingComponent(this)
 
     private val viewModel by viewModels<PersonDetailViewModel> { viewModelFactory }
 
@@ -43,22 +37,9 @@ class CelebrityDetailFragment : Fragment(), Injectable {
 
     private var personId = -1
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_celebrity_detail,
-            container,
-            false
-        )
-
-        return binding.root
-    }
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding = FragmentCelebrityDetailBinding.bind(view)
+
         val selectedPersonId = getSelectedPerson().id
         //Just to Not reload the movies of person when there no need
         if (personId != selectedPersonId) {
@@ -124,14 +105,14 @@ class CelebrityDetailFragment : Fragment(), Injectable {
 
     private fun observeMoviesAndTvsForCelebrity() {
 
-        viewModel.moviesOfCelebrity.observe(viewLifecycleOwner, {
+        viewModel.moviesOfCelebrity.observe(viewLifecycleOwner, Observer {
             if (!it.data.isNullOrEmpty()) {
                 val moviesPerson = it.data.filter { moviePerson -> moviePerson.poster_path != null }
                 adapterMoviesForCelebrity.submitList(moviesPerson)
             }
         })
 
-        viewModel.tvsOfCelebrity.observe(viewLifecycleOwner, {
+        viewModel.tvsOfCelebrity.observe(viewLifecycleOwner, Observer {
             if (!it.data.isNullOrEmpty()) {
                 val tvsPerson = it.data.filter { tvPerson -> tvPerson.poster_path != null }
                 adapterTvsForCelebrity.submitList(tvsPerson)

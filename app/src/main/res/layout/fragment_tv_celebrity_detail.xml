@@ -7,7 +7,7 @@
 
     <variable
         name="tv"
-        type="com.mustafa.movieguideapp.models.entity.TvPerson" />
+        type="com.mustafa.movieguideapp.models.TvPerson" />
 
   </data>
 

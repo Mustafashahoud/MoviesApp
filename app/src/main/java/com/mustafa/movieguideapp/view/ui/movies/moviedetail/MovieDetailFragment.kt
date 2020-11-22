@@ -16,8 +16,8 @@ import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.api.Api
 import com.mustafa.movieguideapp.databinding.FragmentMovieDetailBinding
 import com.mustafa.movieguideapp.di.Injectable
+import com.mustafa.movieguideapp.models.Movie
 import com.mustafa.movieguideapp.models.Video
-import com.mustafa.movieguideapp.models.entity.Movie
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.ReviewListAdapter
 import com.mustafa.movieguideapp.view.adapter.VideoListAdapter

@@ -3,6 +3,7 @@ package com.mustafa.movieguideapp.utils
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.mustafa.movieguideapp.models.entity.MovieRecentQueries
 
 open class StringListConverter {
     @TypeConverter
@@ -13,7 +14,16 @@ open class StringListConverter {
 
     @TypeConverter
     fun fromList(list: List<String>?): String {
-        val gson = Gson()
-        return gson.toJson(list)
+        return Gson().toJson(list)
+    }
+
+    @TypeConverter
+    fun fromMovieRecentQueries(movieRecentQueries: MovieRecentQueries?): String {
+        return Gson().toJson(movieRecentQueries?.query)
+    }
+
+    @TypeConverter
+    fun toMovieRecentQueries(string: String): MovieRecentQueries {
+        return Gson().fromJson(string, MovieRecentQueries::class.java)
     }
 }

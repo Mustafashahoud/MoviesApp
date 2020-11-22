@@ -5,7 +5,9 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
+import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.api.Api
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import javax.inject.Inject
@@ -22,6 +24,9 @@ class FragmentBindingAdapters @Inject constructor(val fragment: Fragment) {
             Glide.with(fragment)
                 .load(it)
                 .listener(listener)
+                .centerCrop()
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .error(R.drawable.ic_error)
                 .into(imageView)
         }
     }

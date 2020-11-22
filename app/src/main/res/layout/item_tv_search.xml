@@ -8,7 +8,7 @@
 
         <variable
             name="tv"
-            type="com.mustafa.movieguideapp.models.entity.Tv" />
+            type="com.mustafa.movieguideapp.models.Tv" />
     </data>
 
     <androidx.cardview.widget.CardView

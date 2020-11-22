@@ -7,7 +7,7 @@
     <data>
         <variable
             name="person"
-            type="com.mustafa.movieguideapp.models.entity.Person" />
+            type="com.mustafa.movieguideapp.models.Person" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

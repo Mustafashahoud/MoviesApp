@@ -4,98 +4,59 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentCelebritiesSearchResultBinding
 import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.extension.hideKeyboard
-import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
-import com.mustafa.movieguideapp.view.adapter.PeopleSearchListAdapter
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
-import com.mustafa.movieguideapp.view.ui.common.RetryCallback
+import com.mustafa.movieguideapp.view.adapter.PeopleAdapter
 import kotlinx.android.synthetic.main.toolbar_search_result.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class SearchCelebritiesResultFragment : Fragment(), Injectable {
+class SearchCelebritiesResultFragment : Fragment(R.layout.fragment_celebrities_search_result),
+    Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject
-    lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<SearchCelebritiesResultViewModel> { viewModelFactory }
-    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentCelebritiesSearchResultBinding>()
-    private var adapter by autoCleared<PeopleSearchListAdapter>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_celebrities_search_result,
-            container,
-            false
-        )
-
-        return binding.root
-    }
+    private var adapter by autoCleared<PeopleAdapter>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        with(binding) {
-            lifecycleOwner = viewLifecycleOwner
-            searchResult = viewModel.searchPeopleListLiveData
-            query = viewModel.queryPersonLiveData
-            callback = object : RetryCallback {
-                override fun retry() {
-                    viewModel.refresh()
+        initializeUI()
+
+        getQuerySafeArgs()?.let { query ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewModel.searchPeople(query).collectLatest { pagingData ->
+                    adapter.submitData(pagingData)
                 }
             }
         }
-
-        initializeUI()
-        subscribers()
-        viewModel.setSearchPeopleQueryAndPage(getQuerySafeArgs(), 1)
-
-
-    }
-
-    private fun subscribers() {
-        viewModel.searchPeopleListLiveData.observe(viewLifecycleOwner, {
-            binding.searchResult = viewModel.searchPeopleListLiveData
-            if (it.data != null && it.data.isNotEmpty()) {
-                adapter.submitList(it.data)
-            }
-        })
     }
 
 
     private fun getQuerySafeArgs(): String? {
-        val params =
-            SearchCelebritiesResultFragmentArgs.fromBundle(
-                requireArguments()
-            )
+        val params = SearchCelebritiesResultFragmentArgs.fromBundle(requireArguments())
         return params.query
     }
 
     private fun initializeUI() {
 
-        adapter = PeopleSearchListAdapter(dataBindingComponent) {
+        adapter = PeopleAdapter(dataBindingComponent) {
             findNavController().navigate(
                 SearchCelebritiesResultFragmentDirections.actionSearchCelebritiesResultFragmentToCelebrityDetail(
                     it
@@ -106,26 +67,17 @@ class SearchCelebritiesResultFragment : Fragment(), Injectable {
         hideKeyboard()
         binding.recyclerViewSearchResultPeople.adapter = adapter
         binding.recyclerViewSearchResultPeople.layoutManager = LinearLayoutManager(context)
-        binding.recyclerViewSearchResultPeople.addOnScrollListener(object :
-            RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val lastPosition = layoutManager.findLastVisibleItemPosition()
-                if (lastPosition == adapter.itemCount - 1
-                    && viewModel.searchPeopleListLiveData.value?.status != Status.LOADING
-                    && viewModel.searchPeopleListLiveData.value?.hasNextPage!!
-                ) {
-                    viewModel.loadMore()
-                }
-            }
-        })
 
         search_view.setOnSearchClickListener {
-            findNavController().navigate(SearchCelebritiesResultFragmentDirections.actionSearchCelebritiesResultFragmentToSearchCelebritiesFragment())
+            findNavController().navigate(
+                SearchCelebritiesResultFragmentDirections.actionSearchCelebritiesResultFragmentToSearchCelebritiesFragment()
+            )
         }
 
         arrow_back.setOnClickListener {
-            findNavController().navigate(SearchCelebritiesResultFragmentDirections.actionSearchCelebritiesResultFragmentToSearchCelebritiesFragment())
+            findNavController().navigate(
+                SearchCelebritiesResultFragmentDirections.actionSearchCelebritiesResultFragmentToSearchCelebritiesFragment()
+            )
         }
     }
 

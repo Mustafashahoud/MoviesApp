@@ -13,26 +13,21 @@ import com.mustafa.movieguideapp.api.Api
 import com.mustafa.movieguideapp.extension.bindResource
 import com.mustafa.movieguideapp.extension.requestGlideListener
 import com.mustafa.movieguideapp.extension.visible
-import com.mustafa.movieguideapp.models.Keyword
-import com.mustafa.movieguideapp.models.Resource
-import com.mustafa.movieguideapp.models.Review
-import com.mustafa.movieguideapp.models.Video
-import com.mustafa.movieguideapp.models.entity.*
-import com.mustafa.movieguideapp.models.network.PersonDetail
+import com.mustafa.movieguideapp.models.*
 import com.mustafa.movieguideapp.utils.KeywordListMapper
 import com.mustafa.movieguideapp.utils.StringUtils
 import com.mustafa.movieguideapp.view.adapter.ReviewListAdapter
 import com.mustafa.movieguideapp.view.adapter.VideoListAdapter
 
-
-/**
- *  Copied from https://github.com/skydoves/TheMovies
- */
 @BindingAdapter("visibilityByResource")
-fun bindVisibilityByResource(view: View, resource: Resource<List<Any>>?) {
+fun bindVisibilityByResource(view: View, resource: Resource<*>?) {
     view.bindResource(resource) {
-        if (resource?.data?.isNotEmpty()!!) {
-            view.visible()
+        resource?.data?.let { data ->
+            if (data is List<*>) {
+                if (data.isNotEmpty()) {
+                    view.visible()
+                }
+            }
         }
     }
 }

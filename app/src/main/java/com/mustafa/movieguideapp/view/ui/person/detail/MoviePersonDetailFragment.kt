@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.databinding.FragmentMovieCelebrityDetailBinding
 import com.mustafa.movieguideapp.di.Injectable
-import com.mustafa.movieguideapp.models.entity.MoviePerson
+import com.mustafa.movieguideapp.models.MoviePerson
 import com.mustafa.movieguideapp.utils.autoCleared
 
 

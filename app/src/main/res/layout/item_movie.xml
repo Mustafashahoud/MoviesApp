@@ -7,7 +7,7 @@
     <data>
         <variable
             name="movie"
-            type="com.mustafa.movieguideapp.models.entity.Movie" />
+            type="com.mustafa.movieguideapp.models.Movie" />
     </data>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

@@ -29,7 +29,7 @@
         tools:layout="@layout/fragment_celebrity_detail">
         <argument
             android:name="person"
-            app:argType="com.mustafa.movieguideapp.models.entity.Person" />
+            app:argType="com.mustafa.movieguideapp.models.Person" />
 
         <action
             android:id="@+id/action_celebrityDetail_to_celebrityMovieDetail"
@@ -48,7 +48,7 @@
         tools:layout="@layout/fragment_movie_celebrity_detail">
         <argument
             android:name="movie"
-            app:argType="com.mustafa.movieguideapp.models.entity.MoviePerson" />
+            app:argType="com.mustafa.movieguideapp.models.MoviePerson" />
     </fragment>
 
 
@@ -59,7 +59,7 @@
         tools:layout="@layout/fragment_tv_celebrity_detail">
         <argument
             android:name="tv"
-            app:argType="com.mustafa.movieguideapp.models.entity.TvPerson" />
+            app:argType="com.mustafa.movieguideapp.models.TvPerson" />
     </fragment>
 
     <fragment

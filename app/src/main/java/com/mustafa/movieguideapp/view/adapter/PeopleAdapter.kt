@@ -4,45 +4,43 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.DiffUtil
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.databinding.ItemPersonBinding
-import com.mustafa.movieguideapp.models.entity.Person
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
-import com.mustafa.movieguideapp.view.ui.common.DataBoundListAdapter
+import com.mustafa.movieguideapp.models.Person
+import com.mustafa.movieguideapp.utils.PeopleDiffUtilCallBack
 
 class PeopleAdapter(
     private val dataBindingComponent: DataBindingComponent,
     private val movieOnClickCallback: ((Person) -> Unit)?
-) : DataBoundListAdapter<Person, ItemPersonBinding>(
-    diffCallback = object : DiffUtil.ItemCallback<Person>() {
-        override fun areItemsTheSame(oldItem: Person, newItem: Person): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Person, newItem: Person): Boolean {
-            return oldItem == (newItem)
+) : PagingDataAdapter<Person, PeopleAdapter.ViewHolder>(PeopleDiffUtilCallBack()) {
+    class ViewHolder(private val binding: ItemPersonBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(person: Person) {
+            binding.person = person
         }
     }
-) {
 
-    override fun createBinding(parent: ViewGroup): ItemPersonBinding {
-        val binding = DataBindingUtil.inflate<ItemPersonBinding>(
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding: ItemPersonBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.item_person,
             parent,
             false,
             dataBindingComponent
         )
+
         binding.root.setOnClickListener {
             binding.person?.let {
                 movieOnClickCallback?.invoke(it)
             }
         }
-        return binding
-    }
 
-    override fun bind(binding: ItemPersonBinding, item: Person) {
-        binding.person = item
+        return ViewHolder(binding)
     }
 }

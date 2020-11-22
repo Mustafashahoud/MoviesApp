@@ -3,7 +3,7 @@ package com.mustafa.movieguideapp.view.ui.tv.tvdetail
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
-import com.mustafa.movieguideapp.repository.TvRepository
+import com.mustafa.movieguideapp.repository.tvs.TvRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.view.ViewModelBase
 import kotlinx.coroutines.CoroutineDispatcher

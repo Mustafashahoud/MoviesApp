@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
+import com.mustafa.movieguideapp.models.MoviePerson
 import com.mustafa.movieguideapp.models.Resource
-import com.mustafa.movieguideapp.models.entity.MoviePerson
-import com.mustafa.movieguideapp.models.entity.TvPerson
-import com.mustafa.movieguideapp.repository.PeopleRepository
+import com.mustafa.movieguideapp.models.TvPerson
+import com.mustafa.movieguideapp.repository.people.PeopleRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.AbsentLiveData
 import com.mustafa.movieguideapp.view.ViewModelBase

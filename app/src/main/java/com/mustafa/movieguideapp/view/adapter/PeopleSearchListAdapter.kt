@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.databinding.ItemPersonSearchBinding
-import com.mustafa.movieguideapp.models.entity.Person
+import com.mustafa.movieguideapp.models.Person
 import com.mustafa.movieguideapp.view.ui.common.DataBoundListAdapter
 
 class PeopleSearchListAdapter(

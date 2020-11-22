@@ -26,12 +26,12 @@
         tools:layout="@layout/fragment_tv_detail">
         <argument
             android:name="tv"
-            app:argType="com.mustafa.movieguideapp.models.entity.Tv" />
+            app:argType="com.mustafa.movieguideapp.models.Tv" />
     </fragment>
 
     <fragment
         android:id="@+id/tvSearchFragment"
-        android:name="com.mustafa.movieguideapp.view.ui.search.TvSearchFragment"
+        android:name="com.mustafa.movieguideapp.view.ui.search.tvs.TvSearchFragment"
         android:label="tvSearchFragment"
         tools:layout="@layout/fragment_search">
         <action
@@ -53,7 +53,7 @@
 
     <fragment
         android:id="@+id/tvSearchFragmentResult"
-        android:name="com.mustafa.movieguideapp.view.ui.search.result.TvSearchResultFragment"
+        android:name="com.mustafa.movieguideapp.view.ui.search.tvs.TvSearchResultFragment"
         android:label="tvSearchFragmentResult" >
         <action
             android:id="@+id/action_tvSearchFragmentResult_to_tvSearchFragment"
@@ -70,7 +70,7 @@
 
     <fragment
         android:id="@+id/tvSearchFragmentResultFilter"
-        android:name="com.mustafa.movieguideapp.view.ui.search.filter.TvSearchResultFilterFragment"
+        android:name="com.mustafa.movieguideapp.view.ui.filter.TvSearchResultFilterFragment"
         android:label="tvSearchFragmentResultFilter"
         tools:layout="@layout/fragment_search_filter">
 

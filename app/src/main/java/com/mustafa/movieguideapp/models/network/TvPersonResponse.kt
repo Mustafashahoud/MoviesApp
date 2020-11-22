@@ -1,7 +1,7 @@
 package com.mustafa.movieguideapp.models.network
 
 import com.mustafa.movieguideapp.models.NetworkResponseModel
-import com.mustafa.movieguideapp.models.entity.TvPerson
+import com.mustafa.movieguideapp.models.TvPerson
 
 class TvPersonResponse(
     val cast: List<TvPerson>,

@@ -1,7 +1,7 @@
 
 package com.mustafa.movieguideapp.di
 
-import com.mustafa.movieguideapp.view.ui.main.MainActivity
+import com.mustafa.movieguideapp.view.ui.MainActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

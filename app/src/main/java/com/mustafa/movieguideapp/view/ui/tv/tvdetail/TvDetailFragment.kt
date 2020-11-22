@@ -17,13 +17,12 @@ import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.api.Api
 import com.mustafa.movieguideapp.databinding.FragmentTvDetailBinding
 import com.mustafa.movieguideapp.di.Injectable
+import com.mustafa.movieguideapp.models.Tv
 import com.mustafa.movieguideapp.models.Video
-import com.mustafa.movieguideapp.models.entity.Tv
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.ReviewListAdapter
 import com.mustafa.movieguideapp.view.adapter.VideoListAdapter
 import com.mustafa.movieguideapp.view.viewholder.VideoListViewHolder
-import kotlinx.android.synthetic.main.layout_tv_detail_body.*
 import javax.inject.Inject
 
 
@@ -66,15 +65,19 @@ class TvDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
 
 
     private fun initializeUI() {
-        binding.detailBody.detailBodyRecyclerViewTrailers
-        binding.detailBody.detailBodyRecyclerViewTrailers.layoutManager =
-            LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
-        binding.detailBody.detailBodyRecyclerViewTrailers.adapter = VideoListAdapter(this)
-        binding.detailBody.detailBodyRecyclerViewReviews.layoutManager =
-            LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        binding.detailBody.detailBodyRecyclerViewReviews.adapter = ReviewListAdapter()
-        binding.detailBody.detailBodyRecyclerViewReviews.isNestedScrollingEnabled = false
-        binding.detailBody.detailBodyRecyclerViewReviews.setHasFixedSize(true)
+        binding.apply {
+            detailBody.detailBodyRecyclerViewTrailers
+            detailBody.detailBodyRecyclerViewTrailers.layoutManager =
+                LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
+            detailBody.detailBodyRecyclerViewTrailers.adapter =
+                VideoListAdapter(this@TvDetailFragment)
+            detailBody.detailBodyRecyclerViewReviews.layoutManager =
+                LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+            detailBody.detailBodyRecyclerViewReviews.adapter = ReviewListAdapter()
+            detailBody.detailBodyRecyclerViewReviews.isNestedScrollingEnabled = false
+            detailBody.detailBodyRecyclerViewReviews.setHasFixedSize(true)
+        }
+
     }
 
     private fun getTvFromIntent(): Tv {
