@@ -1,13 +1,10 @@
 package com.mustafa.movieguideapp.view.ui.person.search
 
-import android.content.Intent
 import android.os.Bundle
-import android.speech.RecognizerIntent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingComponent
@@ -15,7 +12,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,12 +22,13 @@ import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.extension.gone
 import com.mustafa.movieguideapp.extension.inVisible
 import com.mustafa.movieguideapp.extension.visible
+import com.mustafa.movieguideapp.utils.ActivityResultApiObserver
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.PeopleSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
+import com.mustafa.movieguideapp.view.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
-import java.util.*
 import javax.inject.Inject
 
 class SearchCelebritiesFragment : Fragment(), Injectable {
@@ -42,9 +39,11 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
     @Inject
     lateinit var appExecutors: AppExecutors
 
+    private lateinit var activityResultApiObserver: ActivityResultApiObserver
+
     private val viewModel by viewModels<SearchCelebritiesResultViewModel> { viewModelFactory }
 
-    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
     private var binding by autoCleared<FragmentCelebritiesSearchBinding>()
 
@@ -52,7 +51,7 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
 
     private var arrayAdapter: ArrayAdapter<String>? = null
 
-    private var hasRecentQueriesChanged = MutableLiveData<Boolean>()
+    private val hasRecentQueriesChanged = MutableLiveData<Boolean>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,8 +69,20 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        initResultApiObserve()
         initializeUI()
         subscribers()
+    }
+
+    private fun initResultApiObserve() {
+        activityResultApiObserver =
+            ActivityResultApiObserver(requireActivity().activityResultRegistry) { query ->
+                query?.let {
+                    navigateToSearchCelebritiesResultFragment(it)
+                }
+            }
+        lifecycle.addObserver(activityResultApiObserver)
     }
 
 
@@ -88,21 +99,10 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
 
         search_view.queryHint = "Search Celebrities"
 
-        voiceSearch.setOnClickListener {
-            val voiceIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-            voiceIntent.putExtra(
-                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-            )
-            voiceIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-            if (activity?.packageManager?.let { it1 -> voiceIntent.resolveActivity(it1) } != null) {
-                startActivityForResult(voiceIntent, 10)
-            } else {
-                Toast.makeText(
-                    context,
-                    "your device does not support Speech Input",
-                    Toast.LENGTH_SHORT
-                ).show()
+        voice_search.setOnClickListener {
+            val voiceIntent = (activity as MainActivity).getVoiceRecognitionIntent()
+            voiceIntent?.let {
+                activityResultApiObserver.startVoiceRecognitionActivityForResult(it)
             }
         }
 
@@ -113,7 +113,7 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
 
         search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                navigateToSearchCelebritiesResultFragment(query)
+                query?.let { navigateToSearchCelebritiesResultFragment(query) }
                 return true
             }
 
@@ -149,57 +149,60 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
                     it
                 )
             )
-
         }
-        recyclerView_suggestion.adapter = adapter
-        recyclerView_suggestion.layoutManager = LinearLayoutManager(context)
+        binding.apply {
+            recyclerViewSuggestion.adapter = adapter
+            recyclerViewSuggestion.layoutManager = LinearLayoutManager(context)
+        }
     }
 
-    private fun navigateToSearchCelebritiesResultFragment(query: String?) {
+    private fun navigateToSearchCelebritiesResultFragment(query: String) {
         findNavController().navigate(
             SearchCelebritiesFragmentDirections.actionSearchCelebritiesFragmentToSearchCelebritiesResultFragment(
-                query!!
+                query
             )
         )
     }
 
 
     private fun subscribers() {
-        viewModel.getPeopleRecentQueries().observe(viewLifecycleOwner, Observer {
+        viewModel.getPeopleRecentQueries().observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty()) {
                 val queries = it.map { peopleRecentQuery -> peopleRecentQuery.query }
                 setListViewOfRecentQueries(queries)
             }
-        })
+        }
 
-        hasRecentQueriesChanged.observe(viewLifecycleOwner, Observer {
+        hasRecentQueriesChanged.observe(viewLifecycleOwner) {
             arrayAdapter?.let { adapter -> clear_recent_queries.isClickable = !adapter.isEmpty }
-        })
+        }
     }
 
     /**
      *
      */
     private fun setListViewOfRecentQueries(queries: List<String?>) {
-        arrayAdapter = ArrayAdapter<String>(
+        arrayAdapter = ArrayAdapter(
             requireContext(),
             R.layout.recent_query_item,
             queries.requireNoNulls()
         )
         hasRecentQueriesChanged.value = true
-        listView_recent_queries.setHeaderDividersEnabled(true)
-        listView_recent_queries.setFooterDividersEnabled(true)
-        listView_recent_queries.adapter = arrayAdapter
-        listView_recent_queries.setOnItemClickListener { parent, _, position, _ ->
-            val query = parent.getItemAtPosition(position) as String
-            navigateToSearchCelebritiesResultFragment(query)
+        binding.apply {
+            listViewRecentQueries.setHeaderDividersEnabled(true)
+            listViewRecentQueries.setFooterDividersEnabled(true)
+            listViewRecentQueries.adapter = arrayAdapter
+            listViewRecentQueries.setOnItemClickListener { parent, _, position, _ ->
+                val query = parent.getItemAtPosition(position) as String
+                navigateToSearchCelebritiesResultFragment(query)
+            }
         }
 
 
     }
 
     private fun observeSuggestions(newText: String?) {
-        viewModel.peopleSuggestions.observe(viewLifecycleOwner, Observer {
+        viewModel.peopleSuggestions.observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty()) {
                 showSuggestionViewAndHideRecentSearches()
             }
@@ -211,18 +214,22 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
                     adapter.submitList(null)
                 }
             }
-        })
+        }
     }
 
     private fun hideSuggestionViewAndShowRecentSearches() {
-        recent_queries_bar.visible()
-        listView_recent_queries.visible()
-        recyclerView_suggestion.inVisible()
+        binding.apply {
+            recentQueriesBar.visible()
+            listViewRecentQueries.visible()
+            recyclerViewSuggestion.inVisible()
+        }
     }
 
     private fun showSuggestionViewAndHideRecentSearches() {
-        recent_queries_bar.gone()
-        listView_recent_queries.inVisible()
-        recyclerView_suggestion.visible()
+        binding.apply {
+            recentQueriesBar.gone()
+            listViewRecentQueries.inVisible()
+            recyclerViewSuggestion.visible()
+        }
     }
 }

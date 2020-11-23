@@ -1,6 +1,9 @@
 package com.mustafa.movieguideapp.view.ui.main
 
+import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
@@ -15,6 +18,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 import javax.inject.Inject
 
 
@@ -76,11 +80,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         } else super.onBackPressed()
     }
 
-    companion object {
-        const val MOVIE_LIST_FRAGMENT = "MovieListFragment"
-        const val TV_LIST_FRAGMENT = "TvListFragment"
-        const val CELEBRITY_LIST_FRAGMENT = "CelebritiesListFragment"
-    }
+
 
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -152,6 +152,30 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
             .setFullScreen(true)
             .setDuration(3000)
             .show()
+    }
+
+    companion object {
+        const val MOVIE_LIST_FRAGMENT = "MovieListFragment"
+        const val TV_LIST_FRAGMENT = "TvListFragment"
+        const val CELEBRITY_LIST_FRAGMENT = "CelebritiesListFragment"
+    }
+
+    fun getVoiceRecognitionIntent(): Intent? {
+        val voiceIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        with(voiceIntent) {
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+        }
+        return if (this.packageManager?.let { packageManager -> voiceIntent.resolveActivity(packageManager) } != null) {
+            voiceIntent
+        } else {
+            Toast.makeText(
+                this,
+                "your device does not support Speech Input",
+                Toast.LENGTH_SHORT
+            ).show()
+            null
+        }
     }
 }
 

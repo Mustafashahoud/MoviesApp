@@ -10,9 +10,6 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
@@ -27,6 +24,7 @@ import com.mustafa.movieguideapp.extension.gone
 import com.mustafa.movieguideapp.extension.inVisible
 import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.models.SelectableItem
+import com.mustafa.movieguideapp.utils.ActivityResultApiObserver
 import com.mustafa.movieguideapp.utils.Constants.Companion.VOICE_REQUEST_CODE
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.COUNTRIES
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.GENRES
@@ -43,13 +41,11 @@ import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.ratingFilters
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.runtimeFilters
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.yearFilters
 import com.mustafa.movieguideapp.view.adapter.FilterMultiSelectableAdapter
+import com.mustafa.movieguideapp.view.ui.main.MainActivity
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search_filter.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
 import org.jetbrains.anko.textColor
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 abstract class SearchFragmentBase : Fragment() {
 
@@ -69,9 +65,11 @@ abstract class SearchFragmentBase : Fragment() {
 
     private var arrayAdapter: ArrayAdapter<String>? = null
 
+    private lateinit var activityResultApiObserver: ActivityResultApiObserver
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initResultApiObserve()
         observeRecentQueriesChanged()
         initializeUI()
         subscribers()
@@ -89,6 +87,17 @@ abstract class SearchFragmentBase : Fragment() {
         }
 
     }
+
+    private fun initResultApiObserve() {
+        activityResultApiObserver =
+            ActivityResultApiObserver(requireActivity().activityResultRegistry) { query ->
+                query?.let {
+                    navigateFromSearchFragmentToSearchFragmentResult(it)
+                }
+            }
+        lifecycle.addObserver(activityResultApiObserver)
+    }
+
 
     private fun observeRecentQueriesChanged() {
         hasRecentQueriesChanged.observe(viewLifecycleOwner) {
@@ -380,14 +389,9 @@ abstract class SearchFragmentBase : Fragment() {
     private fun initToolbar() {
 
         voice_search.setOnClickListener {
-            val voiceIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-            voiceIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-            voiceIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-            if (activity?.packageManager?.let { packageManager -> voiceIntent.resolveActivity(packageManager) } != null) {
-                startActivityForResult(voiceIntent, 10)
-
-            } else {
-                Toast.makeText(context, "your device does not support Speech Input", Toast.LENGTH_SHORT).show()
+            val voiceIntent = (activity as MainActivity).getVoiceRecognitionIntent()
+            voiceIntent?.let {
+                activityResultApiObserver.startVoiceRecognitionActivityForResult(it)
             }
         }
 
