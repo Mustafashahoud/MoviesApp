@@ -34,7 +34,7 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
     lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<TvSearchViewModel> { viewModelFactory }
-    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentSearchBinding>()
     private var tvAdapter by autoCleared<TvSearchListAdapter>()
 

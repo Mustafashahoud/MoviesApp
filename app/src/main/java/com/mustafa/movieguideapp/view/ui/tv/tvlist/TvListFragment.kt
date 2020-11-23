@@ -11,17 +11,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentTvsBinding
 import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.Status
+import com.mustafa.movieguideapp.utils.InfinitePager
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.TvListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
-import kotlinx.android.synthetic.main.fragment_tvs.*
 import kotlinx.android.synthetic.main.toolbar_search.*
 import javax.inject.Inject
 
@@ -33,7 +32,7 @@ class TvListFragment : Fragment(), Injectable {
     @Inject
     lateinit var appExecutors: AppExecutors
 
-    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
     private val viewModel by viewModels<TvListViewModel> { viewModelFactory }
     private var binding by autoCleared<FragmentTvsBinding>()
@@ -81,22 +80,23 @@ class TvListFragment : Fragment(), Injectable {
                 )
             )
         }
-//        adapter.setHasStableIds(true)
-        recyclerView_list_tvs.adapter = adapter
-        recyclerView_list_tvs.layoutManager = GridLayoutManager(context, 3)
-        recyclerView_list_tvs.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as GridLayoutManager
-                val lastPosition = layoutManager.findLastVisibleItemPosition()
-                if (lastPosition == adapter.itemCount - 1
-                    && viewModel.tvListLiveData.value?.status != Status.LOADING
-                ) {
-                    viewModel.tvListLiveData.value?.let {
-                        if (it.hasNextPage) viewModel.loadMore()
+        with(binding) {
+            recyclerViewListTvs.adapter = adapter
+            recyclerViewListTvs.layoutManager = GridLayoutManager(context, 3)
+            recyclerViewListTvs.addOnScrollListener(object : InfinitePager(adapter) {
+                override fun loadMoreCondition(): Boolean {
+                    viewModel.tvListLiveData.value?.let { resource ->
+                        return resource.hasNextPage && resource.status != Status.LOADING
                     }
+                    return false
                 }
-            }
-        })
+
+                override fun loadMore() {
+                    viewModel.loadMore()
+                }
+            })
+        }
+
 
         search_icon.setOnClickListener {
             findNavController().navigate(

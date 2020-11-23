@@ -43,7 +43,7 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
 
     private val viewModel by viewModels<SearchCelebritiesResultViewModel> { viewModelFactory }
 
-    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
     private var binding by autoCleared<FragmentCelebritiesSearchBinding>()
 
@@ -124,7 +124,7 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
             }
         })
 
-        clear_recent_queries.setOnClickListener {
+        binding.clearRecentQueries.setOnClickListener {
             arrayAdapter?.let {
                 val builder = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
                 builder.setMessage(R.string.dialog_message)

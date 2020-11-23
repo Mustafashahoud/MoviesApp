@@ -34,7 +34,7 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
 
     private val viewModel by viewModels<MovieSearchViewModel> { viewModelFactory }
 
-    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
     private var binding by autoCleared<FragmentSearchBinding>()
 

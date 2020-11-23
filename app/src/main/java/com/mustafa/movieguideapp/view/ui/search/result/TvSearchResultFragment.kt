@@ -11,13 +11,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentTvSearchResultBinding
 import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.extension.hideKeyboard
 import com.mustafa.movieguideapp.models.Status
+import com.mustafa.movieguideapp.utils.InfinitePager
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.TvSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
@@ -106,18 +106,16 @@ class TvSearchResultFragment : Fragment(), Injectable {
 
         recyclerView_search_result_tvs.layoutManager = LinearLayoutManager(context)
 
-        recyclerView_search_result_tvs.addOnScrollListener(object :
-            RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val lastPosition = layoutManager.findLastVisibleItemPosition()
-                if (lastPosition == adapter.itemCount - 1
-                    && viewModel.searchTvListLiveData.value?.status != Status.LOADING
-                ) {
-                    if (viewModel.searchTvListLiveData.value?.hasNextPage!!) {
-                        viewModel.loadMore()
-                    }
+        recyclerView_search_result_tvs.addOnScrollListener(object : InfinitePager(adapter) {
+            override fun loadMoreCondition(): Boolean {
+                viewModel.searchTvListLiveData.value?.let { resource ->
+                    return resource.hasNextPage && resource.status != Status.LOADING
                 }
+                return false
+            }
+
+            override fun loadMore() {
+                viewModel.loadMore()
             }
         })
 

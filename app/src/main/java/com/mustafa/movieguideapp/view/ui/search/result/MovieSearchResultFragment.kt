@@ -11,20 +11,18 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentMovieSearchResultBinding
 import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.extension.hideKeyboard
 import com.mustafa.movieguideapp.models.Status
+import com.mustafa.movieguideapp.utils.InfinitePager
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MovieSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
 import com.mustafa.movieguideapp.view.ui.search.MovieSearchViewModel
-import kotlinx.android.synthetic.main.fragment_movie_search_result.*
-import kotlinx.android.synthetic.main.fragment_movie_search_result.view.*
 import kotlinx.android.synthetic.main.toolbar_search_result.*
 import javax.inject.Inject
 
@@ -37,7 +35,7 @@ class MovieSearchResultFragment : Fragment(), Injectable {
     lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<MovieSearchViewModel> { viewModelFactory }
-    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentMovieSearchResultBinding>()
     private var adapter by autoCleared<MovieSearchListAdapter>()
 
@@ -103,24 +101,24 @@ class MovieSearchResultFragment : Fragment(), Injectable {
         }
 
         hideKeyboard()
-        binding.root.recyclerView_search_result_movies.adapter = adapter
-
-        recyclerView_search_result_movies.layoutManager = LinearLayoutManager(context)
-
-        recyclerView_search_result_movies.addOnScrollListener(object :
-            RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val lastPosition = layoutManager.findLastVisibleItemPosition()
-                if (lastPosition == adapter.itemCount - 1
-                    && viewModel.searchMovieListLiveData.value?.status != Status.LOADING
-                ) {
-                    if (viewModel.searchMovieListLiveData.value?.hasNextPage!!) {
-                        viewModel.loadMore()
+        with(binding) {
+            recyclerViewSearchResultMovies.adapter = adapter
+            recyclerViewSearchResultMovies.layoutManager = LinearLayoutManager(context)
+            recyclerViewSearchResultMovies.addOnScrollListener(object : InfinitePager(adapter) {
+                override fun loadMoreCondition(): Boolean {
+                    viewModel.searchMovieListLiveData.value?.let { resource ->
+                        return resource.hasNextPage && resource.status != Status.LOADING
                     }
+                    return false
                 }
-            }
-        })
+
+                override fun loadMore() {
+                    viewModel.loadMore()
+                }
+            })
+        }
+
+
 
         search_view.setOnSearchClickListener {
             findNavController().navigate(

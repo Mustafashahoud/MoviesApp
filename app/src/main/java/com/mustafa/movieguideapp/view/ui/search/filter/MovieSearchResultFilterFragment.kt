@@ -20,8 +20,6 @@ import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MovieSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
-import kotlinx.android.synthetic.main.fragment_search_result_filter.*
-import kotlinx.android.synthetic.main.fragment_search_result_filter.view.*
 import javax.inject.Inject
 
 class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectable,
@@ -34,7 +32,7 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
     lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<MovieSearchFilterViewModel> { viewModelFactory }
-    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentSearchResultFilterBinding>()
     private var adapter by autoCleared<MovieSearchListAdapter>()
 
@@ -92,13 +90,14 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
             )
         }
 
-        binding.root.filtered_items_recycler_view.adapter = adapter
-
-        filtered_items_recycler_view.layoutManager = LinearLayoutManager(
-            context,
-            LinearLayoutManager.VERTICAL,
-            false
-        )
+        with(binding) {
+            filteredItemsRecyclerView.adapter = adapter
+            filteredItemsRecyclerView.layoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        }
     }
 
     override fun loadMoreFilters() {
