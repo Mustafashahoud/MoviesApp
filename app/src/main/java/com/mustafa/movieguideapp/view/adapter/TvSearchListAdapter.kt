@@ -20,7 +20,7 @@ class TvSearchListAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Tv, newItem: Tv): Boolean {
-            return oldItem == (newItem)
+            return oldItem == newItem
         }
     }
 ) {

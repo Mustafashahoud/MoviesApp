@@ -18,7 +18,6 @@ import com.mustafa.movieguideapp.models.entity.Person
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MoviePersonListAdapter
 import com.mustafa.movieguideapp.view.adapter.TvPersonListAdapter
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import kotlinx.android.synthetic.main.toolbar_detail.*
 import javax.inject.Inject
 
@@ -27,9 +26,6 @@ class CelebrityDetailFragment : Fragment(), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var appExecutors: AppExecutors
 
     var dataBindingComponent = FragmentDataBindingComponent(this)
 
@@ -46,7 +42,7 @@ class CelebrityDetailFragment : Fragment(), Injectable {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_celebrity_detail,

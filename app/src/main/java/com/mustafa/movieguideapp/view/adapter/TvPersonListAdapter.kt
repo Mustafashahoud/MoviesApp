@@ -6,11 +6,8 @@ import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import com.mustafa.movieguideapp.R
-import com.mustafa.movieguideapp.databinding.ItemMovieBinding
-import com.mustafa.movieguideapp.databinding.ItemMovieForCelebrityBinding
 import com.mustafa.movieguideapp.databinding.ItemTvForCelebrityBinding
 import com.mustafa.movieguideapp.models.entity.TvPerson
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.DataBoundListAdapter
 
 class TvPersonListAdapter(
@@ -23,18 +20,18 @@ class TvPersonListAdapter(
         }
 
         override fun areContentsTheSame(oldItem: TvPerson, newItem: TvPerson): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem == newItem
         }
     }
 ) {
 
     override fun createBinding(parent: ViewGroup): ItemTvForCelebrityBinding {
         val binding = DataBindingUtil.inflate<ItemTvForCelebrityBinding>(
-                LayoutInflater.from(parent.context),
-                R.layout.item_tv_for_celebrity,
-                parent,
-                false,
-                dataBindingComponent
+            LayoutInflater.from(parent.context),
+            R.layout.item_tv_for_celebrity,
+            parent,
+            false,
+            dataBindingComponent
         )
         binding.root.setOnClickListener {
             binding.tv?.let {

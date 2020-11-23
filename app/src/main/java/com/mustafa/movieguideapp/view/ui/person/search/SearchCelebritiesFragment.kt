@@ -15,7 +15,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,7 +27,6 @@ import com.mustafa.movieguideapp.extension.inVisible
 import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.PeopleSearchListAdapter
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
 import java.util.*
@@ -38,9 +36,6 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<SearchCelebritiesResultViewModel> { viewModelFactory }
 
@@ -58,7 +53,7 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_celebrities_search,
@@ -172,9 +167,9 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
             }
         })
 
-        hasRecentQueriesChanged.observe(viewLifecycleOwner, Observer {
+        hasRecentQueriesChanged.observe(viewLifecycleOwner) {
             arrayAdapter?.let { adapter -> clear_recent_queries.isClickable = !adapter.isEmpty }
-        })
+        }
     }
 
     /**
@@ -199,7 +194,7 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
     }
 
     private fun observeSuggestions(newText: String?) {
-        viewModel.peopleSuggestions.observe(viewLifecycleOwner, Observer {
+        viewModel.peopleSuggestions.observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty()) {
                 showSuggestionViewAndHideRecentSearches()
             }
@@ -211,7 +206,7 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
                     adapter.submitList(null)
                 }
             }
-        })
+        }
     }
 
     private fun hideSuggestionViewAndShowRecentSearches() {

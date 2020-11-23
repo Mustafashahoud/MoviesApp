@@ -19,7 +19,6 @@ import com.mustafa.movieguideapp.extension.hideKeyboard
 import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MovieSearchListAdapter
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.InfinitePager
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
 import com.mustafa.movieguideapp.view.ui.search.MovieSearchViewModel
@@ -31,9 +30,6 @@ class MovieSearchResultFragment : Fragment(), Injectable {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject
-    lateinit var appExecutors: AppExecutors
-
     private val viewModel by viewModels<MovieSearchViewModel> { viewModelFactory }
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     var binding by autoCleared<FragmentMovieSearchResultBinding>()
@@ -43,7 +39,7 @@ class MovieSearchResultFragment : Fragment(), Injectable {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_movie_search_result,
@@ -80,7 +76,7 @@ class MovieSearchResultFragment : Fragment(), Injectable {
     }
 
 
-    private fun getQuerySafeArgs(): String? {
+    private fun getQuerySafeArgs(): String {
         val params =
             MovieSearchResultFragmentArgs.fromBundle(
                 requireArguments()

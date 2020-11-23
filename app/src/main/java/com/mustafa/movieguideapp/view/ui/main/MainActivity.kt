@@ -4,14 +4,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.extension.*
 import com.mustafa.movieguideapp.utils.setupWithNavController
-import com.rbddevs.splashy.Splashy
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -36,13 +34,13 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         } // Else, need to wait for onRestoreInstanceState
         setOnNavigationItemReselected()
 
-        currentNavController?.observe(this, Observer { navController ->
+        currentNavController?.observe(this) { navController ->
             navController.addOnDestinationChangedListener { _, destination, _ ->
                 if (isMainFragment(destination)) {
                     findViewById<BottomNavigationView>(R.id.bottom_navigation).visible()
                 } else findViewById<BottomNavigationView>(R.id.bottom_navigation).gone()
             }
-        })
+        }
     }
 
 
@@ -57,19 +55,19 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         val currentFragmentName = (currentFragment as Fragment).javaClass.simpleName
 
         if (currentFragmentName == MOVIE_LIST_FRAGMENT) {
-            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_movies)!!) {
+            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_movies)) {
                 currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_movies)
             } else {
                 super.onBackPressed()
             }
         } else if (currentFragmentName == TV_LIST_FRAGMENT) {
-            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_tvs)!!) {
+            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_tvs)) {
                 currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_tvs)
             } else {
                 super.onBackPressed()
             }
         } else if (currentFragmentName == CELEBRITY_LIST_FRAGMENT) {
-            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_celebrities)!!) {
+            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_celebrities)) {
                 currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_celebrities)
             } else {
                 super.onBackPressed()

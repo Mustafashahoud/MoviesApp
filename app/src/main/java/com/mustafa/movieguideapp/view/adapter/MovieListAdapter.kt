@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.DiffUtil
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.databinding.ItemMovieBinding
 import com.mustafa.movieguideapp.models.entity.Movie
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.DataBoundListAdapter
 
 class MovieListAdapter(
@@ -21,24 +20,19 @@ class MovieListAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-            return oldItem.backdrop_path == newItem.backdrop_path
-                    && oldItem.original_title == newItem.original_title
-                    && oldItem.original_language == newItem.original_language
-                    && oldItem.page == newItem.page
-                    && oldItem.vote_count == newItem.vote_count
-                    && oldItem.vote_average == newItem.vote_average
-                    && oldItem.id == newItem.id
+            return oldItem == newItem
+
         }
     }
 ) {
 
     override fun createBinding(parent: ViewGroup): ItemMovieBinding {
         val binding = DataBindingUtil.inflate<ItemMovieBinding>(
-                LayoutInflater.from(parent.context),
-                R.layout.item_movie,
-                parent,
-                false,
-                dataBindingComponent
+            LayoutInflater.from(parent.context),
+            R.layout.item_movie,
+            parent,
+            false,
+            dataBindingComponent
         )
         binding.root.setOnClickListener {
             binding.movie?.let {

@@ -1,14 +1,6 @@
 package com.mustafa.movieguideapp.room
 
-import android.util.SparseIntArray
-import androidx.collection.SparseArrayCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.mustafa.movieguideapp.models.entity.*
 
 @Dao
@@ -85,7 +77,6 @@ abstract class PeopleDao {
 //            people.sortedWith(compareBy { order.get(it.id) })
 //        }
 //    }
-
 
 
 //    fun loadSearchPeopleListOrdered(peopleIds: List<Int>): LiveData<List<Person>> {

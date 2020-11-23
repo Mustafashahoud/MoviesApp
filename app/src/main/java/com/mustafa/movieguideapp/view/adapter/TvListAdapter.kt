@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.DiffUtil
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.databinding.ItemTvBinding
 import com.mustafa.movieguideapp.models.entity.Tv
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.DataBoundListAdapter
 
 class TvListAdapter(
@@ -21,7 +20,7 @@ class TvListAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Tv, newItem: Tv): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem == newItem
         }
     }
 ) {

@@ -87,7 +87,7 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
      */
 
 
-    private fun getKeywordsAsSeparatedString(): String? {
+    private fun getKeywordsAsSeparatedString(): String {
         return StringUtils.mapKeywordsToSeparatedIds(filtersMap?.get(FiltersConstants.KEYWORDS))
     }
 

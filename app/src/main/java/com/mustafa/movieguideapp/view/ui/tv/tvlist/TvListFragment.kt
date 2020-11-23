@@ -18,7 +18,6 @@ import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.TvListAdapter
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.InfinitePager
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
 import kotlinx.android.synthetic.main.toolbar_search.*
@@ -28,9 +27,6 @@ class TvListFragment : Fragment(), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var appExecutors: AppExecutors
 
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
@@ -46,7 +42,7 @@ class TvListFragment : Fragment(), Injectable {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_tvs,

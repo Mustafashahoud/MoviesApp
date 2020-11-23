@@ -18,7 +18,6 @@ import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MovieSearchListAdapter
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
 import javax.inject.Inject
 
@@ -27,9 +26,6 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<MovieSearchFilterViewModel> { viewModelFactory }
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
@@ -41,7 +37,7 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_search_result_filter,

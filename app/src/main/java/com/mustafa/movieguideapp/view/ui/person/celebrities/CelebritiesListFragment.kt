@@ -18,7 +18,6 @@ import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.PeopleAdapter
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.InfinitePager
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
 import kotlinx.android.synthetic.main.toolbar_search.*
@@ -28,9 +27,6 @@ class CelebritiesListFragment : Fragment(), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var appExecutors: AppExecutors
 
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
@@ -43,7 +39,7 @@ class CelebritiesListFragment : Fragment(), Injectable {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_celebrities,

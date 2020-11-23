@@ -80,6 +80,8 @@ class FilterMultiSelectableAdapter(
         notifyDataSetChanged()
     }
 
+
+    @Suppress("unused")
     fun selectItems(itemsToSelect: List<String>) {
         for (itemToSelect in itemsToSelect) {
             for (item in items) {

@@ -6,7 +6,6 @@ import androidx.lifecycle.switchMap
 import com.mustafa.movieguideapp.repository.DiscoverRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.view.ViewModelBase
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
@@ -18,9 +17,6 @@ class MovieListViewModel @Inject constructor(
 
     private var pageNumber = 1
     private val moviePageLiveData: MutableLiveData<Int> = MutableLiveData()
-
-    @Inject
-    lateinit var appExecutors: AppExecutors
 
     val movieListLiveData = moviePageLiveData.switchMap { pageNumber ->
         launchOnViewModelScope {

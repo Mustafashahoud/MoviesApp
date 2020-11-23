@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.DiffUtil
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.databinding.ItemPersonBinding
 import com.mustafa.movieguideapp.models.entity.Person
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.DataBoundListAdapter
 
 class PeopleAdapter(
@@ -21,7 +20,7 @@ class PeopleAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Person, newItem: Person): Boolean {
-            return oldItem == (newItem)
+            return oldItem == newItem
         }
     }
 ) {

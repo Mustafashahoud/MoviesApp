@@ -59,11 +59,6 @@ class TvSearchFilterViewModel @Inject constructor(
         searchTvFilterPageLiveData.value = page
     }
 
-    //For Testing
-    fun setPage(page: Int?) {
-        searchTvFilterPageLiveData.value = page
-    }
-
     fun loadMoreFilters() {
         pageFiltersNumber++
         searchTvFilterPageLiveData.value = pageFiltersNumber

@@ -24,10 +24,6 @@ constructor(private val discoverRepository: DiscoverRepository, dispatcherIO: Co
         }
     }
 
-    fun setTvPage(page: Int) {
-        tvPageLiveData.value = page
-    }
-
     init {
         tvPageLiveData.value = 1
     }

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 abstract class InfinitePager(val adapter: RecyclerView.Adapter<*>) :
     RecyclerView.OnScrollListener() {
-    var isScrolling = false
+    private var isScrolling = false
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         val layoutManager = when (recyclerView.layoutManager) {

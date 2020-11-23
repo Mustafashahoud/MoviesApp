@@ -17,7 +17,6 @@ import com.mustafa.movieguideapp.databinding.FragmentSearchBinding
 import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MovieSearchListAdapter
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.search.base.SearchFragmentBase
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
@@ -27,9 +26,6 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<MovieSearchViewModel> { viewModelFactory }
 
@@ -45,7 +41,7 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_search,

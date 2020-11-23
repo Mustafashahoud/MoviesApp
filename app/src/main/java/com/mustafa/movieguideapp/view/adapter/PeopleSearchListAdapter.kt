@@ -20,7 +20,7 @@ class PeopleSearchListAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Person, newItem: Person): Boolean {
-            return oldItem == (newItem)
+            return oldItem == newItem
         }
     }
 ) {

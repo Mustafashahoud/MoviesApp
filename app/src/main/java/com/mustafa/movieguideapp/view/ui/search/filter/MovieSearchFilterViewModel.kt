@@ -1,8 +1,8 @@
 package com.mustafa.movieguideapp.view.ui.search.filter
 
-import androidx.lifecycle.*
-import com.mustafa.movieguideapp.models.Resource
-import com.mustafa.movieguideapp.models.entity.Movie
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.switchMap
 import com.mustafa.movieguideapp.repository.DiscoverRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.AbsentLiveData
@@ -59,10 +59,6 @@ class MovieSearchFilterViewModel @Inject constructor(
         this.genres = genres
         this.region = region
         this.rating = rating
-        searchMovieFilterPageLiveData.value = page
-    }
-
-    fun setPage(page: Int?) {
         searchMovieFilterPageLiveData.value = page
     }
 
