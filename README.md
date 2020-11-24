@@ -24,6 +24,7 @@
 | ------------- | ------------- |
 | [master](https://github.com/Mustafashahoud/MoviesApp/tree/master) | The base for the rest of the other branch. <br/>Uses Kotlin, Architecture Components, AppExecutors, Dagger, Retrofit Data Binding, etc. and uses Room as source of truth, with a reactive UI. |
 | [coroutines-flow](https://github.com/Mustafashahoud/MoviesApp/tree/coroutines-flow)| Same like the master branch but much better as it uses coroutines Flow (single source of truth with Flow). For testing coroutines Flow check [Tandem Repository](https://github.com/Mustafashahoud/Tandem). |
+| [paging3-network](https://github.com/Mustafashahoud/MoviesApp/tree/paging3-network)| . This branch uses Paging3 library to handle paging, it is wayyy easier. |
 
 ## App Demo
 
