@@ -4,22 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentSearchResultFilterBinding
 import com.mustafa.movieguideapp.di.Injectable
-import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.utils.autoCleared
-import com.mustafa.movieguideapp.view.adapter.MovieSearchListAdapter
-import com.mustafa.movieguideapp.view.ui.common.RetryCallback
+import com.mustafa.movieguideapp.view.adapter.FilteredMoviesAdapter
+import com.mustafa.movieguideapp.view.adapter.LoadStateAdapter
 import javax.inject.Inject
 
 class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectable,
@@ -31,13 +32,13 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
     private val viewModel by viewModels<MovieSearchFilterViewModel> { viewModelFactory }
     private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentSearchResultFilterBinding>()
-    private var adapter by autoCleared<MovieSearchListAdapter>()
+    private var pagingAdapter by autoCleared<FilteredMoviesAdapter>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_search_result_filter,
@@ -57,46 +58,64 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
             lifecycleOwner = this@MovieSearchResultFilterFragment
             totalFilterResult = viewModel.totalMoviesCount
             selectedFilters = setSelectedFilters()
-            callback = object : RetryCallback {
-                override fun retry() {
-                    viewModel.refresh()
-                }
-            }
         }
     }
 
     override fun observeSubscribers() {
-        viewModel.searchMovieListFilterLiveData.observe(viewLifecycleOwner, Observer {
-            binding.resource = viewModel.searchMovieListFilterLiveData.value
-            if (it.data != null && it.data.isNotEmpty()) {
-                adapter.submitList(it.data)
-            }
-        })
+        viewModel.searchMovieListFilterLiveData.observe(viewLifecycleOwner) {
+            pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+
+        }
     }
 
     override fun setRecyclerViewAdapter() {
-        adapter = MovieSearchListAdapter(dataBindingComponent) {
-            findNavController().navigate(
-                MovieSearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieDetail(
-                    it
-                )
+        initAdapter()
+    }
+
+    private fun initAdapter() {
+        pagingAdapter = FilteredMoviesAdapter(
+            dataBindingComponent
+        ) {
+            MovieSearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieDetail(
+                it
             )
         }
 
-        binding.filteredItemsRecyclerView.adapter = adapter
-        binding.filteredItemsRecyclerView.layoutManager = LinearLayoutManager(
-            context,
-            LinearLayoutManager.VERTICAL,
-            false
-        )
+        binding.filteredItemsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(
+                requireContext(), LinearLayoutManager.VERTICAL, false
+            )
+            adapter = pagingAdapter.withLoadStateFooter(
+                footer = LoadStateAdapter { pagingAdapter.retry() }
+            )
+            this.setHasFixedSize(true)
+        }
+
+        pagingAdapter.addLoadStateListener { loadState ->
+            binding.filteredItemsRecyclerView.isVisible = loadState.refresh is LoadState.NotLoading
+            binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
+            binding.retry.isVisible = loadState.refresh is LoadState.Error
+            // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
+            val errorState = loadState.source.append as? LoadState.Error
+                ?: loadState.source.prepend as? LoadState.Error
+                ?: loadState.append as? LoadState.Error
+                ?: loadState.prepend as? LoadState.Error
+            errorState?.let {
+                Toast.makeText(
+                    requireContext(),
+                    "\uD83D\uDE28 Wooops ${it.error}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
-    override fun loadMoreFilters() {
-        viewModel.loadMoreFilters()
+    override fun initUI() {
+        setRetrySetOnClickListener()
     }
 
-    override fun isLoading(): Boolean {
-        return viewModel.searchMovieListFilterLiveData.value is Resource.Loading
+    private fun setRetrySetOnClickListener() {
+        binding.retry.setOnClickListener { pagingAdapter.retry() }
     }
 
     override fun navigateFromSearchResultFilterFragmentToSearchFragment() {
@@ -104,14 +123,6 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
             MovieSearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieSearchFragment()
         )
     }
-
-    override fun hasNextPage(): Boolean {
-        viewModel.searchMovieListFilterLiveData.value?.let {
-            return it.hasNextPage
-        }
-        return false
-    }
-
 
     override fun resetAndLoadFiltersSortedBy(order: String) {
         viewModel.resetFilterValues()

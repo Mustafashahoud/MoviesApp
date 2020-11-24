@@ -13,7 +13,7 @@ class PeoplePagingSource @Inject constructor(private val backend: PeopleService)
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Person> {
         return try {
             val currentLoadingPageKey = params.key ?: TMDB_STARTING_PAGE_INDEX
-            val response = backend.fetchPopularPeople2(page = currentLoadingPageKey)
+            val response = backend.fetchPopularPeople(page = currentLoadingPageKey)
             val people = response.results
 
             LoadResult.Page(

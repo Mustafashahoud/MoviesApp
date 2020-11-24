@@ -11,7 +11,7 @@ import retrofit2.http.Query
 interface PeopleService {
 
     @GET("/3/person/popular?language=en")
-    suspend fun fetchPopularPeople2(@Query("page") page: Int): PeopleResponse
+    suspend fun fetchPopularPeople(@Query("page") page: Int): PeopleResponse
 
     @GET("/3/person/{person_id}")
     suspend fun fetchPersonDetail(@Path("person_id") id: Int): ApiResponse<PersonDetail>
@@ -21,5 +21,11 @@ interface PeopleService {
 
     @GET("/3/person/{person_id}/tv_credits")
     suspend fun fetchPersonTvs(@Path("person_id") id: Int): ApiResponse<TvPersonResponse>
+
+    @GET("/3/search/person")
+    suspend fun searchPeople(
+        @Query("query") query: String,
+        @Query("page") page: Int
+    ): PeopleResponse
 
 }

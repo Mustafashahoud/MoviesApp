@@ -19,7 +19,7 @@ class SearchPeoplePagingSource @Inject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Person> {
         return try {
             val currentLoadingPageKey = params.key ?: TMDB_STARTING_PAGE_INDEX
-            val response = service.fetchPopularPeople2(page = currentLoadingPageKey)
+            val response = service.searchPeople(query, page = currentLoadingPageKey)
             val people = response.results
 
             if (search) peopleDao?.insertQuery(PeopleRecentQueries(query))

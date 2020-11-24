@@ -119,7 +119,6 @@ dependencies {
     def androidxVersion = '1.0.0'
     def appCompatVersion = '1.1.0'
     def androidFragment = '1.2.5'
-    def recyclerVersion = '1.1.0'
     def ankoVersion = '0.10.8'
     def archComponentVersion = '2.1.0'
     def lifecycleVersion = '2.2.0'
@@ -150,7 +149,7 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:$androidFragment"
     implementation 'com.google.android.material:material:1.1.0'
     implementation "androidx.palette:palette-ktx:$androidxVersion"
-    implementation "androidx.recyclerview:recyclerview:$recyclerVersion"
+    implementation "androidx.recyclerview:recyclerview:1.2.0-alpha06"
     implementation "androidx.constraintlayout:constraintlayout:2.0.4"
 
     // kotlin
@@ -175,9 +174,9 @@ dependencies {
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
     // dependency injection
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    implementation "com.google.dagger:dagger-android:$daggerVersion"
-    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    implementation "com.google.dagger:dagger:2.30"
+    implementation "com.google.dagger:dagger-android:2.30"
+    implementation "com.google.dagger:dagger-android-support:2.30"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
 

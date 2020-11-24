@@ -5,7 +5,7 @@ buildscript {
         compileSdkVersion = 29
         minSdkVersion = 23
         targetSdkVersion = 29
-        kotlinVersion = '1.4.10'
+        kotlinVersion = '1.4.20'
         navVersion = '2.2.2'
     }
 

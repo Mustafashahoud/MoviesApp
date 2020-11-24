@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.di.Injectable
@@ -55,19 +54,10 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
     protected fun getFilterData() = filtersData
 
     private fun initializeUI() {
-        setRecyclerViewAdapter()
 
-        nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, _, scrollY, _, oldScrollY ->
-            if (v?.getChildAt(v.childCount - 1) != null) {
-                if ((scrollY >= (v.getChildAt(v.childCount - 1).measuredHeight - v.measuredHeight))
-                    && scrollY > oldScrollY
-                    && !isLoading()
-                    && hasNextPage()
-                ) {
-                    loadMoreFilters()
-                }
-            }
-        })
+        initUI()
+
+        setRecyclerViewAdapter()
 
         sort_by_icon.setOnClickListener {
             PopupMenu(requireContext(), it).apply {
@@ -89,7 +79,7 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
      */
 
 
-    private fun getKeywordsAsSeparatedString(): String? {
+    private fun getKeywordsAsSeparatedString(): String {
         return StringUtils.mapKeywordsToSeparatedIds(filtersMap?.get(FiltersConstants.KEYWORDS))
     }
 
@@ -204,13 +194,11 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
         }
     }
 
+    open fun initUI() {}
     abstract fun resetAndLoadFiltersSortedBy(order: String = popularity)
     abstract fun getFilterMap(): HashMap<String, ArrayList<String>>?
     abstract fun setBindingVariables()
     abstract fun observeSubscribers()
     abstract fun setRecyclerViewAdapter()
-    abstract fun loadMoreFilters()
-    abstract fun isLoading(): Boolean
     abstract fun navigateFromSearchResultFilterFragmentToSearchFragment()
-    abstract fun hasNextPage(): Boolean
 }

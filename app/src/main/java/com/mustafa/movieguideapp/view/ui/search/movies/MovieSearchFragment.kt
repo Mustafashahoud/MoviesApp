@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,7 +22,7 @@ import com.mustafa.movieguideapp.view.adapter.MoviesSearchAdapter
 import com.mustafa.movieguideapp.view.ui.search.base.SearchFragmentBase
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,18 +34,17 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
 
 
     private val viewModel by viewModels<MovieSearchViewModel> { viewModelFactory }
-
     private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
-
     private var binding by autoCleared<FragmentSearchBinding>()
-
     private var movieAdapter by autoCleared<MoviesSearchAdapter>()
+
+    private var searchJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_search,
@@ -88,10 +86,11 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
         )
     }
 
-    @FlowPreview
+
     override fun observeSuggestions(newText: String?) {
         newText?.let { text ->
-            viewLifecycleOwner.lifecycleScope.launch {
+            searchJob?.cancel()
+            searchJob = viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.getSuggestions(text).collectLatest {
                     if (tabs.getTabAt(0)?.isSelected!!) {
                         showSuggestionViewAndHideRecentSearches()
@@ -125,24 +124,19 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
 
 
     override fun observeAndSetRecentQueries() {
-        viewModel.movieRecentQueries.observe(viewLifecycleOwner, Observer {listQueries ->
+        viewModel.movieRecentQueries.observe(viewLifecycleOwner) { listQueries ->
             if (!listQueries.isNullOrEmpty()) {
                 val queries = listQueries.filter { it.isNotEmpty() }
                 if (queries.isNotEmpty()) setListViewOfRecentQueries(queries)
             }
-        })
+        }
     }
 
     override fun deleteAllRecentQueries() {
         viewModel.deleteAllMovieRecentQueries()
     }
 
-    @FlowPreview
-    override fun setSuggestionsQuery(newText: String?) {
-//        newText?.let {
-//            viewModel.getSuggestions(newText)
-//        }
-    }
+    override fun setSuggestionsQuery(newText: String?) {}
 
 }
 

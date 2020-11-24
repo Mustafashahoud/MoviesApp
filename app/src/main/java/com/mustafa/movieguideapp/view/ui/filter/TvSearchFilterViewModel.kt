@@ -2,11 +2,10 @@ package com.mustafa.movieguideapp.view.ui.filter
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.switchMap
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.mustafa.movieguideapp.models.FilterData
-import com.mustafa.movieguideapp.models.Resource
-import com.mustafa.movieguideapp.models.Tv
 import com.mustafa.movieguideapp.repository.tvs.TvsRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.view.ViewModelBase
@@ -15,7 +14,7 @@ import javax.inject.Inject
 
 @OpenForTesting
 class TvSearchFilterViewModel @Inject constructor(
-    private val discoverRepository: TvsRepository,
+    private val repository: TvsRepository,
     dispatcher: CoroutineDispatcher
 ) : ViewModelBase(dispatcher) {
 
@@ -26,19 +25,13 @@ class TvSearchFilterViewModel @Inject constructor(
     private val searchTvFilterPageLiveData: MutableLiveData<Int> = MutableLiveData()
 
     private val _totalTvsCount = MutableLiveData<String>()
-    val totalTvsCount : LiveData<String> get() = _totalTvsCount
+    val totalTvsCount: LiveData<String> get() = _totalTvsCount
 
-    val searchTvListFilterLiveData: LiveData<Resource<List<Tv>>> =
-        searchTvFilterPageLiveData.switchMap { page ->
-            launchOnViewModelScope {
-                discoverRepository.loadFilteredTvs(
-                    filterData = filterData,
-                    page = page
-                ) {
-                    _totalTvsCount.postValue(it.toString())
-                }.asLiveData()
-            }
-        }
+    val searchTvListFilterLiveData = liveData {
+        emitSource(repository.loadFilteredTvs(filterData = filterData) {
+            _totalTvsCount.postValue(it.toString())
+        }.cachedIn(viewModelScope))
+    }
 
     fun setFilters(
         filterData: FilterData,
@@ -48,21 +41,9 @@ class TvSearchFilterViewModel @Inject constructor(
         searchTvFilterPageLiveData.value = page
     }
 
-    fun loadMoreFilters() {
-        pageFiltersNumber++
-        searchTvFilterPageLiveData.value = pageFiltersNumber
-    }
-
     fun resetFilterValues() {
         filterData = FilterData()
         this.pageFiltersNumber = 1
-    }
-
-
-    fun refresh() {
-        searchTvFilterPageLiveData.value?.let {
-            searchTvFilterPageLiveData.value = it
-        }
     }
 
 }

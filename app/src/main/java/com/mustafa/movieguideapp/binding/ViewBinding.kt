@@ -32,6 +32,7 @@ fun bindVisibilityByResource(view: View, resource: Resource<*>?) {
     }
 }
 
+@Suppress("unused")
 @BindingAdapter("visibleGone")
 fun showHide(view: View, show: Boolean) {
     view.visibility = if (show) View.VISIBLE else View.GONE

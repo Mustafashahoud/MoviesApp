@@ -15,10 +15,24 @@ class MoviesAdapter(
     private val dataBindingComponent: DataBindingComponent,
     private val movieOnClickCallback: ((Movie) -> Unit)?
 ) : PagingDataAdapter<Movie, MoviesAdapter.ViewHolder>(MovieDiffUtilCallBack()) {
+
+    companion object {
+        private const val NETWORK_VIEW_TYPE = 1
+        private const val WALLPAPER_VIEW_TYPE = 2
+    }
+
     class ViewHolder(private val binding: ItemMovieBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(movie: Movie) {
             binding.movie = movie
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == itemCount) {
+            NETWORK_VIEW_TYPE
+        } else {
+            WALLPAPER_VIEW_TYPE
         }
     }
 

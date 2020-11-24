@@ -17,13 +17,10 @@ class MovieSearchFilterViewModel @Inject constructor(
     dispatcher: CoroutineDispatcher
 ) : ViewModelBase(dispatcher) {
 
-    private var pageFiltersNumber = 1
-
     private val _totalMoviesCount = MutableLiveData<String>()
     val totalMoviesCount: LiveData<String> get() = _totalMoviesCount
 
     private var filterData = FilterData()
-
 
     private val searchMovieFilterPageLiveData: MutableLiveData<Int> = MutableLiveData()
 
@@ -31,7 +28,6 @@ class MovieSearchFilterViewModel @Inject constructor(
         launchOnViewModelScope {
             repository.loadFilteredMovies(
                 filterData = filterData,
-                page = it
             ) { totalCount ->
                 _totalMoviesCount.postValue(totalCount.toString())
             }.asLiveData()
@@ -47,20 +43,8 @@ class MovieSearchFilterViewModel @Inject constructor(
         searchMovieFilterPageLiveData.value = page
     }
 
-    fun loadMoreFilters() {
-        pageFiltersNumber++
-        searchMovieFilterPageLiveData.value = pageFiltersNumber
-    }
 
     fun resetFilterValues() {
         filterData = FilterData()
-        this.pageFiltersNumber = 1
     }
-
-    fun refresh() {
-        searchMovieFilterPageLiveData.value?.let {
-            searchMovieFilterPageLiveData.value = it
-        }
-    }
-
 }

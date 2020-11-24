@@ -98,7 +98,7 @@ fun FragmentManager.getCurrentNavigationFragment(): Fragment? =
 /**
  * true if the findFirstCompletelyVisibleItemPosition is Zero
  */
-fun Fragment.isRecyclerViewScrollPositionZero(id: Int): Boolean? =
+fun Fragment.isRecyclerViewScrollPositionZero(id: Int): Boolean =
     (activity?.findViewById<RecyclerView>(id)?.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition() == 0
 
 fun Fragment.setSmoothScrollToZero(resId: Int) {

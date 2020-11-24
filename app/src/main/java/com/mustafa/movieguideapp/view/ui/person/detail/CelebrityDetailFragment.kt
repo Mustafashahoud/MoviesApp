@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -105,18 +104,18 @@ class CelebrityDetailFragment : Fragment(R.layout.fragment_celebrity_detail), In
 
     private fun observeMoviesAndTvsForCelebrity() {
 
-        viewModel.moviesOfCelebrity.observe(viewLifecycleOwner, Observer {
+        viewModel.moviesOfCelebrity.observe(viewLifecycleOwner) {
             if (!it.data.isNullOrEmpty()) {
                 val moviesPerson = it.data.filter { moviePerson -> moviePerson.poster_path != null }
                 adapterMoviesForCelebrity.submitList(moviesPerson)
             }
-        })
+        }
 
-        viewModel.tvsOfCelebrity.observe(viewLifecycleOwner, Observer {
+        viewModel.tvsOfCelebrity.observe(viewLifecycleOwner) {
             if (!it.data.isNullOrEmpty()) {
                 val tvsPerson = it.data.filter { tvPerson -> tvPerson.poster_path != null }
                 adapterTvsForCelebrity.submitList(tvsPerson)
             }
-        })
+        }
     }
 }

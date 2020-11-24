@@ -11,9 +11,7 @@ import com.mustafa.movieguideapp.repository.movies.MoviesRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.view.ViewModelBase
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,10 +41,8 @@ class MovieSearchViewModel @Inject constructor(
         return newResult
     }
 
-
-    @FlowPreview
     fun getSuggestions(queryString: String): Flow<PagingData<Movie>> {
-        return repository.getMovieSuggestions(queryString).cachedIn(viewModelScope).debounce(1000L)
+        return repository.getMovieSuggestions(queryString).cachedIn(viewModelScope)
     }
 
     val movieRecentQueries: LiveData<List<String>> = liveData(viewModelScope.coroutineContext) {

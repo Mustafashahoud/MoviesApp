@@ -1,16 +1,16 @@
 package com.mustafa.movieguideapp.view.ui.person.search
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import android.speech.RecognizerIntent
 import android.view.View
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingComponent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
@@ -18,8 +18,11 @@ import com.mustafa.movieguideapp.databinding.FragmentCelebritiesSearchResultBind
 import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.extension.hideKeyboard
 import com.mustafa.movieguideapp.utils.autoCleared
-import com.mustafa.movieguideapp.view.adapter.PeopleAdapter
+import com.mustafa.movieguideapp.view.adapter.LoadStateAdapter
+import com.mustafa.movieguideapp.view.adapter.PeopleSearchAdapter
+import com.mustafa.movieguideapp.view.ui.person.celebrities.CelebritiesListFragmentDirections
 import kotlinx.android.synthetic.main.toolbar_search_result.*
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,40 +37,30 @@ class SearchCelebritiesResultFragment : Fragment(R.layout.fragment_celebrities_s
     private val viewModel by viewModels<SearchCelebritiesResultViewModel> { viewModelFactory }
     private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentCelebritiesSearchResultBinding>()
-    private var adapter by autoCleared<PeopleAdapter>()
+    private var pagingAdapter by autoCleared<PeopleSearchAdapter>()
+
+    private var searchJob: Job? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        binding = FragmentCelebritiesSearchResultBinding.bind(view)
+
+        setRetrySetOnClickListener()
         initializeUI()
 
-        getQuerySafeArgs()?.let { query ->
-            viewLifecycleOwner.lifecycleScope.launch {
+        getQuerySafeArgs().let { query ->
+            searchJob?.cancel()
+            searchJob = viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.searchPeople(query).collectLatest { pagingData ->
-                    adapter.submitData(pagingData)
+                    pagingAdapter.submitData(pagingData)
                 }
             }
         }
     }
 
-
-    private fun getQuerySafeArgs(): String? {
-        val params = SearchCelebritiesResultFragmentArgs.fromBundle(requireArguments())
-        return params.query
-    }
-
     private fun initializeUI() {
-
-        adapter = PeopleAdapter(dataBindingComponent) {
-            findNavController().navigate(
-                SearchCelebritiesResultFragmentDirections.actionSearchCelebritiesResultFragmentToCelebrityDetail(
-                    it
-                )
-            )
-        }
-
+        initAdapter()
         hideKeyboard()
-        binding.recyclerViewSearchResultPeople.adapter = adapter
-        binding.recyclerViewSearchResultPeople.layoutManager = LinearLayoutManager(context)
-
         search_view.setOnSearchClickListener {
             findNavController().navigate(
                 SearchCelebritiesResultFragmentDirections.actionSearchCelebritiesResultFragmentToSearchCelebritiesFragment()
@@ -81,19 +74,48 @@ class SearchCelebritiesResultFragment : Fragment(R.layout.fragment_celebrities_s
         }
     }
 
-    /**
-     * Receiving Voice Query
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            10 -> if (resultCode == Activity.RESULT_OK && data != null) {
-                val voiceQuery = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                hideKeyboard()
-                search_view.setQuery(voiceQuery?.let { it[0] }, true)
+    private fun initAdapter() {
+        pagingAdapter = PeopleSearchAdapter(
+            dataBindingComponent
+        ) {
+            CelebritiesListFragmentDirections.actionCelebritiesToCelebrity(it)
+        }
+
+        binding.recyclerViewSearchResultPeople.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = pagingAdapter.withLoadStateFooter(
+                footer = LoadStateAdapter { pagingAdapter.retry() }
+            )
+            this.setHasFixedSize(true)
+        }
+
+        pagingAdapter.addLoadStateListener { loadState ->
+            binding.recyclerViewSearchResultPeople.isVisible =
+                loadState.refresh is LoadState.NotLoading
+            binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
+            binding.retry.isVisible = loadState.refresh is LoadState.Error
+            // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
+            val errorState = loadState.source.append as? LoadState.Error
+                ?: loadState.source.prepend as? LoadState.Error
+                ?: loadState.append as? LoadState.Error
+                ?: loadState.prepend as? LoadState.Error
+            errorState?.let {
+                Toast.makeText(
+                    requireContext(),
+                    "\uD83D\uDE28 Wooops ${it.error}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
+    }
+
+    private fun setRetrySetOnClickListener() {
+        binding.retry.setOnClickListener { pagingAdapter.retry() }
+    }
+
+
+    private fun getQuerySafeArgs(): String {
+        val params = SearchCelebritiesResultFragmentArgs.fromBundle(requireArguments())
+        return params.query
     }
 }

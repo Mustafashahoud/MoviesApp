@@ -10,9 +10,7 @@ import androidx.paging.filter
 import com.mustafa.movieguideapp.models.Tv
 import com.mustafa.movieguideapp.repository.tvs.TvsRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -41,9 +39,8 @@ class TvSearchViewModel @Inject constructor(
         return newResult
     }
 
-    @FlowPreview
     fun getSuggestions(queryString: String): Flow<PagingData<Tv>> {
-        return repository.getTvSuggestions(queryString).cachedIn(viewModelScope).debounce(1000L)
+        return repository.getTvSuggestions(queryString).cachedIn(viewModelScope)
     }
 
     val tvRecentQueries: LiveData<List<String>> = liveData(viewModelScope.coroutineContext) {

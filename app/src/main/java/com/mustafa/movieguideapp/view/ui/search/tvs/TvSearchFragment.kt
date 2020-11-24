@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,7 +22,7 @@ import com.mustafa.movieguideapp.view.adapter.TvsSearchAdapter
 import com.mustafa.movieguideapp.view.ui.search.base.SearchFragmentBase
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,11 +38,13 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
     private var binding by autoCleared<FragmentSearchBinding>()
     private var tvAdapter by autoCleared<TvsSearchAdapter>()
 
+    private var searchJob: Job? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_search,
@@ -86,10 +87,10 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
         )
     }
 
-    @FlowPreview
     override fun observeSuggestions(newText: String?) {
         newText?.let { text ->
-            viewLifecycleOwner.lifecycleScope.launch {
+            searchJob?.cancel()
+            searchJob  = viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.getSuggestions(text).collectLatest {
                     if (tabs.getTabAt(0)?.isSelected!!) {
                         showSuggestionViewAndHideRecentSearches()
@@ -122,12 +123,12 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
 
 
     override fun observeAndSetRecentQueries() {
-        viewModel.tvRecentQueries.observe(viewLifecycleOwner, Observer { queries ->
+        viewModel.tvRecentQueries.observe(viewLifecycleOwner) { queries ->
             if (!queries.isNullOrEmpty()) {
                 val queryList = queries.filter { it.isNotEmpty() }
                 if (queryList.isNotEmpty()) setListViewOfRecentQueries(queryList)
             }
-        })
+        }
     }
 
     override fun deleteAllRecentQueries() {

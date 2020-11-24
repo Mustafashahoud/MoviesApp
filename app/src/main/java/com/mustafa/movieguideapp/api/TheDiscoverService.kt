@@ -8,8 +8,6 @@ import retrofit2.http.Query
 
 interface TheDiscoverService {
 
-
-    //////////////////////
     @GET("/3/discover/movie?language=en&sort_by=popularity.desc")
     suspend fun fetchMovies(@Query("page") page: Int): DiscoverMovieResponse
 
@@ -24,6 +22,7 @@ interface TheDiscoverService {
     suspend fun fetchSearchTvs(@Query("query") query: String,
                                @Query("page") page: Int) : DiscoverTvResponse
 
+
     @GET("/3/discover/movie")
     suspend fun searchMovieFilters(
         @Query("vote_average.gte") rating: Int?,
@@ -35,7 +34,7 @@ interface TheDiscoverService {
         @Query("with_runtime.gte") with_runtime: Int?,
         @Query("region") region: String?,
         @Query("page") page: Int)
-            : ApiResponse<DiscoverMovieResponse>
+            : DiscoverMovieResponse
 
     @GET("/3/discover/tv")
     suspend fun searchTvFilters(
@@ -47,8 +46,7 @@ interface TheDiscoverService {
         @Query("with_original_language") with_original_language: String?,
         @Query("with_runtime.gte") with_runtime: Int?,
         @Query("page") page: Int)
-            : ApiResponse<DiscoverTvResponse>
-
+            : DiscoverTvResponse
 
 }
 

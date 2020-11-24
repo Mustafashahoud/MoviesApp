@@ -4,21 +4,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentSearchResultFilterBinding
 import com.mustafa.movieguideapp.di.Injectable
-import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.utils.autoCleared
-import com.mustafa.movieguideapp.view.adapter.TvSearchListAdapter
-import com.mustafa.movieguideapp.view.ui.common.RetryCallback
+import com.mustafa.movieguideapp.view.adapter.FilteredTvsAdapter
+import com.mustafa.movieguideapp.view.adapter.LoadStateAdapter
 import javax.inject.Inject
 
 class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectable,
@@ -30,13 +31,13 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
     private val viewModel by viewModels<TvSearchFilterViewModel> { viewModelFactory }
     private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentSearchResultFilterBinding>()
-    private var adapter by autoCleared<TvSearchListAdapter>()
+    private var pagingAdapter by autoCleared<FilteredTvsAdapter>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_search_result_filter,
@@ -56,46 +57,64 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
             lifecycleOwner = this@TvSearchResultFilterFragment
             totalFilterResult = viewModel.totalTvsCount
             selectedFilters = setSelectedFilters()
-            callback = object : RetryCallback {
-                override fun retry() {
-                    viewModel.refresh()
-                }
-            }
         }
     }
 
     override fun observeSubscribers() {
-        viewModel.searchTvListFilterLiveData.observe(viewLifecycleOwner, Observer {
-            binding.resource = viewModel.searchTvListFilterLiveData.value
-            if (it.data != null && it.data.isNotEmpty()) {
-                adapter.submitList(it.data)
-            }
-        })
+        viewModel.searchTvListFilterLiveData.observe(viewLifecycleOwner) {
+            pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+
+        }
     }
 
     override fun setRecyclerViewAdapter() {
-        adapter = TvSearchListAdapter(dataBindingComponent) {
-            findNavController().navigate(
-                TvSearchResultFilterFragmentDirections.actionTvSearchFragmentResultFilterToTvDetail(
-                    it
-                )
-            )
+        initAdapter()
+    }
+
+    private fun initAdapter() {
+        pagingAdapter = FilteredTvsAdapter(
+            dataBindingComponent
+        ) {
+            TvSearchResultFilterFragmentDirections.actionTvSearchFragmentResultFilterToTvDetail(it)
         }
 
-        binding.filteredItemsRecyclerView.adapter = adapter
-        binding.filteredItemsRecyclerView.layoutManager = LinearLayoutManager(
-            context,
-            LinearLayoutManager.VERTICAL,
-            false
-        )
+        binding.filteredItemsRecyclerView.apply {
+            layoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+            adapter = pagingAdapter.withLoadStateFooter(
+                footer = LoadStateAdapter { pagingAdapter.retry() }
+            )
+            this.setHasFixedSize(true)
+        }
+
+        pagingAdapter.addLoadStateListener { loadState ->
+            binding.filteredItemsRecyclerView.isVisible = loadState.refresh is LoadState.NotLoading
+            binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
+            binding.retry.isVisible = loadState.refresh is LoadState.Error
+            // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
+            val errorState = loadState.source.append as? LoadState.Error
+                ?: loadState.source.prepend as? LoadState.Error
+                ?: loadState.append as? LoadState.Error
+                ?: loadState.prepend as? LoadState.Error
+            errorState?.let {
+                Toast.makeText(
+                    requireContext(),
+                    "\uD83D\uDE28 Wooops ${it.error}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
-    override fun loadMoreFilters() {
-        viewModel.loadMoreFilters()
+    override fun initUI() {
+        setRetrySetOnClickListener()
     }
 
-    override fun isLoading(): Boolean {
-        return viewModel.searchTvListFilterLiveData.value is Resource.Loading
+    private fun setRetrySetOnClickListener() {
+        binding.retry.setOnClickListener { pagingAdapter.retry() }
     }
 
     override fun navigateFromSearchResultFilterFragmentToSearchFragment() {
@@ -103,15 +122,6 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
             TvSearchResultFilterFragmentDirections.actionTvSearchFragmentResultFilterToTvSearchFragment()
         )
     }
-
-
-    override fun hasNextPage(): Boolean {
-        viewModel.searchTvListFilterLiveData.value?.let {
-            return it.hasNextPage
-        }
-        return false
-    }
-
 
     override fun resetAndLoadFiltersSortedBy(order: String) {
         viewModel.resetFilterValues()

@@ -4,44 +4,43 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.DiffUtil
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.databinding.ItemMovieSearchBinding
 import com.mustafa.movieguideapp.models.Movie
-import com.mustafa.movieguideapp.view.ui.common.DataBoundListAdapter
+import com.mustafa.movieguideapp.utils.MovieDiffUtilCallBack
 
-class MovieSearchListAdapter(
+class FilteredMoviesAdapter(
     private val dataBindingComponent: DataBindingComponent,
     private val movieOnClickCallback: ((Movie) -> Unit)?
-) : DataBoundListAdapter<Movie, ItemMovieSearchBinding>(
-    diffCallback = object : DiffUtil.ItemCallback<Movie>() {
-        override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-            return oldItem == (newItem)
+) : PagingDataAdapter<Movie, FilteredMoviesAdapter.ViewHolder>(MovieDiffUtilCallBack()) {
+    class ViewHolder(private val binding: ItemMovieSearchBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(movie: Movie) {
+            binding.movie = movie
         }
     }
-) {
 
-    override fun createBinding(parent: ViewGroup): ItemMovieSearchBinding {
-        val binding = DataBindingUtil.inflate<ItemMovieSearchBinding>(
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding: ItemMovieSearchBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
             R.layout.item_movie_search,
             parent,
             false,
             dataBindingComponent
         )
+
         binding.root.setOnClickListener {
             binding.movie?.let {
                 movieOnClickCallback?.invoke(it)
             }
         }
-        return binding
-    }
 
-    override fun bind(binding: ItemMovieSearchBinding, item: Movie) {
-        binding.movie = item
+        return ViewHolder(binding)
     }
 }

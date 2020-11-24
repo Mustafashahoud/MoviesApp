@@ -13,12 +13,26 @@ import com.mustafa.movieguideapp.utils.TvDiffUtilCallBack
 
 class TvsAdapter(
     private val dataBindingComponent: DataBindingComponent,
-    private val movieOnClickCallback: ((Tv) -> Unit)?
+    private val tvOnClickCallback: ((Tv) -> Unit)?
 ) : PagingDataAdapter<Tv, TvsAdapter.ViewHolder>(TvDiffUtilCallBack()) {
+
+    companion object {
+        private const val NETWORK_VIEW_TYPE = 1
+        private const val WALLPAPER_VIEW_TYPE = 2
+    }
+
     class ViewHolder(private val binding: ItemTvBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(tv: Tv) {
             binding.tv = tv
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == itemCount) {
+            NETWORK_VIEW_TYPE
+        } else {
+            WALLPAPER_VIEW_TYPE
         }
     }
 
@@ -37,7 +51,7 @@ class TvsAdapter(
 
         binding.root.setOnClickListener {
             binding.tv?.let {
-                movieOnClickCallback?.invoke(it)
+                tvOnClickCallback?.invoke(it)
             }
         }
 

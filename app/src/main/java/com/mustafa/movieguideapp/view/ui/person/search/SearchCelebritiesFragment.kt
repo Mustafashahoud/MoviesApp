@@ -12,7 +12,6 @@ import androidx.databinding.DataBindingComponent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -26,9 +25,10 @@ import com.mustafa.movieguideapp.extension.gone
 import com.mustafa.movieguideapp.extension.inVisible
 import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.utils.autoCleared
-import com.mustafa.movieguideapp.view.adapter.PeopleAdapter
+import com.mustafa.movieguideapp.view.adapter.PeopleSearchAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.*
@@ -41,15 +41,15 @@ class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search)
 
     private val viewModel by viewModels<SearchCelebritiesResultViewModel> { viewModelFactory }
 
-    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
     private var binding by autoCleared<FragmentCelebritiesSearchBinding>()
-
-    private var adapter by autoCleared<PeopleAdapter>()
-
+    private var adapter by autoCleared<PeopleSearchAdapter>()
     private var arrayAdapter: ArrayAdapter<String>? = null
 
     private val hasRecentQueriesChanged = MutableLiveData<Boolean>()
+
+    private var searchJob: Job? = null
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -129,7 +129,7 @@ class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search)
     }
 
     private fun initRecyclerView() {
-        adapter = PeopleAdapter(dataBindingComponent) {
+        adapter = PeopleSearchAdapter(dataBindingComponent) {
             findNavController().navigate(
                 SearchCelebritiesFragmentDirections.actionSearchCelebritiesFragmentToCelebrityDetail(
                     it
@@ -152,15 +152,15 @@ class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search)
 
 
     private fun subscribers() {
-        viewModel.peopleRecentQueries.observe(viewLifecycleOwner, Observer {
+        viewModel.peopleRecentQueries.observe(viewLifecycleOwner) {
             if (!it.isNullOrEmpty()) {
                 setListViewOfRecentQueries(it)
             }
-        })
+        }
 
-        hasRecentQueriesChanged.observe(viewLifecycleOwner, Observer {
+        hasRecentQueriesChanged.observe(viewLifecycleOwner) {
             arrayAdapter?.let { adapter -> clear_recent_queries.isClickable = !adapter.isEmpty }
-        })
+        }
     }
 
     private fun setListViewOfRecentQueries(queries: List<String?>) {
@@ -170,11 +170,11 @@ class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search)
             queries.requireNoNulls()
         )
         hasRecentQueriesChanged.value = true
-        binding.apply {
-            listViewRecentQueries.setHeaderDividersEnabled(true)
-            listViewRecentQueries.setFooterDividersEnabled(true)
-            listViewRecentQueries.adapter = arrayAdapter
-            listViewRecentQueries.setOnItemClickListener { parent, _, position, _ ->
+        binding.listViewRecentQueries.apply {
+            setHeaderDividersEnabled(true)
+            setFooterDividersEnabled(true)
+            adapter = arrayAdapter
+            setOnItemClickListener { parent, _, position, _ ->
                 val query = parent.getItemAtPosition(position) as String
                 navigateToSearchCelebritiesResultFragment(query)
             }
@@ -183,30 +183,39 @@ class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search)
 
     private fun observeSuggestions(newText: String?) {
         newText?.let {
-            viewLifecycleOwner.lifecycleScope.launch {
+            // Make sure we cancel the previous job before creating a new one
+            searchJob?.cancel()
+            searchJob = viewLifecycleOwner.lifecycleScope.launch {
                 viewModel.getSuggestions(it).collectLatest { pagingData ->
                     if (it.isNotEmpty()) {
                         showSuggestionViewAndHideRecentSearches()
                     }
-                    adapter.submitData(pagingData)
+
                     if ((newText.isEmpty() || newText.isBlank())) {
                         hideSuggestionViewAndShowRecentSearches()
                         adapter.submitData(PagingData.empty())
                     }
+
+                    adapter.submitData(pagingData)
                 }
             }
         }
     }
 
+
     private fun hideSuggestionViewAndShowRecentSearches() {
-        binding.recentQueriesBar.visible()
-        binding.listViewRecentQueries.visible()
-        binding.recyclerViewSuggestion.inVisible()
+        binding.apply {
+            recentQueriesBar.visible()
+            listViewRecentQueries.visible()
+            recyclerViewSuggestion.inVisible()
+        }
     }
 
     private fun showSuggestionViewAndHideRecentSearches() {
-        binding.recentQueriesBar.gone()
-        binding.listViewRecentQueries.inVisible()
-        binding.recyclerViewSuggestion.visible()
+        binding.apply {
+            recentQueriesBar.gone()
+            listViewRecentQueries.inVisible()
+            recyclerViewSuggestion.visible()
+        }
     }
 }
