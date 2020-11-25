@@ -55,7 +55,8 @@
     <fragment
         android:id="@+id/movieSearchFragmentResult"
         android:name="com.mustafa.movieguideapp.view.ui.search.movies.MovieSearchResultFragment"
-        android:label="MovieSearchResultFragment" >
+        android:label="MovieSearchResultFragment"
+        tools:layout="@layout/fragment_movie_search_result">
         <action
             android:id="@+id/action_movieSearchFragmentResult_to_movieSearchFragment"
             app:popUpTo="@id/movieSearchFragment" />
