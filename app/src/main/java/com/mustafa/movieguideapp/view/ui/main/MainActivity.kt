@@ -6,14 +6,12 @@ import android.speech.RecognizerIntent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.extension.*
 import com.mustafa.movieguideapp.utils.setupWithNavController
-import com.rbddevs.splashy.Splashy
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -28,23 +26,25 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), HasAndroidInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
-    private var currentNavController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        setSplashy()
+//        setSplashy()
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
         setOnNavigationItemReselected()
 
-        currentNavController?.observe(this) { navController ->
-            navController.addOnDestinationChangedListener { _, destination, _ ->
-                if (isMainFragment(destination)) {
-                    findViewById<BottomNavigationView>(R.id.bottom_navigation).visible()
-                } else findViewById<BottomNavigationView>(R.id.bottom_navigation).gone()
-            }
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
+
+
+        navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (isMainFragment(destination)) {
+                bottom_navigation.visible()
+            } else bottom_navigation.gone()
+
         }
     }
 
@@ -81,8 +81,6 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
     }
 
 
-
-
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
         super.onRestoreInstanceState(savedInstanceState)
@@ -101,7 +99,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         val navGraphIds = listOf(R.navigation.movie, R.navigation.tv, R.navigation.star)
 
         // Setup the bottom navigation view with a list of navigation graphs
-        val controller = bottomNavigationView.setupWithNavController(
+        bottomNavigationView.setupWithNavController(
             navGraphIds = navGraphIds,
             fragmentManager = supportFragmentManager,
             containerId = R.id.nav_host_container,
@@ -112,7 +110,6 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 //    controller.observe(this, Observer { navController ->
 //      setupActionBarWithNavController(navController)
 //    })
-        currentNavController = controller
     }
 
 //  override fun onSupportNavigateUp(): Boolean {
@@ -139,20 +136,20 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 
-    private fun setSplashy() {
-        Splashy(this)
-            .setLogo(R.mipmap.ic_launcher_foreground)
-            .setTitle("MovieGuide")
-            .setTitleColor(R.color.colorAccent)
-            .showProgress(true)
-            .setProgressColor(R.color.colorAccent)
-            .setSubTitle("Eng. Mustafa Shahoud")
-            .setProgressColor(R.color.colorAccent)
-            .setBackgroundResource(R.color.backgroundDarker)
-            .setFullScreen(true)
-            .setDuration(3000)
-            .show()
-    }
+//    private fun setSplashy() {
+//        Splashy(this)
+//            .setLogo(R.mipmap.ic_launcher_foreground)
+//            .setTitle("MovieGuide")
+//            .setTitleColor(R.color.colorAccent)
+//            .showProgress(true)
+//            .setProgressColor(R.color.colorAccent)
+//            .setSubTitle("Eng. Mustafa Shahoud")
+//            .setProgressColor(R.color.colorAccent)
+//            .setBackgroundResource(R.color.backgroundDarker)
+//            .setFullScreen(true)
+//            .setDuration(3000)
+//            .show()
+//    }
 
     companion object {
         const val MOVIE_LIST_FRAGMENT = "MovieListFragment"
@@ -163,10 +160,17 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
     fun getVoiceRecognitionIntent(): Intent? {
         val voiceIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         with(voiceIntent) {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
         }
-        return if (this.packageManager?.let { packageManager -> voiceIntent.resolveActivity(packageManager) } != null) {
+        return if (this.packageManager?.let { packageManager ->
+                voiceIntent.resolveActivity(
+                    packageManager
+                )
+            } != null) {
             voiceIntent
         } else {
             Toast.makeText(
