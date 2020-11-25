@@ -40,6 +40,7 @@
                 android:id="@+id/recyclerView_list_celebrities"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:bindVisibilityForRecycler="@{searchResult}"
                 tools:listitem="@layout/item_movie" />
 
         </LinearLayout>

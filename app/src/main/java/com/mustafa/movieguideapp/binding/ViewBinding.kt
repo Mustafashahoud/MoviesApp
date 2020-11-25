@@ -11,12 +11,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mustafa.movieguideapp.api.Api
 import com.mustafa.movieguideapp.extension.bindResource
+import com.mustafa.movieguideapp.extension.inVisible
 import com.mustafa.movieguideapp.extension.requestGlideListener
 import com.mustafa.movieguideapp.extension.visible
-import com.mustafa.movieguideapp.models.Keyword
-import com.mustafa.movieguideapp.models.Resource
-import com.mustafa.movieguideapp.models.Review
-import com.mustafa.movieguideapp.models.Video
+import com.mustafa.movieguideapp.models.*
 import com.mustafa.movieguideapp.models.entity.*
 import com.mustafa.movieguideapp.models.network.PersonDetail
 import com.mustafa.movieguideapp.utils.KeywordListMapper
@@ -25,15 +23,20 @@ import com.mustafa.movieguideapp.view.adapter.ReviewListAdapter
 import com.mustafa.movieguideapp.view.adapter.VideoListAdapter
 
 
-/**
- *  Copied from https://github.com/skydoves/TheMovies
- */
 @BindingAdapter("visibilityByResource")
 fun bindVisibilityByResource(view: View, resource: Resource<List<Any>>?) {
     view.bindResource(resource) {
         if (resource?.data?.isNotEmpty()!!) {
             view.visible()
         }
+    }
+}
+
+@BindingAdapter("bindVisibilityForRecycler")
+fun bindVisibilityForRecycler(view: RecyclerView, resource: Resource<List<Any>>?) {
+    resource?.let {
+        if (it.status == Status.ERROR) view.inVisible()
+        else view.visible()
     }
 }
 
