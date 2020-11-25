@@ -3,9 +3,8 @@ package com.mustafa.movieguideapp.view.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.extension.*
@@ -23,7 +22,6 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), HasAndroidInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
-    private var currentNavController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,13 +32,15 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         } // Else, need to wait for onRestoreInstanceState
         setOnNavigationItemReselected()
 
-        currentNavController?.observe(this) { navController ->
-            navController.addOnDestinationChangedListener { _, destination, _ ->
-                if (isMainFragment(destination)) {
-                    findViewById<BottomNavigationView>(R.id.bottom_navigation).visible()
-                } else findViewById<BottomNavigationView>(R.id.bottom_navigation).gone()
-            }
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
+
+        navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (isMainFragment(destination)) {
+                bottom_navigation.visible()
+            } else bottom_navigation.gone()
         }
+
     }
 
 
@@ -100,23 +100,14 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         val navGraphIds = listOf(R.navigation.movie, R.navigation.tv, R.navigation.star)
 
         // Setup the bottom navigation view with a list of navigation graphs
-        val controller = bottomNavigationView.setupWithNavController(
+        bottomNavigationView.setupWithNavController(
             navGraphIds = navGraphIds,
             fragmentManager = supportFragmentManager,
             containerId = R.id.nav_host_container,
             intent = intent
         )
-
-        //Whenever the selected controller changes, setup the action bar.
-//    controller.observe(this, Observer { navController ->
-//      setupActionBarWithNavController(navController)
-//    })
-        currentNavController = controller
     }
 
-//  override fun onSupportNavigateUp(): Boolean {
-//    return currentNavController?.value?.navigateUp() ?: false
-//  }
 
     private fun setOnNavigationItemReselected() {
         bottom_navigation.setOnNavigationItemReselectedListener {
@@ -133,7 +124,9 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
 
     private fun isMainFragment(destination: NavDestination): Boolean =
-        destination.id == R.id.moviesFragment || destination.id == R.id.tvsFragment || destination.id == R.id.celebritiesFragment
+        destination.id == R.id.moviesFragment
+                || destination.id == R.id.tvsFragment
+                || destination.id == R.id.celebritiesFragment
 
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector

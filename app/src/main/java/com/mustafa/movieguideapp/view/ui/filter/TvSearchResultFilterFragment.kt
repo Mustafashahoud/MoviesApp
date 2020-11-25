@@ -75,7 +75,11 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
         pagingAdapter = FilteredTvsAdapter(
             dataBindingComponent
         ) {
-            TvSearchResultFilterFragmentDirections.actionTvSearchFragmentResultFilterToTvDetail(it)
+            findNavController().navigate(
+                TvSearchResultFilterFragmentDirections.actionTvSearchFragmentResultFilterToTvDetail(
+                    it
+                )
+            )
         }
 
         binding.filteredItemsRecyclerView.apply {

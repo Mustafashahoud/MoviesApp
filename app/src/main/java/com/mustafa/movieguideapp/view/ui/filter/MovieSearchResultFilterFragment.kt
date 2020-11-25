@@ -76,8 +76,10 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
         pagingAdapter = FilteredMoviesAdapter(
             dataBindingComponent
         ) {
-            MovieSearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieDetail(
-                it
+            findNavController().navigate(
+                MovieSearchResultFilterFragmentDirections.actionMovieSearchFragmentResultFilterToMovieDetail(
+                    it
+                )
             )
         }
 

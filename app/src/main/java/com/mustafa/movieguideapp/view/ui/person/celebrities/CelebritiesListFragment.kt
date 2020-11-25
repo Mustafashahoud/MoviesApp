@@ -55,6 +55,7 @@ class CelebritiesListFragment : Fragment(R.layout.fragment_celebrities), Injecta
             )
         }
     }
+
     private fun setRetrySetOnClickListener() {
         binding.retry.setOnClickListener { pagingAdapter.retry() }
     }
@@ -63,7 +64,9 @@ class CelebritiesListFragment : Fragment(R.layout.fragment_celebrities), Injecta
         pagingAdapter = PeopleAdapter(
             dataBindingComponent
         ) {
-            CelebritiesListFragmentDirections.actionCelebritiesToCelebrity(it)
+            findNavController().navigate(
+                CelebritiesListFragmentDirections.actionCelebritiesToCelebrity(it)
+            )
         }
 
         binding.recyclerViewListCelebrities.apply {

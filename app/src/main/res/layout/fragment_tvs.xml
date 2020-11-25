@@ -15,8 +15,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <include layout="@layout/toolbar_search" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_list_tvs"
             android:layout_width="0dp"

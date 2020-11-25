@@ -19,7 +19,8 @@ import com.mustafa.movieguideapp.extension.getGridLayoutManagerWithSpanSizeOne
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.LoadStateAdapter
 import com.mustafa.movieguideapp.view.adapter.TvsAdapter
-import kotlinx.android.synthetic.main.toolbar_search.*
+
+import kotlinx.android.synthetic.main.toolbar_search.view.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,7 +48,7 @@ class TvListFragment : Fragment(R.layout.fragment_tvs), Injectable {
     private fun initializeUI() {
         intiToolbar(getString(R.string.fragment_tvs))
         initAdapter()
-        search_icon.setOnClickListener {
+        binding.toolbarSearch.search_icon.setOnClickListener {
             findNavController().navigate(
                 TvListFragmentDirections.actionTvsFragmentToTvSearchFragment()
             )
@@ -101,7 +102,7 @@ class TvListFragment : Fragment(R.layout.fragment_tvs), Injectable {
     }
 
     private fun intiToolbar(title: String) {
-        toolbar_title.text = title
+        binding.toolbarSearch.toolbar_title.text = title
     }
 
 }

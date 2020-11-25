@@ -78,7 +78,9 @@ class SearchCelebritiesResultFragment : Fragment(R.layout.fragment_celebrities_s
         pagingAdapter = PeopleSearchAdapter(
             dataBindingComponent
         ) {
-            CelebritiesListFragmentDirections.actionCelebritiesToCelebrity(it)
+            findNavController().navigate(
+                CelebritiesListFragmentDirections.actionCelebritiesToCelebrity(it)
+            )
         }
 
         binding.recyclerViewSearchResultPeople.apply {

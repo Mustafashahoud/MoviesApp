@@ -64,7 +64,9 @@ class MovieListFragment : Fragment(R.layout.fragment_movies), Injectable {
         pagingAdapter = MoviesAdapter(
             dataBindingComponent
         ) {
-            MovieListFragmentDirections.actionMoviesFragmentToMovieDetail(it)
+            findNavController().navigate(
+                MovieListFragmentDirections.actionMoviesFragmentToMovieDetail(it)
+            )
         }
 
         binding.recyclerViewListMovies.apply {
