@@ -238,6 +238,9 @@ dependencies {
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 
+    //Leak canary: LeakCanary is a memory leak detection library for Android.
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
+
     // Barista's scrollTo(R.id.button) works on all kinds of scrollable views, also on NestedScroll
     androidTestImplementation "com.schibsted.spain:barista:3.3.0"
 
