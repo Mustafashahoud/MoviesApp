@@ -20,7 +20,6 @@ import com.mustafa.movieguideapp.extension.hideKeyboard
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.LoadStateAdapter
 import com.mustafa.movieguideapp.view.adapter.PeopleSearchAdapter
-import com.mustafa.movieguideapp.view.ui.person.celebrities.CelebritiesListFragmentDirections
 import kotlinx.android.synthetic.main.toolbar_search_result.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -79,7 +78,9 @@ class SearchCelebritiesResultFragment : Fragment(R.layout.fragment_celebrities_s
             dataBindingComponent
         ) {
             findNavController().navigate(
-                CelebritiesListFragmentDirections.actionCelebritiesToCelebrity(it)
+                SearchCelebritiesResultFragmentDirections.actionSearchCelebritiesResultFragmentToCelebrityDetail(
+                    it
+                )
             )
         }
 

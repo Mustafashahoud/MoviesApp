@@ -26,7 +26,6 @@ import com.mustafa.movieguideapp.extension.inVisible
 import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.PeopleSearchAdapter
-import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -160,7 +159,9 @@ class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search)
         }
 
         hasRecentQueriesChanged.observe(viewLifecycleOwner) {
-            arrayAdapter?.let { adapter -> clear_recent_queries.isClickable = !adapter.isEmpty }
+            arrayAdapter?.let { adapter ->
+                binding.clearRecentQueries.isClickable = !adapter.isEmpty
+            }
         }
     }
 

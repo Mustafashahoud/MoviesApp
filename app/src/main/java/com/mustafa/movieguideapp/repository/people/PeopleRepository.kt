@@ -112,6 +112,6 @@ class PeopleRepository @Inject constructor(
     }
 
     suspend fun deleteAllPeopleRecentQueries() {
-        peopleDao.getAllPeopleQueries()
+        peopleDao.deleteAllPeopleQueries()
     }
 }

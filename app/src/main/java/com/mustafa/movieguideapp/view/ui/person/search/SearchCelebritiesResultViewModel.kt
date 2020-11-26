@@ -1,5 +1,6 @@
 package com.mustafa.movieguideapp.view.ui.person.search
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
@@ -45,7 +46,7 @@ class SearchCelebritiesResultViewModel @Inject constructor(
     }
 
 
-    val peopleRecentQueries = liveData(viewModelScope.coroutineContext) {
+    val peopleRecentQueries: LiveData<List<String>> = liveData(viewModelScope.coroutineContext) {
         val movieRecentQueries = peopleRepository.getPeopleRecentQueries()
         emit(movieRecentQueries)
     }
