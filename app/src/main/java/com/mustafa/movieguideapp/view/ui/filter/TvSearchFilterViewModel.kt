@@ -1,22 +1,16 @@
 package com.mustafa.movieguideapp.view.ui.filter
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.mustafa.movieguideapp.models.FilterData
 import com.mustafa.movieguideapp.repository.tvs.TvsRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
-import com.mustafa.movieguideapp.view.ViewModelBase
-import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
 @OpenForTesting
 class TvSearchFilterViewModel @Inject constructor(
     private val repository: TvsRepository,
-    dispatcher: CoroutineDispatcher
-) : ViewModelBase(dispatcher) {
+) : ViewModel() {
 
     private var pageFiltersNumber = 1
 
@@ -27,10 +21,10 @@ class TvSearchFilterViewModel @Inject constructor(
     private val _totalTvsCount = MutableLiveData<String>()
     val totalTvsCount: LiveData<String> get() = _totalTvsCount
 
-    val searchTvListFilterLiveData = liveData {
-        emitSource(repository.loadFilteredTvs(filterData = filterData) {
+    val searchTvListFilterLiveData = searchTvFilterPageLiveData.switchMap {
+        repository.loadFilteredTvs(filterData = filterData) {
             _totalTvsCount.postValue(it.toString())
-        }.cachedIn(viewModelScope))
+        }.cachedIn(viewModelScope)
     }
 
     fun setFilters(

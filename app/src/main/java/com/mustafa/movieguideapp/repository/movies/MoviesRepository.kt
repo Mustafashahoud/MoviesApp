@@ -1,8 +1,10 @@
 package com.mustafa.movieguideapp.repository.movies
 
+import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.mustafa.movieguideapp.api.TheDiscoverService
 import com.mustafa.movieguideapp.models.FilterData
 import com.mustafa.movieguideapp.models.Movie
@@ -72,7 +74,7 @@ class MoviesRepository @Inject constructor(
     fun loadFilteredMovies(
         filterData: FilterData,
         totalCount: (Int) -> Unit
-    ): Flow<PagingData<Movie>> {
+    ): LiveData<PagingData<Movie>> {
         return Pager(
             config = PagingConfig(
                 TMDB_API_PAGE_SIZE,
@@ -82,6 +84,6 @@ class MoviesRepository @Inject constructor(
             FilteredMoviesPagingSource(service, filterData) {
                 totalCount(it)
             }
-        }.flow
+        }.liveData
     }
 }

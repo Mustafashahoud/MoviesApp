@@ -1,6 +1,7 @@
 package com.mustafa.movieguideapp.view.ui.search.movies
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -9,8 +10,6 @@ import androidx.paging.filter
 import com.mustafa.movieguideapp.models.Movie
 import com.mustafa.movieguideapp.repository.movies.MoviesRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
-import com.mustafa.movieguideapp.view.ViewModelBase
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -19,8 +18,7 @@ import javax.inject.Inject
 @OpenForTesting
 class MovieSearchViewModel @Inject constructor(
     private val repository: MoviesRepository,
-    dispatcherIO: CoroutineDispatcher
-) : ViewModelBase(dispatcherIO) {
+) : ViewModel() {
 
     private var currentQueryValue: String? = null
 
