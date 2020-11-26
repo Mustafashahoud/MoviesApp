@@ -23,6 +23,7 @@ import com.mustafa.movieguideapp.view.ui.search.base.SearchFragmentBase
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -91,16 +92,20 @@ class MovieSearchFragment : SearchFragmentBase(), Injectable {
         newText?.let { text ->
             searchJob?.cancel()
             searchJob = viewLifecycleOwner.lifecycleScope.launch {
+                delay(1000L)
                 viewModel.getSuggestions(text).collectLatest {
-                    if (tabs.getTabAt(0)?.isSelected!!) {
+                    if (tabs.getTabAt(0)?.isSelected!! && !(text.isEmpty() || text.isBlank())) {
                         showSuggestionViewAndHideRecentSearches()
                     }
-                    movieAdapter.submitData(it)
 
                     if ((text.isEmpty() || text.isBlank()) && tabs.getTabAt(0)?.isSelected!!) {
                         hideSuggestionViewAndShowRecentSearches()
                         movieAdapter.submitData(PagingData.empty())
                     }
+
+                    movieAdapter.submitData(it)
+
+
                 }
             }
         }

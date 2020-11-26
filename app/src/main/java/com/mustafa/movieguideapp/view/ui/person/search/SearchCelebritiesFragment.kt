@@ -29,6 +29,7 @@ import com.mustafa.movieguideapp.view.adapter.PeopleSearchAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.*
@@ -186,6 +187,7 @@ class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search)
             // Make sure we cancel the previous job before creating a new one
             searchJob?.cancel()
             searchJob = viewLifecycleOwner.lifecycleScope.launch {
+                delay(1000L)
                 viewModel.getSuggestions(it).collectLatest { pagingData ->
                     if (it.isNotEmpty()) {
                         showSuggestionViewAndHideRecentSearches()

@@ -13,7 +13,7 @@ import com.mustafa.movieguideapp.utils.StringListConverter
         MovieRecentQueries::class,
         PeopleRecentQueries::class,
         TvRecentQueries::class],
-    version = 3, exportSchema = false
+    version = 1, exportSchema = false
 )
 @TypeConverters(
     value = [(StringListConverter::class)]

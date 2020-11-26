@@ -42,6 +42,8 @@ class TvSearchResultFragment : Fragment(R.layout.fragment_tv_search_result), Inj
 
         binding = FragmentTvSearchResultBinding.bind(view)
 
+        setRetrySetOnClickListener()
+
         initializeUI()
 
         getQuerySafeArgs().let { query ->
@@ -105,6 +107,11 @@ class TvSearchResultFragment : Fragment(R.layout.fragment_tv_search_result), Inj
                 ).show()
             }
         }
+    }
+
+
+    private fun setRetrySetOnClickListener() {
+        binding.retry.setOnClickListener { pagingAdapter.retry() }
     }
 
     private fun getQuerySafeArgs(): String {
