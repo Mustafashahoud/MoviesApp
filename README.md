@@ -3,7 +3,7 @@
 * A Movie Application uses [TheMovie API](https://www.themoviedb.org) based on Kotlin MVVM architecture and material design.
 * A single-activity pattern, using the Navigation component to manage fragment operations.
 * Reactive UIs using LiveData observables and Data Binding.
-* Handles background tasks using coroutines + Flow.
+* Handles background tasks using Executors for the [master branch](https://github.com/Mustafashahoud/MoviesApp/tree/master), coroutines + Flow for the [2nd](https://github.com/Mustafashahoud/MoviesApp/tree/coroutines-flow) and [3th](https://github.com/Mustafashahoud/MoviesApp/tree/paging3-network) branch and RxJava for [4th branch](https://github.com/Mustafashahoud/MoviesApp/tree/paging3-rxjava).
 * It consists of 16 fragments which are fully tested by Espresso.
 
 
@@ -15,6 +15,8 @@
 - [Dagger2](https://github.com/google/dagger) for dependency injection
 - [Retrofit2 & Gson](https://github.com/square/retrofit) for REST API
 - [Glide](https://github.com/bumptech/glide) for loading images
+- [RxJava](https://github.com/ReactiveX/RxJava/tree/2.x) for the [4th branch](https://github.com/Mustafashahoud/MoviesApp/tree/paging3-rxjava)
+- [LeakCanary](https://square.github.io/leakcanary/) for detecting memory leak
 - [Mockito-kotlin](https://github.com/nhaarman/mockito-kotlin) for Junit mock test
 - [Espresso](https://developer.android.com/training/testing/espresso) for UI testing
 - [Timber](https://github.com/JakeWharton/timber) for logging
@@ -25,6 +27,7 @@
 | [master](https://github.com/Mustafashahoud/MoviesApp/tree/master) | The base for the rest of the other branch. <br/>Uses Kotlin, Architecture Components, AppExecutors, Dagger, Retrofit Data Binding, etc. and uses Room as source of truth, with a reactive UI. |
 | [coroutines-flow](https://github.com/Mustafashahoud/MoviesApp/tree/coroutines-flow)| Same like the master branch but much better as it uses coroutines Flow (single source of truth with Flow). For testing coroutines Flow check [Tandem Repository](https://github.com/Mustafashahoud/Tandem). |
 | [paging3-network](https://github.com/Mustafashahoud/MoviesApp/tree/paging3-network)| This branch uses Paging3 library to handle paging, it is wayyy easier. |
+| [paging3-rxjava](https://github.com/Mustafashahoud/MoviesApp/tree/paging3-rxjava)| This branch uses RxJava2 with the Paging3 library as well as ViewBinding instead of kotlin synthetic. |
 
 ## App Demo
 
@@ -40,9 +43,15 @@
 </p>
 
 ## License
-
-Copyright 2019 The Android Open Source Project, Inc.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+```xml
+Copyright 2020 The Android Open Source Project, Inc.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
