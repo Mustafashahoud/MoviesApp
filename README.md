@@ -3,7 +3,7 @@
 * A Movie Application uses [TheMovie API](https://www.themoviedb.org) based on Kotlin MVVM architecture and material design.
 * A single-activity pattern, using the Navigation component to manage fragment operations.
 * Reactive UIs using LiveData observables and Data Binding.
-* Handles background tasks using app Executors for the [master branch](https://github.com/Mustafashahoud/MoviesApp/tree/master), coroutines + Flow for [2nd](https://github.com/Mustafashahoud/MoviesApp/tree/coroutines-flow) and [3th](https://github.com/Mustafashahoud/MoviesApp/tree/paging3-network) branch and RxJava for [4th branch](https://github.com/Mustafashahoud/MoviesApp/tree/paging3-rxjava).
+* Handles background tasks using Executors for the [master branch](https://github.com/Mustafashahoud/MoviesApp/tree/master), coroutines + Flow for the [2nd](https://github.com/Mustafashahoud/MoviesApp/tree/coroutines-flow) and [3th](https://github.com/Mustafashahoud/MoviesApp/tree/paging3-network) branch and RxJava for [4th branch](https://github.com/Mustafashahoud/MoviesApp/tree/paging3-rxjava).
 * It consists of 16 fragments which are fully tested by Espresso.
 
 
