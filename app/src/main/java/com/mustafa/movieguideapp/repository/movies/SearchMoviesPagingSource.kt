@@ -3,7 +3,6 @@ package com.mustafa.movieguideapp.repository.movies
 import androidx.paging.rxjava2.RxPagingSource
 import com.mustafa.movieguideapp.api.TheDiscoverService
 import com.mustafa.movieguideapp.models.Movie
-import com.mustafa.movieguideapp.models.entity.MovieRecentQueries
 import com.mustafa.movieguideapp.models.network.DiscoverMovieResponse
 import com.mustafa.movieguideapp.room.MovieDao
 import com.mustafa.movieguideapp.testing.OpenForTesting
@@ -26,7 +25,6 @@ class SearchMoviesPagingSource @Inject constructor(
 
         return service.fetchSearchMovies(query = query, page = currentLoadingPageKey)
             .subscribeOn(Schedulers.io())
-            .doOnSuccess { if (search) movieDao.insertQuery(MovieRecentQueries(query)) }
             .map { toLoadResult(it, currentLoadingPageKey) }
             .onErrorReturn { LoadResult.Error(it) }
             .observeOn(AndroidSchedulers.mainThread())

@@ -3,7 +3,6 @@ package com.mustafa.movieguideapp.repository.tvs
 import androidx.paging.rxjava2.RxPagingSource
 import com.mustafa.movieguideapp.api.TheDiscoverService
 import com.mustafa.movieguideapp.models.Tv
-import com.mustafa.movieguideapp.models.entity.TvRecentQueries
 import com.mustafa.movieguideapp.models.network.DiscoverTvResponse
 import com.mustafa.movieguideapp.room.TvDao
 import com.mustafa.movieguideapp.utils.Constants.Companion.TMDB_STARTING_PAGE_INDEX
@@ -24,10 +23,7 @@ class SearchTvsPagingSource @Inject constructor(
 
         return service.fetchSearchTvs(query = query, page = currentLoadingPageKey)
             .subscribeOn(Schedulers.io())
-            .doOnSuccess {
-                if (search)
-                    tvDao.insertQuery(TvRecentQueries(query))
-            }.map { toLoadResult(it, currentLoadingPageKey) }
+            .map { toLoadResult(it, currentLoadingPageKey) }
             .onErrorReturn { LoadResult.Error(it) }
             .observeOn(AndroidSchedulers.mainThread())
     }
