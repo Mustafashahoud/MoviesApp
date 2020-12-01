@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -8,6 +9,7 @@
         <variable
             name="movie"
             type="com.mustafa.movieguideapp.models.Movie" />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -77,11 +79,13 @@
 
                 <include
                     android:id="@+id/detail_header"
-                    layout="@layout/layout_movie_detail_header" />
+                    layout="@layout/layout_movie_detail_header"
+                    bind:movie="@{movie}" />
 
                 <include
                     android:id="@+id/detail_body"
-                    layout="@layout/layout_movie_detail_body" />
+                    layout="@layout/layout_movie_detail_body"
+                    bind:movie="@{movie}"/>
 
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

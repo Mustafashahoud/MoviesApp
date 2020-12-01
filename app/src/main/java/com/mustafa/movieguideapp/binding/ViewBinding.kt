@@ -2,16 +2,14 @@ package com.mustafa.movieguideapp.binding
 
 import android.annotation.SuppressLint
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.databinding.BindingAdapter
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import co.lujun.androidtagview.TagContainerLayout
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.mustafa.movieguideapp.api.Api
 import com.mustafa.movieguideapp.extension.bindResource
-import com.mustafa.movieguideapp.extension.requestGlideListener
 import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.models.*
 import com.mustafa.movieguideapp.utils.KeywordListMapper
@@ -36,6 +34,22 @@ fun bindVisibilityByResource(view: View, resource: Resource<*>?) {
 @BindingAdapter("visibleGone")
 fun showHide(view: View, show: Boolean) {
     view.visibility = if (show) View.VISIBLE else View.GONE
+}
+
+@Suppress("unused")
+@BindingAdapter("bindToast")
+fun bindToast(view: View, loadState: CombinedLoadStates) {
+    val errorState =
+        loadState.refresh as? LoadState.Error
+            ?: loadState.append as? LoadState.Error
+            ?: loadState.prepend as? LoadState.Error
+    errorState?.let {
+        Toast.makeText(
+            view.context,
+            "\uD83D\uDE28 Wooops ${it.error}",
+            Toast.LENGTH_LONG
+        ).show()
+    }
 }
 
 
@@ -119,67 +133,6 @@ fun bindTvGenreForTvPerson(view: TextView, tv: TvPerson) {
     view.text = "Genre: ${StringUtils.getTvGenresById(tv.genre_ids)}"
 }
 
-@BindingAdapter("bindBackDrop")
-fun bindBackDrop(view: ImageView, movie: Movie) {
-    if (movie.backdrop_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(movie.backdrop_path))
-            .listener(view.requestGlideListener())
-            .into(view)
-    } else if (movie.poster_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(movie.poster_path))
-            .listener(view.requestGlideListener())
-            .into(view)
-    }
-}
-
-@BindingAdapter("bindBackDropForMoviePerson")
-fun bindBackDropForMoviePerson(view: ImageView, movie: MoviePerson) {
-    if (movie.backdrop_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(movie.backdrop_path))
-            .listener(view.requestGlideListener())
-            .into(view)
-    } else if (movie.poster_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(movie.poster_path))
-            .listener(view.requestGlideListener())
-            .into(view)
-    }
-}
-
-@BindingAdapter("bindBackDrop")
-fun bindBackDrop(view: ImageView, tv: Tv) {
-    if (tv.backdrop_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(tv.backdrop_path))
-            .listener(view.requestGlideListener())
-            .into(view)
-    } else {
-        Glide.with(view.context).load(tv.poster_path?.let { Api.getBackdropPath(it) })
-            .listener(view.requestGlideListener())
-            .into(view)
-    }
-}
-
-@BindingAdapter("bindBackDropForTvPerson")
-fun bindBackDropForTvPerson(view: ImageView, movie: TvPerson) {
-    if (movie.backdrop_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(movie.backdrop_path))
-            .listener(view.requestGlideListener())
-            .into(view)
-    } else if (movie.poster_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(movie.poster_path))
-            .listener(view.requestGlideListener())
-            .into(view)
-    }
-}
-
-@BindingAdapter("bindBackDrop")
-fun bindBackDrop(view: ImageView, person: Person) {
-    if (person.profile_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(person.profile_path))
-            .apply(RequestOptions().circleCrop())
-            .into(view)
-    }
-}
-
 
 @BindingAdapter("setCharacterForTvPerson")
 fun setCharacterForTv(textView: TextView, tv: TvPerson) {
@@ -209,7 +162,7 @@ fun bindAdapterVideoList(view: RecyclerView, resource: Resource<List<Video>>?) {
     view.bindResource(resource) {
         if (resource != null) {
             val adapter = view.adapter as? VideoListAdapter
-            adapter?.addVideoList(resource)
+            adapter?.submitList(resource.data)
             if (resource.data?.isNotEmpty()!!) {
                 view.visible()
             }
@@ -222,7 +175,7 @@ fun bindAdapterReviewList(view: RecyclerView, resource: Resource<List<Review>>?)
     view.bindResource(resource) {
         if (resource != null) {
             val adapter = view.adapter as? ReviewListAdapter
-            adapter?.addReviewList(resource)
+            adapter?.submitList(resource.data)
             if (resource.data?.isNotEmpty()!!) {
                 view.visible()
             }

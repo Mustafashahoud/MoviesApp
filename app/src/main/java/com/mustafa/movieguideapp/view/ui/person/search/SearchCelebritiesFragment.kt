@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,11 +25,6 @@ import com.mustafa.movieguideapp.extension.inVisible
 import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.PeopleSearchAdapter
-import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
@@ -49,9 +43,6 @@ class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search)
 
     private val hasRecentQueriesChanged = MutableLiveData<Boolean>()
 
-    private var searchJob: Job? = null
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentCelebritiesSearchBinding.bind(view)
         initializeUI()
@@ -68,11 +59,10 @@ class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search)
      * Init the toolbar
      */
     private fun initToolbar() {
-        search_view.onActionViewExpanded()
+        binding.toolbarSearchIconfie.searchView.onActionViewExpanded()
+        binding.toolbarSearchIconfie.searchView.queryHint = "Search Celebrities"
 
-        search_view.queryHint = "Search Celebrities"
-
-        voiceSearch.setOnClickListener {
+        binding.toolbarSearchIconfie.voiceSearch.setOnClickListener {
             val voiceIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             voiceIntent.putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -83,29 +73,41 @@ class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search)
                 startActivityForResult(voiceIntent, 10)
             } else {
                 Toast.makeText(
-                    context,
+                    requireContext(),
                     "your device does not support Speech Input",
                     Toast.LENGTH_SHORT
                 ).show()
             }
         }
 
-        arrow_back.setOnClickListener {
-            search_view.clearFocus()
+
+        binding.toolbarSearchIconfie.arrowBack.setOnClickListener {
+            binding.toolbarSearchIconfie.searchView.clearFocus()
             findNavController().navigate(
                 SearchCelebritiesFragmentDirections.actionSearchCelebritiesFragmentToCelebritiesFragment()
             )
         }
 
-        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.toolbarSearchIconfie.searchView.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                navigateToSearchCelebritiesResultFragment(query)
+                query?.let { navigateToSearchCelebritiesResultFragment(query) }
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel.getSuggestions(newText!!)
-                observeSuggestions(newText)
+                newText?.let { text ->
+                    if (!(text.isEmpty() || text.isBlank())) {
+                        showSuggestionViewAndHideRecentSearches()
+                        viewModel.setSuggestionQuery(text)
+                    }
+
+                    if ((text.isEmpty() || text.isBlank())) {
+                        hideSuggestionViewAndShowRecentSearches()
+                        adapter.submitData(viewLifecycleOwner.lifecycle, PagingData.empty())
+                    }
+                }
+
                 return true
             }
         })
@@ -138,7 +140,7 @@ class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search)
         }
         binding.apply {
             recyclerViewSuggestion.adapter = adapter
-            recyclerViewSuggestion.layoutManager = LinearLayoutManager(context)
+            recyclerViewSuggestion.layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
@@ -163,6 +165,8 @@ class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search)
                 binding.clearRecentQueries.isClickable = !adapter.isEmpty
             }
         }
+
+        observeSuggestions()
     }
 
     private fun setListViewOfRecentQueries(queries: List<String?>) {
@@ -183,25 +187,9 @@ class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search)
         }
     }
 
-    private fun observeSuggestions(newText: String?) {
-        newText?.let {
-            // Make sure we cancel the previous job before creating a new one
-            searchJob?.cancel()
-            searchJob = viewLifecycleOwner.lifecycleScope.launch {
-                delay(1000L)
-                viewModel.getSuggestions(it).collectLatest { pagingData ->
-                    if (it.isNotEmpty()) {
-                        showSuggestionViewAndHideRecentSearches()
-                    }
-
-                    if ((newText.isEmpty() || newText.isBlank())) {
-                        hideSuggestionViewAndShowRecentSearches()
-                        adapter.submitData(PagingData.empty())
-                    }
-
-                    adapter.submitData(pagingData)
-                }
-            }
+    private fun observeSuggestions() {
+        viewModel.getSuggestions().observe(viewLifecycleOwner) {
+            adapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
     }
 

@@ -1,6 +1,5 @@
 package com.mustafa.movieguideapp.view.ui.search.base
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.mustafa.movieguideapp.R
+import com.mustafa.movieguideapp.databinding.FragmentSearchBinding
 import com.mustafa.movieguideapp.extension.gone
 import com.mustafa.movieguideapp.extension.inVisible
 import com.mustafa.movieguideapp.extension.visible
@@ -39,26 +40,22 @@ import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.languageFilter
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.ratingFilters
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.runtimeFilters
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.yearFilters
+import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.FilterMultiSelectableAdapter
-import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.android.synthetic.main.fragment_search_filter.*
-import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
 import org.jetbrains.anko.textColor
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-abstract class SearchFragmentBase : Fragment() {
+abstract class SearchFragmentBase(@LayoutRes layout: Int) : Fragment(layout) {
 
     private var isComingFromEdit = false
 
     private val hasAnyFilterBeenSelected = MutableLiveData<Boolean>()
 
-    private val mapFilterTypeToSelectedFilters =
-        HashMap<FilterMultiSelectableAdapter, ArrayList<String>>()
+    private var mapFilterTypeToSelectedFilters by autoCleared<HashMap<FilterMultiSelectableAdapter, ArrayList<String>>>()
 
-    private var mapFilterTypeToSelectedFiltersToBeEdited =
-        HashMap<FilterMultiSelectableAdapter, ArrayList<String>>()
+    private var mapFilterTypeToSelectedFiltersToBeEdited by autoCleared<HashMap<FilterMultiSelectableAdapter, ArrayList<String>>>()
 
     private var filtersToReSelect = ArrayList<String>()
 
@@ -66,30 +63,41 @@ abstract class SearchFragmentBase : Fragment() {
 
     private var arrayAdapter: ArrayAdapter<String>? = null
 
+    protected var searchBinding by autoCleared<FragmentSearchBinding>()
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        searchBinding = FragmentSearchBinding.bind(view)
+
+
+        mapFilterTypeToSelectedFilters = HashMap()
+        mapFilterTypeToSelectedFiltersToBeEdited = HashMap()
+
         observeRecentQueriesChanged()
         initializeUI()
         subscribers()
         setBindingVariables()
 
         if (isComingFromEdit) {
-            val filterTab = tabs.getTabAt(1)
+            val filterTab = searchBinding.tabs.getTabAt(1)
             filterTab?.select()
             renderViewsWhenFiltersTabSelected()
         } else {
-            val recentTab = tabs.getTabAt(0)
+            val recentTab = searchBinding.tabs.getTabAt(0)
             recentTab?.select()
             renderViewsWhenRecentTabSelected()
-            search_view.onActionViewExpanded()
+            searchBinding.toolbarSearch.searchView.onActionViewExpanded()
         }
 
     }
 
     private fun observeRecentQueriesChanged() {
         hasRecentQueriesChanged.observe(viewLifecycleOwner) {
-            arrayAdapter?.let { adapter -> clear_recent_queries.isClickable = !adapter.isEmpty }
+            arrayAdapter?.let { adapter ->
+                searchBinding.clearRecentQueries.isClickable = !adapter.isEmpty
+            }
         }
     }
 
@@ -98,7 +106,7 @@ abstract class SearchFragmentBase : Fragment() {
 
         initToolbar()
 
-        initTabLayout(tabs)
+        initTabLayout(searchBinding.tabs)
 
         setSearchViewHint()
 
@@ -106,16 +114,18 @@ abstract class SearchFragmentBase : Fragment() {
 
         initClearRecentClearAndSeeResultBarWidgets()
 
-        if (tabs.getTabAt(0)?.isSelected!!)
+        if (searchBinding.tabs.getTabAt(0)?.isSelected!!)
             observeAndSetRecentQueries()
 
         // Adapter
         setRecyclerViewAdapter()
 
+        observeSuggestions()
+
     }
 
     private fun initClearRecentClearAndSeeResultBarWidgets() {
-        clear_filter.setOnClickListener {
+        searchBinding.filters.clearFilter.setOnClickListener {
 
             for (adapter in mapFilterTypeToSelectedFilters.keys) {
                 adapter.clearSelection()
@@ -128,7 +138,7 @@ abstract class SearchFragmentBase : Fragment() {
             hasAnyFilterBeenSelected.value = true
         }
 
-        see_result.setOnClickListener {
+        searchBinding.filters.seeResult.setOnClickListener {
             populateFiltersToBeEditedMap()
             val stringKeyMap = convertAdapterKeyMapToStringKeyMap()
 
@@ -144,7 +154,7 @@ abstract class SearchFragmentBase : Fragment() {
         }
 
 
-        clear_recent_queries.setOnClickListener {
+        searchBinding.clearRecentQueries.setOnClickListener {
             arrayAdapter?.let {
                 val builder = AlertDialog.Builder(requireContext(), R.style.AlertDialogTheme)
                 builder.setMessage(R.string.dialog_message)
@@ -205,12 +215,13 @@ abstract class SearchFragmentBase : Fragment() {
         hasAnyFilterBeenSelected.observe(viewLifecycleOwner) {
             if (it != null && it == true) {
                 if (!checkIfAllFiltersEmpty()) {
-                    clear_filter.isEnabled = true
-                    clear_filter.textColor =
+                    searchBinding.filters.clearFilter.isEnabled = true
+                    searchBinding.filters.clearFilter.textColor =
                         context?.resources?.getColor(R.color.colorAccent, context?.theme)!!
                 } else {
-                    clear_filter.isEnabled = false // to NOT let ripple effect work
-                    clear_filter.textColor =
+                    searchBinding.filters.clearFilter.isEnabled =
+                        false // to NOT let ripple effect work
+                    searchBinding.filters.clearFilter.textColor =
                         context?.resources?.getColor(R.color.clearFilterColor, context?.theme)!!
                 }
             }
@@ -340,7 +351,8 @@ abstract class SearchFragmentBase : Fragment() {
             if (selectableItem.isSelected) filters.add(selectableItem.title)
         }
         this.mapFilterTypeToSelectedFilters[filterAdapter] = filters
-        recyclerView?.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
+        recyclerView?.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
         recyclerView?.adapter = filterAdapter
         recyclerView?.setHasFixedSize(true)
     }
@@ -356,19 +368,19 @@ abstract class SearchFragmentBase : Fragment() {
                 R.layout.recent_query_item,
                 queries.requireNoNulls()
             )
-        if (tabs.getTabAt(0)?.isSelected!!) {
+        if (searchBinding.tabs.getTabAt(0)?.isSelected!!) {
             showRecentQueries()
         }
         hasRecentQueriesChanged.value = true
-        listView_recent_queries.setHeaderDividersEnabled(true)
-        listView_recent_queries.setFooterDividersEnabled(true)
-        listView_recent_queries.adapter = arrayAdapter
-        listView_recent_queries.setOnItemClickListener { parent, _, position, _ ->
-            val query = parent.getItemAtPosition(position) as String
-            navigateFromSearchFragmentToSearchFragmentResult(query)
+        searchBinding.listViewRecentQueries.apply {
+            setHeaderDividersEnabled(true)
+            setFooterDividersEnabled(true)
+            adapter = arrayAdapter
+            setOnItemClickListener { parent, _, position, _ ->
+                val query = parent.getItemAtPosition(position) as String
+                navigateFromSearchFragmentToSearchFragmentResult(query)
+            }
         }
-
-
     }
 
     /**
@@ -376,7 +388,7 @@ abstract class SearchFragmentBase : Fragment() {
      */
     private fun initToolbar() {
 
-        voiceSearch.setOnClickListener {
+        searchBinding.toolbarSearch.voiceSearch.setOnClickListener {
             val voiceIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             voiceIntent.putExtra(
                 RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -395,56 +407,40 @@ abstract class SearchFragmentBase : Fragment() {
         }
 
 
-        arrow_back.setOnClickListener {
-            search_view.clearFocus()
+        searchBinding.toolbarSearch.arrowBack.setOnClickListener {
+            searchBinding.toolbarSearch.searchView.clearFocus()
             navigateFromSearchFragmentToListItemsFragment()
         }
 
-        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchBinding.toolbarSearch.searchView.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                navigateFromSearchFragmentToSearchFragmentResult(query!!)
+                query?.let { navigateFromSearchFragmentToSearchFragmentResult(query) }
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 setSuggestionsQuery(newText)
-                observeSuggestions(newText)
                 return true
             }
         })
     }
 
     /**
-     * Receiving Voice Query
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            10 -> if (resultCode == Activity.RESULT_OK && data != null) {
-                val voiceQuery = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                dismissKeyboard(search_view.windowToken)
-                search_view.setQuery(voiceQuery?.let { it[0] }, true)
-            }
-        }
-    }
-
-    /**
      *
      */
     private fun renderViewsWhenRecentTabSelected() {
-        search_view.requestFocus()
+        searchBinding.toolbarSearch.searchView.requestFocus()
         hideFiltersLayout()
-        search_view.visible()
-        voiceSearch.visible()
-        filter_label.gone()
-        if (search_view.query.isEmpty() || search_view.query.isBlank()) {
+        searchBinding.toolbarSearch.searchView.visible()
+        searchBinding.toolbarSearch.voiceSearch.visible()
+        searchBinding.toolbarSearch.filterLabel.gone()
+        if (searchBinding.toolbarSearch.searchView.query.isEmpty() || searchBinding.toolbarSearch.searchView.query.isBlank()) {
             showRecentSearchesBar()
             showRecentQueries()
         } else {
             hideRecentQueries()
-            recyclerView_suggestion.visible()
+            searchBinding.recyclerViewSuggestion.visible()
         }
     }
 
@@ -453,49 +449,49 @@ abstract class SearchFragmentBase : Fragment() {
      */
     private fun renderViewsWhenFiltersTabSelected() {
         hideListViewAndRecyclerView()
-        search_view.gone()
-        voiceSearch.gone()
-        filter_label.text = getString(R.string.filters)
-        filter_label.visible()
+        searchBinding.toolbarSearch.searchView.gone()
+        searchBinding.toolbarSearch.voiceSearch.gone()
+        searchBinding.toolbarSearch.filterLabel.text = getString(R.string.filters)
+        searchBinding.toolbarSearch.filterLabel.visible()
         showFiltersLayout()
         hideRecentSearchesBar()
-        dismissKeyboard(search_view.windowToken)
+        dismissKeyboard(searchBinding.toolbarSearch.searchView.windowToken)
     }
 
     private fun hideFiltersLayout() {
-        filters.inVisible()
+        searchBinding.filters.filters.inVisible()
+//        filters.inVisible()
     }
 
     private fun showFiltersLayout() {
-        filters.visible()
+        searchBinding.filters.filters.visible()
     }
 
 
     private fun hideRecentSearchesBar() {
-        recent_queries_bar.gone()
+        searchBinding.recentQueriesBar.gone()
     }
 
     private fun showRecentSearchesBar() {
-        recent_queries_bar.visible()
+        searchBinding.recentQueriesBar.visible()
     }
 
 
     private fun hideListViewAndRecyclerView() {
-        listView_recent_queries.inVisible()
-        recyclerView_suggestion.inVisible()
-
+        searchBinding.listViewRecentQueries.inVisible()
+        searchBinding.recyclerViewSuggestion.inVisible()
     }
 
     private fun hideRecentQueries() {
-        listView_recent_queries.inVisible()
+        searchBinding.listViewRecentQueries.inVisible()
     }
 
     private fun showRecentQueries() {
-        listView_recent_queries.visible()
+        searchBinding.listViewRecentQueries.visible()
     }
 
     protected fun showSuggestionViewAndHideRecentSearches() {
-        recyclerView_suggestion.visible()
+        searchBinding.recyclerViewSuggestion.visible()
         hideRecentQueries()
         hideRecentSearchesBar()
     }
@@ -503,7 +499,7 @@ abstract class SearchFragmentBase : Fragment() {
     protected fun hideSuggestionViewAndShowRecentSearches() {
         showRecentSearchesBar()
         showRecentQueries()
-        recyclerView_suggestion.inVisible()
+        searchBinding.recyclerViewSuggestion.inVisible()
     }
 
 
@@ -518,7 +514,7 @@ abstract class SearchFragmentBase : Fragment() {
     protected abstract fun observeAndSetRecentQueries()
     protected abstract fun setRecyclerViewAdapter()
     protected abstract fun setSearchViewHint()
-    protected abstract fun observeSuggestions(newText: String?)
+    protected abstract fun observeSuggestions()
     protected abstract fun navigateFromSearchFragmentToSearchFragmentResultFilter(bundle: Bundle)
     protected abstract fun navigateFromSearchFragmentToSearchFragmentResult(query: String)
     protected abstract fun navigateFromSearchFragmentToListItemsFragment()

@@ -5,10 +5,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingComponent
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,13 +18,12 @@ import com.mustafa.movieguideapp.extension.hideKeyboard
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.LoadStateAdapter
 import com.mustafa.movieguideapp.view.adapter.PeopleSearchAdapter
-import kotlinx.android.synthetic.main.toolbar_search_result.*
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import com.mustafa.movieguideapp.view.ui.AutoDisposeFragment
+import com.uber.autodispose.autoDispose
 import javax.inject.Inject
 
-class SearchCelebritiesResultFragment : Fragment(R.layout.fragment_celebrities_search_result),
+class SearchCelebritiesResultFragment :
+    AutoDisposeFragment(R.layout.fragment_celebrities_search_result),
     Injectable {
 
     @Inject
@@ -38,8 +35,6 @@ class SearchCelebritiesResultFragment : Fragment(R.layout.fragment_celebrities_s
     private var binding by autoCleared<FragmentCelebritiesSearchResultBinding>()
     private var pagingAdapter by autoCleared<PeopleSearchAdapter>()
 
-    private var searchJob: Job? = null
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding = FragmentCelebritiesSearchResultBinding.bind(view)
@@ -47,26 +42,27 @@ class SearchCelebritiesResultFragment : Fragment(R.layout.fragment_celebrities_s
         setRetrySetOnClickListener()
         initializeUI()
 
-        getQuerySafeArgs().let { query ->
-            searchJob?.cancel()
-            searchJob = viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.searchPeople(query).collectLatest { pagingData ->
-                    pagingAdapter.submitData(pagingData)
+        val querySearch = getQuerySafeArgs()
+
+        querySearch.let { query ->
+            viewModel.searchPeople(query)
+                .autoDispose(scopeProvider)
+                .subscribe {
+                    pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
                 }
-            }
         }
     }
 
     private fun initializeUI() {
         initAdapter()
         hideKeyboard()
-        search_view.setOnSearchClickListener {
+        binding.toolbarSearch.searchView.setOnSearchClickListener {
             findNavController().navigate(
                 SearchCelebritiesResultFragmentDirections.actionSearchCelebritiesResultFragmentToSearchCelebritiesFragment()
             )
         }
 
-        arrow_back.setOnClickListener {
+        binding.toolbarSearch.arrowBack.setOnClickListener {
             findNavController().navigate(
                 SearchCelebritiesResultFragmentDirections.actionSearchCelebritiesResultFragmentToSearchCelebritiesFragment()
             )

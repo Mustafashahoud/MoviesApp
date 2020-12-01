@@ -4,6 +4,7 @@ package com.mustafa.movieguideapp.api
 import com.mustafa.movieguideapp.models.network.KeywordListResponse
 import com.mustafa.movieguideapp.models.network.ReviewListResponse
 import com.mustafa.movieguideapp.models.network.VideoListResponse
+import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -11,11 +12,11 @@ interface TvService {
 
 
   @GET("/3/tv/{tv_id}/keywords")
-  suspend fun fetchKeywords(@Path("tv_id") id: Int): ApiResponse<KeywordListResponse>
+  fun fetchKeywords(@Path("tv_id") id: Int): Single<KeywordListResponse>
 
   @GET("/3/tv/{tv_id}/videos")
-  suspend fun fetchVideos(@Path("tv_id") id: Int): ApiResponse<VideoListResponse>
+  fun fetchVideos(@Path("tv_id") id: Int): Single<VideoListResponse>
 
   @GET("/3/tv/{tv_id}/reviews")
-  suspend fun fetchReviews(@Path("tv_id") id: Int): ApiResponse<ReviewListResponse>
+  fun fetchReviews(@Path("tv_id") id: Int): Single<ReviewListResponse>
 }

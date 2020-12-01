@@ -1,17 +1,18 @@
 package com.mustafa.movieguideapp.repository.movies
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.liveData
+import androidx.paging.rxjava2.flowable
 import com.mustafa.movieguideapp.api.TheDiscoverService
 import com.mustafa.movieguideapp.models.FilterData
 import com.mustafa.movieguideapp.models.Movie
 import com.mustafa.movieguideapp.room.MovieDao
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.Constants.Companion.TMDB_API_PAGE_SIZE
-import kotlinx.coroutines.flow.Flow
+import io.reactivex.Flowable
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,16 +23,18 @@ class MoviesRepository @Inject constructor(
     private val service: TheDiscoverService,
     private val movieDao: MovieDao
 ) {
-    fun loadPopularMovies(): Flow<PagingData<Movie>> {
+
+    fun loadPopularMovies(): Flowable<PagingData<Movie>> {
         return Pager(
             config = PagingConfig(
                 TMDB_API_PAGE_SIZE,
                 enablePlaceholders = false
             )
-        ) { MoviesPagingSource(service) }.flow
+        ) { MoviesPagingSource(service) }.flowable
     }
 
-    fun searchMovies(query: String): Flow<PagingData<Movie>> {
+
+    fun searchMovies(query: String): Flowable<PagingData<Movie>> {
         return Pager(
             config = PagingConfig(
                 TMDB_API_PAGE_SIZE,
@@ -44,23 +47,25 @@ class MoviesRepository @Inject constructor(
                 query = query,
                 search = true
             )
-        }.flow
+        }.flowable
     }
 
-    fun getMovieSuggestions(query: String): Flow<PagingData<Movie>> {
-        return Pager(
-            config = PagingConfig(
-                TMDB_API_PAGE_SIZE,
-                enablePlaceholders = false
-            )
-        ) {
-            SearchMoviesPagingSource(
-                service,
-                movieDao,
-                query = query,
-                search = false
-            )
-        }.flow
+    fun getMovieSuggestions(query: String): LiveData<PagingData<Movie>> {
+        return LiveDataReactiveStreams.fromPublisher(
+            Pager(
+                config = PagingConfig(
+                    TMDB_API_PAGE_SIZE,
+                    enablePlaceholders = false
+                )
+            ) {
+                SearchMoviesPagingSource(
+                    service,
+                    movieDao,
+                    query = query,
+                    search = false
+                )
+            }.flowable
+        )
     }
 
     suspend fun getMovieRecentQueries(): List<String> {
@@ -75,15 +80,17 @@ class MoviesRepository @Inject constructor(
         filterData: FilterData,
         totalCount: (Int) -> Unit
     ): LiveData<PagingData<Movie>> {
-        return Pager(
-            config = PagingConfig(
-                TMDB_API_PAGE_SIZE,
-                enablePlaceholders = false
-            )
-        ) {
-            FilteredMoviesPagingSource(service, filterData) {
-                totalCount(it)
-            }
-        }.liveData
+        return LiveDataReactiveStreams.fromPublisher(
+            Pager(
+                config = PagingConfig(
+                    TMDB_API_PAGE_SIZE,
+                    enablePlaceholders = false
+                )
+            ) {
+                FilteredMoviesPagingSource(service, filterData) {
+                    totalCount(it)
+                }
+            }.flowable
+        )
     }
 }

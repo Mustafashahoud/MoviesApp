@@ -1,7 +1,6 @@
 package com.mustafa.movieguideapp.view.ui.tv.tvdetail
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
 import com.mustafa.movieguideapp.repository.tvs.TvRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
@@ -20,22 +19,21 @@ class TvDetailViewModel @Inject constructor(
 
     val keywordListLiveData = tvIdLiveData.switchMap { pageNumber ->
         launchOnViewModelScope {
-            repository.loadKeywords(pageNumber).asLiveData()
+            repository.loadKeywords(pageNumber)
         }
     }
 
     val videoListLiveData = tvIdLiveData.switchMap { pageNumber ->
         launchOnViewModelScope {
-            repository.loadVideos(pageNumber).asLiveData()
+            repository.loadVideos(pageNumber)
         }
     }
 
     val reviewListLiveData = tvIdLiveData.switchMap { pageNumber ->
         launchOnViewModelScope {
-            repository.loadReviews(pageNumber).asLiveData()
+            repository.loadReviews(pageNumber)
         }
     }
-
 
     fun setTvId(id: Int) = tvIdLiveData.postValue(id)
 }

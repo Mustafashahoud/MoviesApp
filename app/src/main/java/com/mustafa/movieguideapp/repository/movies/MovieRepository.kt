@@ -1,13 +1,15 @@
 package com.mustafa.movieguideapp.repository.movies
 
-import com.mustafa.movieguideapp.api.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataReactiveStreams
+import com.mustafa.movieguideapp.api.MovieService
 import com.mustafa.movieguideapp.models.Keyword
 import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.models.Review
 import com.mustafa.movieguideapp.models.Video
 import com.mustafa.movieguideapp.testing.OpenForTesting
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -16,51 +18,36 @@ import javax.inject.Singleton
 @Singleton
 class MovieRepository @Inject constructor(private val service: MovieService) {
 
-    suspend fun loadKeywords(id: Int): Flow<Resource<List<Keyword>>> {
-        return flow {
-            service.fetchKeywords(id = id).apply {
-                this.onSuccessSuspend {
-                    data?.let {
-                        emit(Resource.Success(data.keywords, false))
-                    }
-                }.onErrorSuspend {
-                    emit(Resource.Error(message()))
-                }.onExceptionSuspend {
-                    emit(Resource.Error(message()))
-                }
-            }
-        }
+    fun loadKeywords(id: Int): LiveData<Resource<List<Keyword>>> {
+        return LiveDataReactiveStreams.fromPublisher(service.fetchKeywords(id = id)
+            .subscribeOn(Schedulers.io())
+            .map<Resource<List<Keyword>>> { Resource.Success(it.keywords, false) }
+            .onErrorReturn { Resource.Error(it.toString()) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .toFlowable()
+        )
+
     }
 
-    suspend fun loadVideos(id: Int): Flow<Resource<List<Video>>> {
-        return flow {
-            service.fetchVideos(id = id).apply {
-                this.onSuccessSuspend {
-                    data?.let {
-                        emit(Resource.Success(data.results, false))
-                    }
-                }.onErrorSuspend {
-                    emit(Resource.Error(message()))
-                }.onExceptionSuspend {
-                    emit(Resource.Error(message()))
-                }
-            }
-        }
+    fun loadVideos(id: Int): LiveData<Resource<List<Video>>> {
+        return LiveDataReactiveStreams.fromPublisher(
+            service.fetchVideos(id = id)
+                .subscribeOn(Schedulers.io())
+                .map<Resource<List<Video>>> { Resource.Success(it.results, false) }
+                .onErrorReturn { Resource.Error(it.toString()) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .toFlowable()
+        )
     }
 
-    suspend fun loadReviews(id: Int): Flow<Resource<List<Review>>> {
-        return flow {
-            service.fetchReviews(id = id).apply {
-                this.onSuccessSuspend {
-                    data?.let {
-                        emit(Resource.Success(data.results, false))
-                    }
-                }.onErrorSuspend {
-                    emit(Resource.Error(message()))
-                }.onExceptionSuspend {
-                    emit(Resource.Error(message()))
-                }
-            }
-        }
+    fun loadReviews(id: Int): LiveData<Resource<List<Review>>> {
+        return LiveDataReactiveStreams.fromPublisher(
+            service.fetchReviews(id = id)
+                .subscribeOn(Schedulers.io())
+                .map<Resource<List<Review>>> { Resource.Success(it.results, false) }
+                .onErrorReturn { Resource.Error(it.toString()) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .toFlowable()
+        )
     }
 }

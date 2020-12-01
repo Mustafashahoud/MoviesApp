@@ -1,17 +1,14 @@
 package com.mustafa.movieguideapp.view.ui.person.search
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
+import androidx.paging.rxjava2.cachedIn
 import com.mustafa.movieguideapp.models.Person
 import com.mustafa.movieguideapp.repository.people.PeopleRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import io.reactivex.Flowable
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,10 +20,10 @@ class SearchCelebritiesResultViewModel @Inject constructor(
 
     private var currentQueryValue: String? = null
 
-    private var currentSearchResult: Flow<PagingData<Person>>? = null
+    private var currentSearchResult: Flowable<PagingData<Person>>? = null
 
 
-    fun searchPeople(queryString: String): Flow<PagingData<Person>> {
+    fun searchPeople(queryString: String): Flowable<PagingData<Person>> {
         val lastResult = currentSearchResult
         if (queryString == currentQueryValue && lastResult != null) {
             return lastResult
@@ -40,9 +37,15 @@ class SearchCelebritiesResultViewModel @Inject constructor(
         return newResult
     }
 
+    val querySuggestionLiveDta = MutableLiveData<String>()
+    fun getSuggestions(): LiveData<PagingData<Person>> {
+        return querySuggestionLiveDta.switchMap {
+            peopleRepository.getPeopleSuggestions(it).cachedIn(viewModelScope)
+        }
+    }
 
-    fun getSuggestions(queryString: String): Flow<PagingData<Person>> {
-        return peopleRepository.getPeopleSuggestions(queryString).cachedIn(viewModelScope)
+    fun setSuggestionQuery(query: String) {
+        querySuggestionLiveDta.value = query
     }
 
 

@@ -2,6 +2,7 @@ package com.mustafa.movieguideapp.view.ui.person.detail
 
 import android.os.Bundle
 import android.view.View
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -15,7 +16,6 @@ import com.mustafa.movieguideapp.models.Person
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MoviePersonListAdapter
 import com.mustafa.movieguideapp.view.adapter.TvPersonListAdapter
-import kotlinx.android.synthetic.main.toolbar_detail.*
 import javax.inject.Inject
 
 class CelebrityDetailFragment : Fragment(R.layout.fragment_celebrity_detail), Injectable {
@@ -37,7 +37,14 @@ class CelebrityDetailFragment : Fragment(R.layout.fragment_celebrity_detail), In
     private var personId = -1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding = FragmentCelebrityDetailBinding.bind(view)
+
+        binding = DataBindingUtil.bind(view, dataBindingComponent)!!
+
+        with(binding) {
+            lifecycleOwner = this@CelebrityDetailFragment.viewLifecycleOwner
+            viewmodel = viewModel
+            person = getSelectedPerson()
+        }
 
         val selectedPersonId = getSelectedPerson().id
         //Just to Not reload the movies of person when there no need
@@ -45,19 +52,15 @@ class CelebrityDetailFragment : Fragment(R.layout.fragment_celebrity_detail), In
             personId = selectedPersonId
             viewModel.postPersonId(getSelectedPerson().id)
         }
-        with(binding) {
-            lifecycleOwner = this@CelebrityDetailFragment
-            viewmodel = viewModel
-            person = getSelectedPerson()
-        }
+
         observeMoviesAndTvsForCelebrity()
         initializeUI()
     }
 
 
     private fun initializeUI() {
-        toolbar_back_arrow.setOnClickListener { activity?.onBackPressed() }
-        toolbar_title.text = getSelectedPerson().name
+        binding.toolbarDetail.toolbarBackArrow.setOnClickListener { activity?.onBackPressed() }
+        binding.toolbarDetail.toolbarTitle.text = getSelectedPerson().name
         viewModel.setPersonId(getSelectedPerson().id)
         adapterMoviesForCelebrity = MoviePersonListAdapter(
             dataBindingComponent
@@ -71,7 +74,7 @@ class CelebrityDetailFragment : Fragment(R.layout.fragment_celebrity_detail), In
         }
         binding.recyclerViewCelebrityMovies.adapter = adapterMoviesForCelebrity
         binding.recyclerViewCelebrityMovies.layoutManager = LinearLayoutManager(
-            context,
+            requireContext(),
             LinearLayoutManager.HORIZONTAL,
             false
         )
@@ -87,7 +90,7 @@ class CelebrityDetailFragment : Fragment(R.layout.fragment_celebrity_detail), In
         }
         binding.recyclerViewCelebrityTvs.adapter = adapterTvsForCelebrity
         binding.recyclerViewCelebrityTvs.layoutManager = LinearLayoutManager(
-            context,
+            requireContext(),
             LinearLayoutManager.HORIZONTAL,
             false
         )

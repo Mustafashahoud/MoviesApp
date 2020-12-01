@@ -8,7 +8,7 @@ import com.mustafa.movieguideapp.models.entity.TvRecentQueries
 @Dao
 abstract class TvDao {
     @Insert
-    abstract suspend fun insertQuery(query: TvRecentQueries)
+    abstract fun insertQuery(query: TvRecentQueries)
 
     @Query("SELECT `query` FROM TvRecentQueries GROUP BY `query` ORDER BY id DESC LIMIT 30")
     abstract suspend fun getAllTvQueries(): List<String>

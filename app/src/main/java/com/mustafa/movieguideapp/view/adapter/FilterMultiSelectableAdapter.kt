@@ -3,13 +3,14 @@ package com.mustafa.movieguideapp.view.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.recyclerview.widget.RecyclerView
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.mustafa.movieguideapp.R
+import com.mustafa.movieguideapp.databinding.FilterButtonItemBinding
 import com.mustafa.movieguideapp.models.SelectableItem
-import kotlinx.android.synthetic.main.filter_button_item.view.*
 
 
 class FilterMultiSelectableAdapter(
@@ -19,14 +20,25 @@ class FilterMultiSelectableAdapter(
     private val filterButtonUnSelectedOnClickCallback: ((String) -> Unit)?,
     val adapterName: String
 ) :
-    RecyclerView.Adapter<FilterMultiSelectableAdapter.SelectableViewHolder>() {
+    Adapter<FilterMultiSelectableAdapter.SelectableViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectableViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.filter_button_item, parent, false)
-        return SelectableViewHolder(
-            view
+//        val view =
+//            LayoutInflater.from(parent.context).inflate(R.layout.filter_button_item, parent, false)
+        val binding: FilterButtonItemBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            R.layout.filter_button_item,
+            parent,
+            false
         )
+
+        binding.root.setOnClickListener {
+
+        }
+
+
+
+        return SelectableViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -69,8 +81,9 @@ class FilterMultiSelectableAdapter(
         }
     }
 
-    class SelectableViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var button: Button = view.button_filter
+    class SelectableViewHolder(private val binidng: FilterButtonItemBinding) :
+        ViewHolder(binidng.root) {
+        var button: Button = binidng.buttonFilter
     }
 
     fun clearSelection() {

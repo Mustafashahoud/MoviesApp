@@ -7,12 +7,12 @@ import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieguideapp.R
+import com.mustafa.movieguideapp.databinding.ActivityMainBinding
 import com.mustafa.movieguideapp.extension.*
 import com.mustafa.movieguideapp.utils.setupWithNavController
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
-import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 
@@ -23,9 +23,15 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
+    lateinit var binding: ActivityMainBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
 //        setSplashy()
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
@@ -37,8 +43,8 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
         navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
             if (isMainFragment(destination)) {
-                bottom_navigation.visible()
-            } else bottom_navigation.gone()
+                binding.bottomNavigation.visible()
+            } else binding.bottomNavigation.gone()
         }
 
     }
@@ -110,7 +116,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
 
     private fun setOnNavigationItemReselected() {
-        bottom_navigation.setOnNavigationItemReselectedListener {
+        binding.bottomNavigation.setOnNavigationItemReselectedListener {
             when (it.itemId) {
                 R.id.movie -> supportFragmentManager.getCurrentNavigationFragment()
                     ?.setSmoothScrollToZero(R.id.recyclerView_list_movies)

@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
   <data>
 
     <variable
         name="tv"
         type="com.mustafa.movieguideapp.models.Tv" />
+
+    <variable
+        name="viewModel"
+        type="com.mustafa.movieguideapp.view.ui.tv.tvdetail.TvDetailViewModel" />
 
   </data>
 
@@ -75,10 +80,13 @@
 
         <include
             android:id="@+id/detail_header"
+            bind:tv="@{tv}"
             layout="@layout/layout_tv_detail_header" />
 
         <include
             android:id="@+id/detail_body"
+            bind:tv="@{tv}"
+            bind:viewModel="@{viewModel}"
             layout="@layout/layout_tv_detail_body" />
       </LinearLayout>
     </androidx.core.widget.NestedScrollView>

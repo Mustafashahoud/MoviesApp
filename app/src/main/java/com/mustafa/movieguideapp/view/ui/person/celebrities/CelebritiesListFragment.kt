@@ -5,10 +5,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingComponent
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.mustafa.movieguideapp.R
@@ -19,12 +17,11 @@ import com.mustafa.movieguideapp.extension.getGridLayoutManagerWithSpanSizeOne
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.LoadStateAdapter
 import com.mustafa.movieguideapp.view.adapter.PeopleAdapter
-import kotlinx.android.synthetic.main.toolbar_search.*
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import com.mustafa.movieguideapp.view.ui.AutoDisposeFragment
+import com.uber.autodispose.autoDispose
 import javax.inject.Inject
 
-class CelebritiesListFragment : Fragment(R.layout.fragment_celebrities), Injectable {
+class CelebritiesListFragment : AutoDisposeFragment(R.layout.fragment_celebrities), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -49,7 +46,7 @@ class CelebritiesListFragment : Fragment(R.layout.fragment_celebrities), Injecta
 
         initAdapter()
 
-        search_icon.setOnClickListener {
+        binding.toolbarSearch.searchIcon.setOnClickListener {
             findNavController().navigate(
                 CelebritiesListFragmentDirections.actionCelebritiesToSearchCelebritiesFragment()
             )
@@ -99,14 +96,14 @@ class CelebritiesListFragment : Fragment(R.layout.fragment_celebrities), Injecta
 
 
     private fun subscribers() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.peopleStream.collectLatest {
-                pagingAdapter.submitData(it)
+        viewModel.peopleStream
+            .autoDispose(scopeProvider)
+            .subscribe {
+                pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
             }
-        }
     }
 
     private fun intiToolbar(title: String) {
-        toolbar_title.text = title
+        binding.toolbarSearch.toolbarTitle.text = title
     }
 }

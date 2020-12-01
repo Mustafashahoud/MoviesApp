@@ -3,28 +3,31 @@ package com.mustafa.movieguideapp.api
 
 import com.mustafa.movieguideapp.models.network.DiscoverMovieResponse
 import com.mustafa.movieguideapp.models.network.DiscoverTvResponse
+import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface TheDiscoverService {
 
+    /////////////////////////////////////////////
+
     @GET("/3/discover/movie?language=en&sort_by=popularity.desc")
-    suspend fun fetchMovies(@Query("page") page: Int): DiscoverMovieResponse
+    fun fetchMovies(@Query("page") page: Int): Single<DiscoverMovieResponse>
 
     @GET("/3/discover/tv?language=en&sort_by=popularity.desc")
-    suspend fun fetchTvs(@Query("page") page: Int): DiscoverTvResponse
+    fun fetchTvs(@Query("page") page: Int): Single<DiscoverTvResponse>
 
     @GET("/3/search/movie")
-    suspend fun fetchSearchMovies(@Query("query") query: String,
-                                  @Query("page") page: Int) : DiscoverMovieResponse
+    fun fetchSearchMovies(@Query("query") query: String,
+                          @Query("page") page: Int) : Single<DiscoverMovieResponse>
 
     @GET("/3/search/tv")
-    suspend fun fetchSearchTvs(@Query("query") query: String,
-                               @Query("page") page: Int) : DiscoverTvResponse
+    fun fetchSearchTvs(@Query("query") query: String,
+                       @Query("page") page: Int) : Single<DiscoverTvResponse>
 
 
     @GET("/3/discover/movie")
-    suspend fun searchMovieFilters(
+    fun searchMovieFilters(
         @Query("vote_average.gte") rating: Int?,
         @Query("sort_by") sort: String?,
         @Query("year") year: Int?,
@@ -34,10 +37,10 @@ interface TheDiscoverService {
         @Query("with_runtime.gte") with_runtime: Int?,
         @Query("region") region: String?,
         @Query("page") page: Int)
-            : DiscoverMovieResponse
+            : Single<DiscoverMovieResponse>
 
     @GET("/3/discover/tv")
-    suspend fun searchTvFilters(
+    fun searchTvFilters(
         @Query("vote_average.gte") rating: Int?,
         @Query("sort_by") sort: String?,
         @Query("first_air_date_year") year: Int?,
@@ -46,7 +49,7 @@ interface TheDiscoverService {
         @Query("with_original_language") with_original_language: String?,
         @Query("with_runtime.gte") with_runtime: Int?,
         @Query("page") page: Int)
-            : DiscoverTvResponse
+            : Single<DiscoverTvResponse>
 
 }
 

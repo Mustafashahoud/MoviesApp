@@ -39,7 +39,7 @@ class PersonDetailViewModel @Inject constructor(
             if (it == null) {
                 AbsentLiveData.create()
             } else {
-                repository.loadMoviesForPerson(personId = personId.value!!).asLiveData()
+                repository.loadMoviesForPerson(personId = personId.value!!)
             }
         }
     }
@@ -50,7 +50,7 @@ class PersonDetailViewModel @Inject constructor(
             if (it == null) {
                 AbsentLiveData.create()
             } else {
-                repository.loadTvsForPerson(personId = personId.value!!).asLiveData()
+                repository.loadTvsForPerson(personId = personId.value!!)
             }
         }
     }

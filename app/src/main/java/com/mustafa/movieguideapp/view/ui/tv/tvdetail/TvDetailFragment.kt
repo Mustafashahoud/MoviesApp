@@ -3,10 +3,9 @@ package com.mustafa.movieguideapp.view.ui.tv.tvdetail
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
+import androidx.databinding.DataBindingComponent
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,50 +14,36 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.api.Api
+import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentTvDetailBinding
 import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.Tv
-import com.mustafa.movieguideapp.models.Video
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.ReviewListAdapter
 import com.mustafa.movieguideapp.view.adapter.VideoListAdapter
-import com.mustafa.movieguideapp.view.viewholder.VideoListViewHolder
 import javax.inject.Inject
 
 
-class TvDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
+class TvDetailFragment : Fragment(R.layout.fragment_tv_detail),
+    Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by viewModels<TvDetailViewModel> { viewModelFactory }
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    private val mViewModel by viewModels<TvDetailViewModel> { viewModelFactory }
     private var binding by autoCleared<FragmentTvDetailBinding>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_tv_detail,
-            container,
-            false
-        )
-
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        viewModel.setTvId(getTvFromIntent().id)
+        binding = DataBindingUtil.bind(view, dataBindingComponent)!!
+
         with(binding) {
-            lifecycleOwner = this@TvDetailFragment
-            detailBody.viewModel = viewModel
+            lifecycleOwner = this@TvDetailFragment.viewLifecycleOwner
+            viewModel = mViewModel
             tv = getTvFromIntent()
-            detailHeader.tv = getTvFromIntent()
-            detailBody.tv = getTvFromIntent()
         }
+
+        mViewModel.setTvId(getTvFromIntent().id)
 
         initializeUI()
     }
@@ -68,12 +53,16 @@ class TvDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
         binding.apply {
             detailBody.detailBodyRecyclerViewTrailers
             detailBody.detailBodyRecyclerViewTrailers.layoutManager =
-                LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
+                LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
             detailBody.detailBodyRecyclerViewTrailers.adapter =
-                VideoListAdapter(this@TvDetailFragment)
+                VideoListAdapter(dataBindingComponent) { video ->
+                    val playVideoIntent =
+                        Intent(Intent.ACTION_VIEW, Uri.parse(Api.getYoutubeVideoPath(video.key)))
+                    startActivity(playVideoIntent)
+                }
             detailBody.detailBodyRecyclerViewReviews.layoutManager =
-                LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-            detailBody.detailBodyRecyclerViewReviews.adapter = ReviewListAdapter()
+                LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            detailBody.detailBodyRecyclerViewReviews.adapter = ReviewListAdapter(dataBindingComponent)
             detailBody.detailBodyRecyclerViewReviews.isNestedScrollingEnabled = false
             detailBody.detailBodyRecyclerViewReviews.setHasFixedSize(true)
         }
@@ -81,21 +70,13 @@ class TvDetailFragment : Fragment(), VideoListViewHolder.Delegate, Injectable {
     }
 
     private fun getTvFromIntent(): Tv {
-        return TvDetailFragmentArgs.fromBundle(
-            requireArguments()
-        ).tv
+        return TvDetailFragmentArgs.fromBundle(requireArguments()).tv
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home)
             activity?.onBackPressed()
         return false
-    }
-
-    override fun onItemClicked(video: Video) {
-        val playVideoIntent =
-            Intent(Intent.ACTION_VIEW, Uri.parse(Api.getYoutubeVideoPath(video.key)))
-        startActivity(playVideoIntent)
     }
 
 }

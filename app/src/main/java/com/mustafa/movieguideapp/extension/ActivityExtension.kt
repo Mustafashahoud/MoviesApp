@@ -3,7 +3,6 @@
 package com.mustafa.movieguideapp.extension
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.View
@@ -26,7 +25,7 @@ import kotlin.math.max
 @SuppressLint("ObsoleteSdkInt")
 fun checkIsMaterialVersion() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
 
-fun Activity.circularRevealedAtCenter(view: View) {
+fun Fragment.circularRevealedAtCenter(view: View) {
     val cx = (view.left + view.right) / 2
     val cy = (view.top + view.bottom) / 2
     val finalRadius = max(view.width, view.height)
@@ -34,13 +33,13 @@ fun Activity.circularRevealedAtCenter(view: View) {
     if (checkIsMaterialVersion() && view.isAttachedToWindow) {
         val anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, 0f, finalRadius.toFloat())
         view.visible()
-        view.setBackgroundColor(ContextCompat.getColor(this, R.color.background))
+        view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.background))
         anim.duration = 550
         anim.start()
     }
 }
 
-fun Activity.requestGlideListener(view: View): RequestListener<Drawable> {
+fun Fragment.requestGlideListener(view: View): RequestListener<Drawable> {
     return object : RequestListener<Drawable> {
         override fun onLoadFailed(
             e: GlideException?,

@@ -2,11 +2,10 @@ package com.mustafa.movieguideapp.view.ui.person.celebrities
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
 import androidx.paging.filter
+import androidx.paging.rxjava2.cachedIn
 import com.mustafa.movieguideapp.repository.people.PeopleRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 

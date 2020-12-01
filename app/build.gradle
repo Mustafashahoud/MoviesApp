@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: "kotlin-allopen"
 
@@ -48,9 +48,7 @@ android {
     }
     buildFeatures{
         dataBinding = true
-    }
-    androidExtensions {
-        experimental = true
+        viewBinding true
     }
     dexOptions {
         preDexLibraries true
@@ -142,6 +140,8 @@ dependencies {
     def coroutinesVersion = '1.3.9'
     def paging_version = "3.0.0-alpha09"
     def roomVersion = '2.3.0-alpha03'
+    def rxjava_version = '2.2.20'
+    def uber_rxjava_version = '2.0.0'
 
     // support library
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
@@ -162,6 +162,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycleVersion"
+    implementation 'android.arch.lifecycle:reactivestreams:1.1.1'
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
@@ -172,6 +173,8 @@ dependencies {
 
     // Paging 3 Library
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+    implementation "androidx.paging:paging-rxjava2-ktx:$paging_version"
+
 
     // dependency injection
     implementation "com.google.dagger:dagger:2.30"
@@ -189,6 +192,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
     implementation "com.google.code.gson:gson:$googleJsonVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
 
 
     // glide
@@ -211,6 +215,17 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+
+    // RxJava
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.19'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'com.jakewharton.rxbinding4:rxbinding:4.0.0'
+
+
+    implementation "com.uber.autodispose:autodispose:1.4.0"
+    implementation "com.uber.autodispose:autodispose-android:1.4.0"
+    implementation "com.uber.autodispose:autodispose-android-archcomponents:1.4.0"
+    implementation "com.uber.autodispose:autodispose-lifecycle:1.4.0"
 
     // unit test
     testImplementation "junit:junit:$junitVersion"

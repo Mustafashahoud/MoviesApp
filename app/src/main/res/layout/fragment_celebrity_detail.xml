@@ -19,7 +19,7 @@
         android:background="@color/background"
         android:orientation="vertical">
 
-        <include layout="@layout/toolbar_detail" />
+        <include android:id="@+id/toolbar_detail" layout="@layout/toolbar_detail" />
 
 
         <ScrollView

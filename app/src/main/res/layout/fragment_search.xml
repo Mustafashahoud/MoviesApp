@@ -14,7 +14,8 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include layout="@layout/toolbar_search_iconfied" />
+            <include layout="@layout/toolbar_search_iconfied"
+                android:id="@+id/toolbar_search"/>
 
             <LinearLayout
                 android:id="@+id/linear_layout_tabs_recent_searches"
@@ -85,6 +86,8 @@
 
                 <include
                     android:id="@+id/filters"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     layout="@layout/fragment_search_filter"
                     android:visibility="invisible" />
 
@@ -103,6 +106,19 @@
                     tools:listitem="@layout/recent_query_item" />
             </FrameLayout>
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

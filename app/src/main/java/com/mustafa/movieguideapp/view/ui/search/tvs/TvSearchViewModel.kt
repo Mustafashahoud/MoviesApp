@@ -1,17 +1,14 @@
 package com.mustafa.movieguideapp.view.ui.search.tvs
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
+import androidx.paging.rxjava2.cachedIn
 import com.mustafa.movieguideapp.models.Tv
 import com.mustafa.movieguideapp.repository.tvs.TvsRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import io.reactivex.Flowable
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,10 +19,11 @@ class TvSearchViewModel @Inject constructor(
 
     private var currentQueryValue: String? = null
 
-    private var currentSearchResult: Flow<PagingData<Tv>>? = null
+    private var currentSearchResult: Flowable<PagingData<Tv>>? = null
 
 
-    fun searchTvs(queryString: String): Flow<PagingData<Tv>> {
+    val querySuggestionLiveDta = MutableLiveData<String>()
+    fun searchTvs(queryString: String): Flowable<PagingData<Tv>> {
         val lastResult = currentSearchResult
         if (queryString == currentQueryValue && lastResult != null) {
             return lastResult
@@ -39,8 +37,15 @@ class TvSearchViewModel @Inject constructor(
         return newResult
     }
 
-    fun getSuggestions(queryString: String): Flow<PagingData<Tv>> {
-        return repository.getTvSuggestions(queryString).cachedIn(viewModelScope)
+
+    fun setSuggestionQuery(query: String) {
+        querySuggestionLiveDta.value = query
+    }
+
+    fun getSuggestions(): LiveData<PagingData<Tv>> {
+        return querySuggestionLiveDta.switchMap {
+            repository.getTvSuggestions(it).cachedIn(viewModelScope)
+        }
     }
 
     val tvRecentQueries: LiveData<List<String>> = liveData(viewModelScope.coroutineContext) {

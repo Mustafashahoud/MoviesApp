@@ -9,7 +9,7 @@ fun View.bindResource(resource: Resource<*>?, onSuccess: () -> Unit) {
         when (resource) {
             is Resource.Loading -> Unit
             is Resource.Success -> onSuccess()
-            is Resource.Error -> this.context.toast(resource.message.toString())
+            is Resource.Error -> resource.message?.let { message -> this.context.toast(message) }
         }
     }
 }

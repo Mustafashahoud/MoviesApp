@@ -2,15 +2,11 @@ package com.mustafa.movieguideapp.view.ui.search.tvs
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingComponent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
@@ -20,10 +16,8 @@ import com.mustafa.movieguideapp.extension.hideKeyboard
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.LoadStateAdapter
 import com.mustafa.movieguideapp.view.adapter.TvsSearchAdapter
-import kotlinx.android.synthetic.main.toolbar_search_result.*
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import com.uber.autodispose.android.lifecycle.scope
+import com.uber.autodispose.autoDispose
 import javax.inject.Inject
 
 class TvSearchResultFragment : Fragment(R.layout.fragment_tv_search_result), Injectable {
@@ -36,8 +30,6 @@ class TvSearchResultFragment : Fragment(R.layout.fragment_tv_search_result), Inj
     private var binding by autoCleared<FragmentTvSearchResultBinding>()
     private var pagingAdapter by autoCleared<TvsSearchAdapter>()
 
-    private var searchJob: Job? = null
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         binding = FragmentTvSearchResultBinding.bind(view)
@@ -46,26 +38,32 @@ class TvSearchResultFragment : Fragment(R.layout.fragment_tv_search_result), Inj
 
         initializeUI()
 
-        getQuerySafeArgs().let { query ->
-            searchJob?.cancel()
-            searchJob = viewLifecycleOwner.lifecycleScope.launch {
-                viewModel.searchTvs(query).collectLatest {
-                    pagingAdapter.submitData(it)
+        val querySearch = getQuerySafeArgs()
+        querySearch.let { query ->
+            viewModel.searchTvs(query)
+                .autoDispose(scope())
+                .subscribe {
+                    pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
                 }
-            }
+        }
+
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            query = querySearch
+            itemCount = pagingAdapter.itemCount
         }
     }
 
     private fun initializeUI() {
         initAdapter()
         hideKeyboard()
-        search_view.setOnSearchClickListener {
+        binding.toolbarSearch.searchView.setOnSearchClickListener {
             findNavController().navigate(
                 TvSearchResultFragmentDirections.actionTvSearchFragmentResultToTvSearchFragment()
             )
         }
 
-        arrow_back.setOnClickListener {
+        binding.toolbarSearch.arrowBack.setOnClickListener {
             findNavController().navigate(
                 TvSearchResultFragmentDirections.actionTvSearchFragmentResultToTvSearchFragment()
             )
@@ -89,24 +87,7 @@ class TvSearchResultFragment : Fragment(R.layout.fragment_tv_search_result), Inj
             this.setHasFixedSize(true)
         }
 
-        pagingAdapter.addLoadStateListener { loadState ->
-            binding.recyclerViewSearchResultTvs.isVisible =
-                loadState.refresh is LoadState.NotLoading
-            binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
-            binding.retry.isVisible = loadState.refresh is LoadState.Error
-            // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
-            val errorState = loadState.source.append as? LoadState.Error
-                ?: loadState.source.prepend as? LoadState.Error
-                ?: loadState.append as? LoadState.Error
-                ?: loadState.prepend as? LoadState.Error
-            errorState?.let {
-                Toast.makeText(
-                    requireContext(),
-                    "\uD83D\uDE28 Wooops ${it.error}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
+        pagingAdapter.addLoadStateListener { loadState -> binding.loadState = loadState }
     }
 
 

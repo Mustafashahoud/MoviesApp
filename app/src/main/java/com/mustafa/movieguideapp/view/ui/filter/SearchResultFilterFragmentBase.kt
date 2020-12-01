@@ -4,21 +4,25 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import androidx.annotation.LayoutRes
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import com.mustafa.movieguideapp.R
+import com.mustafa.movieguideapp.databinding.FragmentSearchResultFilterBinding
 import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.FilterData
 import com.mustafa.movieguideapp.utils.FiltersConstants
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.RATINGS
 import com.mustafa.movieguideapp.utils.StringUtils
-import kotlinx.android.synthetic.main.fragment_search_result_filter.*
+import com.mustafa.movieguideapp.utils.autoCleared
 
-abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
+abstract class SearchResultFilterFragmentBase(@LayoutRes layout: Int) : Fragment(layout), Injectable,
     PopupMenu.OnMenuItemClickListener {
 
     private var filtersMap: HashMap<String, ArrayList<String>>? = null
     private lateinit var filtersData: FilterData
+
+    protected var binding by autoCleared<FragmentSearchResultFilterBinding>()
 
     companion object {
         const val popularity = "popularity.desc"
@@ -31,6 +35,7 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding = FragmentSearchResultFilterBinding.bind(view)
         initializeUI()
         observeSubscribers()
         renderSortByTextView(sort_by_popularity)
@@ -59,7 +64,7 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
 
         setRecyclerViewAdapter()
 
-        sort_by_icon.setOnClickListener {
+        binding.sortByIcon.setOnClickListener {
             PopupMenu(requireContext(), it).apply {
                 setOnMenuItemClickListener(this@SearchResultFilterFragmentBase)
                 inflate(R.menu.navigation_drawer_menu)
@@ -67,7 +72,7 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
             }
         }
 
-        edit_filters.setOnClickListener {
+        binding.editFilters.setOnClickListener {
             navigateFromSearchResultFilterFragmentToSearchFragment()
         }
     }
@@ -146,27 +151,27 @@ abstract class SearchResultFilterFragmentBase : Fragment(), Injectable,
 
     @SuppressLint("SetTextI18n")
     private fun renderSortByTextView(sortType: String) {
-        sort_by_text_view.text = "Sort by $sortType"
+        binding.sortByTextView.text = "Sort by $sortType"
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
         return when (item?.itemId) {
 
             R.id.sort_popularity -> {
-                if (sort_by_text_view.text == sort_by_popularity) return false
+                if (binding.sortByTextView.text == sort_by_popularity) return false
                 resetAndLoadFiltersSortedBy(popularity)
                 renderSortByTextView(sort_by_popularity)
                 true
             }
             R.id.sort_vote -> {
-                if (sort_by_text_view.text == sort_by_vote_count) return false
+                if (binding.sortByTextView.text == sort_by_vote_count) return false
 
                 resetAndLoadFiltersSortedBy(vote)
                 renderSortByTextView(sort_by_vote_count)
                 true
             }
             R.id.sort_release -> {
-                if (sort_by_text_view.text == sort_by_release_date) return false
+                if (binding.sortByTextView.text == sort_by_release_date) return false
                 resetAndLoadFiltersSortedBy(release)
                 renderSortByTextView(sort_by_release_date)
                 true

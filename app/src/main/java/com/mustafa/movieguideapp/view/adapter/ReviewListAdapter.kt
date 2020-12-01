@@ -1,36 +1,30 @@
 package com.mustafa.movieguideapp.view.adapter
 
-import android.view.View
-
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.databinding.DataBindingComponent
+import androidx.databinding.DataBindingUtil
 import com.mustafa.movieguideapp.R
-import com.mustafa.movieguideapp.models.Resource
+import com.mustafa.movieguideapp.databinding.ItemReviewBinding
 import com.mustafa.movieguideapp.models.Review
-import com.mustafa.movieguideapp.view.viewholder.BaseAdapter
-import com.mustafa.movieguideapp.view.viewholder.BaseViewHolder
-import com.mustafa.movieguideapp.view.viewholder.ReviewListViewHolder
-import com.mustafa.movieguideapp.view.viewholder.SectionRow
+import com.mustafa.movieguideapp.view.ui.common.RecyclerViewBase
 
-/**
- * https://github.com/skydoves/TheMovies
- */
-class ReviewListAdapter : BaseAdapter() {
+class ReviewListAdapter(
+    private val dataBindingComponent: DataBindingComponent
+) : RecyclerViewBase<Review, ItemReviewBinding>() {
 
-    init {
-        addSection(ArrayList<Review>())
+    override fun createBinding(parent: ViewGroup): ItemReviewBinding {
+        return DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            R.layout.item_review,
+            parent,
+            false,
+            dataBindingComponent
+        )
+
     }
 
-    fun addReviewList(resource: Resource<List<Review>>) {
-        resource.data?.let {
-            sections()[0].addAll(it)
-        }
-        notifyDataSetChanged()
-    }
-
-    override fun layout(sectionRow: SectionRow): Int {
-        return R.layout.item_review
-    }
-
-    override fun viewHolder(layout: Int, view: View): BaseViewHolder {
-        return ReviewListViewHolder(view)
+    override fun bind(binding: ItemReviewBinding, item: Review) {
+        binding.review = item
     }
 }

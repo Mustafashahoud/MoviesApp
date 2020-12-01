@@ -1,63 +1,34 @@
 package com.mustafa.movieguideapp.view.ui.search.tvs
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
-import com.mustafa.movieguideapp.databinding.FragmentSearchBinding
 import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.TvsSearchAdapter
 import com.mustafa.movieguideapp.view.ui.search.base.SearchFragmentBase
-import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-class TvSearchFragment : SearchFragmentBase(), Injectable {
+class TvSearchFragment : SearchFragmentBase(R.layout.fragment_search), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel by viewModels<TvSearchViewModel> { viewModelFactory }
     private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
-    private var binding by autoCleared<FragmentSearchBinding>()
     private var tvAdapter by autoCleared<TvsSearchAdapter>()
 
-    private var searchJob: Job? = null
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_search,
-            container,
-            false
-        )
-
-        return binding.root
-    }
 
     override fun setSearchViewHint() {
-        search_view.queryHint = "Search Series"
+        searchBinding.toolbarSearch.searchView.queryHint = "Search Series"
     }
 
     override fun setFilterTabName(tab: TabLayout.Tab?) {
@@ -88,24 +59,9 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
         )
     }
 
-    override fun observeSuggestions(newText: String?) {
-        newText?.let { text ->
-            searchJob?.cancel()
-            searchJob  = viewLifecycleOwner.lifecycleScope.launch {
-                delay(1000L)
-                viewModel.getSuggestions(text).collectLatest {
-                    if (tabs.getTabAt(0)?.isSelected!! && !(text.isEmpty() || text.isBlank())) {
-                        showSuggestionViewAndHideRecentSearches()
-                    }
-
-                    if ((text.isEmpty() || text.isBlank()) && tabs.getTabAt(0)?.isSelected!!) {
-                        hideSuggestionViewAndShowRecentSearches()
-                        tvAdapter.submitData(PagingData.empty())
-                    }
-
-                    tvAdapter.submitData(it)
-                }
-            }
+    override fun observeSuggestions() {
+        viewModel.getSuggestions().observe(viewLifecycleOwner) {
+            tvAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
     }
 
@@ -120,8 +76,8 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
             )
         }
 
-        binding.recyclerViewSuggestion.adapter = tvAdapter
-        binding.recyclerViewSuggestion.layoutManager = LinearLayoutManager(context)
+        searchBinding.recyclerViewSuggestion.adapter = tvAdapter
+        searchBinding.recyclerViewSuggestion.layoutManager = LinearLayoutManager(requireContext())
     }
 
 
@@ -139,7 +95,16 @@ class TvSearchFragment : SearchFragmentBase(), Injectable {
     }
 
     override fun setSuggestionsQuery(newText: String?) {
-//        viewModel.setTvSuggestionsQuery(newText)
+        newText?.let { text ->
+            if (searchBinding.tabs.getTabAt(0)?.isSelected!! && !(text.isEmpty() || text.isBlank())) {
+                showSuggestionViewAndHideRecentSearches()
+                viewModel.setSuggestionQuery(text)
+            }
+            if ((text.isEmpty() || text.isBlank()) && searchBinding.tabs.getTabAt(0)?.isSelected!!) {
+                hideSuggestionViewAndShowRecentSearches()
+                tvAdapter.submitData(viewLifecycleOwner.lifecycle, PagingData.empty())
+            }
+        }
     }
 
 }

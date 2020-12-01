@@ -4,7 +4,7 @@ package com.mustafa.movieguideapp.models
 import android.os.Parcelable
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Movie(

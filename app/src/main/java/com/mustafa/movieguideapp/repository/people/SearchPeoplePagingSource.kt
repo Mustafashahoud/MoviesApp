@@ -1,13 +1,14 @@
 package com.mustafa.movieguideapp.repository.people
 
-import androidx.paging.PagingSource
+import androidx.paging.rxjava2.RxPagingSource
 import com.mustafa.movieguideapp.api.PeopleService
 import com.mustafa.movieguideapp.models.Person
-import com.mustafa.movieguideapp.models.entity.PeopleRecentQueries
+import com.mustafa.movieguideapp.models.network.PeopleResponse
 import com.mustafa.movieguideapp.room.PeopleDao
 import com.mustafa.movieguideapp.utils.Constants.Companion.TMDB_STARTING_PAGE_INDEX
-import retrofit2.HttpException
-import java.io.IOException
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class SearchPeoplePagingSource @Inject constructor(
@@ -15,28 +16,29 @@ class SearchPeoplePagingSource @Inject constructor(
     private val peopleDao: PeopleDao? = null,
     private val query: String,
     private val search: Boolean
-) : PagingSource<Int, Person>() {
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Person> {
-        return try {
-            val currentLoadingPageKey = params.key ?: TMDB_STARTING_PAGE_INDEX
-            val response = service.searchPeople(query, page = currentLoadingPageKey)
-            val people = response.results
+) : RxPagingSource<Int, Person>() {
 
-            if (search) peopleDao?.insertQuery(PeopleRecentQueries(query))
+    private fun toLoadResult(
+        response: PeopleResponse,
+        currentLoadingPageKey: Int
+    ): LoadResult<Int, Person> {
+        return LoadResult.Page(
+            data = response.results,
+            prevKey = if (currentLoadingPageKey == 1) null else currentLoadingPageKey - 1,
+            nextKey = if (currentLoadingPageKey >= response.total_pages) null else currentLoadingPageKey + 1
+        )
+    }
 
-            LoadResult.Page(
-                data = people,
-                prevKey = if (currentLoadingPageKey == TMDB_STARTING_PAGE_INDEX) null else currentLoadingPageKey - 1,
-                nextKey = if (people.isEmpty() || response.page >= response.total_pages) null else currentLoadingPageKey.plus(
-                    1
-                )
-            )
-        } catch (exception: IOException) {
-            return LoadResult.Error(exception)
-        } catch (exception: HttpException) {
-            return LoadResult.Error(exception)
-        } catch (exception: Exception) {
-            LoadResult.Error(exception)
-        }
+    override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, Person>> {
+        val currentLoadingPageKey = params.key ?: TMDB_STARTING_PAGE_INDEX
+        return service.searchPeople(query, page = currentLoadingPageKey)
+            .subscribeOn(Schedulers.io())
+//            .doOnSuccess { if (search) movieDao.insertQuery(MovieRecentQueries(query)) }
+            .map { toLoadResult(it, currentLoadingPageKey) }
+            .onErrorReturn { LoadResult.Error(it) }
+            .observeOn(AndroidSchedulers.mainThread())
+
+
+        //if (search) peopleDao?.insertQuery(PeopleRecentQueries(query))
     }
 }

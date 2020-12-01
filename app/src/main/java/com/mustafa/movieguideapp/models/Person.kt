@@ -2,7 +2,7 @@ package com.mustafa.movieguideapp.models
 
 import android.os.Parcelable
 import androidx.room.Embedded
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Person(

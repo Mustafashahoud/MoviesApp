@@ -1,35 +1,41 @@
 package com.mustafa.movieguideapp.view.adapter
 
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.databinding.DataBindingComponent
+import androidx.databinding.DataBindingUtil
 import com.mustafa.movieguideapp.R
-import com.mustafa.movieguideapp.models.Resource
+import com.mustafa.movieguideapp.databinding.ItemVideoBinding
 import com.mustafa.movieguideapp.models.Video
-import com.mustafa.movieguideapp.view.viewholder.BaseAdapter
-import com.mustafa.movieguideapp.view.viewholder.BaseViewHolder
-import com.mustafa.movieguideapp.view.viewholder.SectionRow
-import com.mustafa.movieguideapp.view.viewholder.VideoListViewHolder
+import com.mustafa.movieguideapp.view.ui.common.RecyclerViewBase
 
-/**
- * Copied from https://github.com/skydoves/TheMovies
- */
-class VideoListAdapter(private val delegate: VideoListViewHolder.Delegate) : BaseAdapter() {
 
-    init {
-        addSection(ArrayList<Video>())
-    }
+class VideoListAdapter(
+    private val dataBindingComponent: DataBindingComponent,
+    private val videoOnClickCallback: (Video) -> Unit
+) : RecyclerViewBase<Video, ItemVideoBinding>() {
 
-    fun addVideoList(resource: Resource<List<Video>>) {
-        resource.data?.let {
-            sections()[0].addAll(it)
+    override fun createBinding(parent: ViewGroup): ItemVideoBinding {
+        val binding: ItemVideoBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(parent.context),
+            R.layout.item_video,
+            parent,
+            false,
+            dataBindingComponent
+        )
+
+        binding.root.setOnClickListener {
+            binding.video?.let {
+                videoOnClickCallback.invoke(it)
+            }
         }
-        notifyDataSetChanged()
+
+        return binding
+
     }
 
-    override fun layout(sectionRow: SectionRow): Int {
-        return R.layout.item_video
+    override fun bind(binding: ItemVideoBinding, item: Video) {
+        binding.video = item
     }
 
-    override fun viewHolder(layout: Int, view: View): BaseViewHolder {
-        return VideoListViewHolder(view, delegate)
-    }
 }

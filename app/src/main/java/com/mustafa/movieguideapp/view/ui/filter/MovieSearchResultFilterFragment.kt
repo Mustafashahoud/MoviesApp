@@ -1,14 +1,9 @@
 package com.mustafa.movieguideapp.view.ui.filter
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingComponent
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -16,14 +11,14 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
-import com.mustafa.movieguideapp.databinding.FragmentSearchResultFilterBinding
 import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.FilteredMoviesAdapter
 import com.mustafa.movieguideapp.view.adapter.LoadStateAdapter
 import javax.inject.Inject
 
-class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectable,
+class MovieSearchResultFilterFragment :
+    SearchResultFilterFragmentBase(R.layout.fragment_search_result_filter), Injectable,
     PopupMenu.OnMenuItemClickListener {
 
     @Inject
@@ -31,22 +26,8 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
 
     private val viewModel by viewModels<MovieSearchFilterViewModel> { viewModelFactory }
     private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
-    private var binding by autoCleared<FragmentSearchResultFilterBinding>()
     private var pagingAdapter by autoCleared<FilteredMoviesAdapter>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_search_result_filter,
-            container,
-            false
-        )
-        return binding.root
-    }
 
     override fun getFilterMap(): HashMap<String, ArrayList<String>>? {
         @Suppress("UNCHECKED_CAST")
@@ -55,7 +36,7 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
 
     override fun setBindingVariables() {
         with(binding) {
-            lifecycleOwner = this@MovieSearchResultFilterFragment
+            lifecycleOwner = this@MovieSearchResultFilterFragment.viewLifecycleOwner
             totalFilterResult = viewModel.totalMoviesCount
             selectedFilters = setSelectedFilters()
         }
