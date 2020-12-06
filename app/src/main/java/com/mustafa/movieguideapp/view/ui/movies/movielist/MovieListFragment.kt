@@ -1,7 +1,6 @@
 package com.mustafa.movieguideapp.view.ui.movies.movielist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingComponent
 import androidx.fragment.app.viewModels
@@ -33,10 +32,7 @@ class MovieListFragment : AutoDisposeFragment(R.layout.fragment_movies), Injecta
 
     private var pagingAdapter by autoCleared<MoviesAdapter>()
 
-    private val TAG = "MovieListFragment"
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         binding = FragmentMoviesBinding.bind(view)
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -47,6 +43,7 @@ class MovieListFragment : AutoDisposeFragment(R.layout.fragment_movies), Injecta
 
     private fun initializeUI() {
         intiToolbar(getString(R.string.fragment_movies))
+        showBottomNavigationView()
         initAdapter()
     }
 
@@ -72,7 +69,7 @@ class MovieListFragment : AutoDisposeFragment(R.layout.fragment_movies), Injecta
             adapter = pagingAdapter.withLoadStateFooter(
                 footer = LoadStateAdapter { pagingAdapter.retry() }
             )
-            this.setHasFixedSize(true)
+            setHasFixedSize(true)
         }
 
         pagingAdapter.addLoadStateListener { loadState -> binding.loadState = loadState }
@@ -90,31 +87,6 @@ class MovieListFragment : AutoDisposeFragment(R.layout.fragment_movies), Injecta
                 MovieListFragmentDirections.actionMoviesFragmentToMovieSearchFragment()
             )
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart() called")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.d(TAG, "onDestroyView() called")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "onPause() called")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop() called")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume() called")
     }
 
 }

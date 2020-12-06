@@ -4,12 +4,11 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.mustafa.movieguideapp.models.entity.MovieRecentQueries
-import io.reactivex.Completable
 
 @Dao
 interface MovieDao {
     @Insert
-    fun insertQuery(query: MovieRecentQueries) : Completable
+    suspend fun insertQuery(query: MovieRecentQueries)
 
     @Query("SELECT `query` FROM MovieRecentQueries GROUP BY `query` ORDER BY id DESC LIMIT 30")
     suspend fun getAllMovieQueries(): List<String>

@@ -9,7 +9,6 @@ import com.mustafa.movieguideapp.room.AppDatabase
 import com.mustafa.movieguideapp.room.MovieDao
 import com.mustafa.movieguideapp.room.PeopleDao
 import com.mustafa.movieguideapp.room.TvDao
-import com.mustafa.movieguideapp.utils.ApiResponseCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
@@ -69,7 +68,6 @@ class AppModule {
             .client(okHttpClient)
             .baseUrl("https://api.themoviedb.org/")
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(ApiResponseCallAdapterFactory())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
     }

@@ -4,7 +4,6 @@ import androidx.paging.rxjava2.RxPagingSource
 import com.mustafa.movieguideapp.api.TheDiscoverService
 import com.mustafa.movieguideapp.models.Tv
 import com.mustafa.movieguideapp.models.network.DiscoverTvResponse
-import com.mustafa.movieguideapp.room.TvDao
 import com.mustafa.movieguideapp.utils.Constants.Companion.TMDB_STARTING_PAGE_INDEX
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -13,9 +12,7 @@ import javax.inject.Inject
 
 class SearchTvsPagingSource @Inject constructor(
     private val service: TheDiscoverService,
-    private val tvDao: TvDao,
-    private val query: String,
-    private val search: Boolean
+    private val query: String
 ) : RxPagingSource<Int, Tv>() {
 
     override fun loadSingle(params: LoadParams<Int>): Single<LoadResult<Int, Tv>> {

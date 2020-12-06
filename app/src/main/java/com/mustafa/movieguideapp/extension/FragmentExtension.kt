@@ -102,4 +102,7 @@ fun Fragment.isRecyclerViewScrollPositionZero(id: Int): Boolean =
 
 fun Fragment.setSmoothScrollToZero(resId: Int) {
     activity?.findViewById<RecyclerView>(resId)?.smoothScrollToPosition(0)
+
 }
+
+fun Fragment.isEmptyOrBlank(text: String) = text.isEmpty() || text.isBlank()

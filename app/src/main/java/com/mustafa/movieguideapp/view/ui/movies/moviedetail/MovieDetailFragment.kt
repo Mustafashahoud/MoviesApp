@@ -74,5 +74,4 @@ class MovieDetailFragment : Fragment(R.layout.fragment_movie_detail), Injectable
         return params.movie
     }
 
-
 }

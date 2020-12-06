@@ -15,7 +15,7 @@ interface PeopleService {
     fun fetchPopularPeople(@Query("page") page: Int): Single<PeopleResponse>
 
     @GET("/3/person/{person_id}")
-    suspend fun fetchPersonDetail(@Path("person_id") id: Int): ApiResponse<PersonDetail>
+    fun fetchPersonDetail(@Path("person_id") id: Int): Single<PersonDetail>
 
     @GET("/3/person/{person_id}/movie_credits")
     fun fetchPersonMovies(@Path("person_id") id: Int): Single<MoviePersonResponse>

@@ -2,9 +2,9 @@ package com.mustafa.movieguideapp.view.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination
-import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.databinding.ActivityMainBinding
@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
     lateinit var binding: ActivityMainBinding
 
+    private var currentNavController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,17 +39,16 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         } // Else, need to wait for onRestoreInstanceState
         setOnNavigationItemReselected()
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
-
-        navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (isMainFragment(destination)) {
-                binding.bottomNavigation.visible()
-            } else binding.bottomNavigation.gone()
+        currentNavController?.observe(this) { navController ->
+            navController.addOnDestinationChangedListener { _, destination, _ ->
+                if (isMainFragment(destination)) {
+                    binding.bottomNavigation.visible()
+                } else {
+                    binding.bottomNavigation.gone()
+                }
+            }
         }
-
     }
-
 
     override fun onBackPressed() {
 //    val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_container)
@@ -57,34 +57,36 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 //      val entry = navHostFragment.childFragmentManager.getBackStackEntryAt(x)
 //      Timber.d("BackStack ${entry.name}")
 //    }
-        val currentFragment: Fragment? = supportFragmentManager.getCurrentNavigationFragment()
-        val currentFragmentName = (currentFragment as Fragment).javaClass.simpleName
+        val currentFragment = supportFragmentManager.getCurrentNavigationFragment()
 
-        if (currentFragmentName == MOVIE_LIST_FRAGMENT) {
-            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_movies)) {
-                currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_movies)
-            } else {
-                super.onBackPressed()
+        when (currentFragment?.id) {
+            R.id.moviesFragment -> {
+                if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_movies)) {
+                    currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_movies)
+                } else {
+                    super.onBackPressed()
+                }
             }
-        } else if (currentFragmentName == TV_LIST_FRAGMENT) {
-            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_tvs)) {
-                currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_tvs)
-            } else {
-                super.onBackPressed()
-            }
-        } else if (currentFragmentName == CELEBRITY_LIST_FRAGMENT) {
-            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_celebrities)) {
-                currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_celebrities)
-            } else {
-                super.onBackPressed()
-            }
-        } else super.onBackPressed()
-    }
 
-    companion object {
-        const val MOVIE_LIST_FRAGMENT = "MovieListFragment"
-        const val TV_LIST_FRAGMENT = "TvListFragment"
-        const val CELEBRITY_LIST_FRAGMENT = "CelebritiesListFragment"
+            R.id.tvsFragment -> {
+                if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_tvs)) {
+                    currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_tvs)
+                } else {
+                    super.onBackPressed()
+                }
+            }
+
+            R.id.celebritiesFragment -> {
+                if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_celebrities)) {
+                    currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_celebrities)
+                } else {
+                    super.onBackPressed()
+                }
+            }
+
+            else -> super.onBackPressed()
+
+        }
     }
 
 
@@ -106,12 +108,14 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         val navGraphIds = listOf(R.navigation.movie, R.navigation.tv, R.navigation.star)
 
         // Setup the bottom navigation view with a list of navigation graphs
-        bottomNavigationView.setupWithNavController(
+        val controller = bottomNavigationView.setupWithNavController(
             navGraphIds = navGraphIds,
             fragmentManager = supportFragmentManager,
             containerId = R.id.nav_host_container,
             intent = intent
         )
+
+        currentNavController = controller
     }
 
 
@@ -136,21 +140,6 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
-
-//    private fun setSplashy() {
-//        Splashy(this)
-//            .setLogo(R.mipmap.ic_launcher_foreground)
-//            .setTitle("MovieGuide")
-//            .setTitleColor(R.color.colorAccent)
-//            .showProgress(true)
-//            .setProgressColor(R.color.colorAccent)
-//            .setSubTitle("Eng. Mustafa Shahoud")
-//            .setProgressColor(R.color.colorAccent)
-//            .setBackgroundResource(R.color.backgroundDarker)
-//            .setFullScreen(true)
-//            .setTime(3000)
-//            .show()
-//    }
 }
 
 

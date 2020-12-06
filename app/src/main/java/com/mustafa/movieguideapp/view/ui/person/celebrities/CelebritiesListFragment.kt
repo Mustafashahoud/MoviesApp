@@ -2,13 +2,10 @@ package com.mustafa.movieguideapp.view.ui.person.celebrities
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingComponent
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentCelebritiesBinding
@@ -34,6 +31,7 @@ class CelebritiesListFragment : AutoDisposeFragment(R.layout.fragment_celebritie
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding = FragmentCelebritiesBinding.bind(view)
+        binding.lifecycleOwner = viewLifecycleOwner
 
         setRetrySetOnClickListener()
         initializeUI()
@@ -43,6 +41,8 @@ class CelebritiesListFragment : AutoDisposeFragment(R.layout.fragment_celebritie
 
     private fun initializeUI() {
         intiToolbar(getString(R.string.fragment_celebrities))
+
+        showBottomNavigationView()
 
         initAdapter()
 
@@ -75,22 +75,7 @@ class CelebritiesListFragment : AutoDisposeFragment(R.layout.fragment_celebritie
         }
 
         pagingAdapter.addLoadStateListener { loadState ->
-            binding.recyclerViewListCelebrities.isVisible =
-                loadState.refresh is LoadState.NotLoading
-            binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
-            binding.retry.isVisible = loadState.refresh is LoadState.Error
-            // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
-            val errorState = loadState.source.append as? LoadState.Error
-                ?: loadState.source.prepend as? LoadState.Error
-                ?: loadState.append as? LoadState.Error
-                ?: loadState.prepend as? LoadState.Error
-            errorState?.let {
-                Toast.makeText(
-                    requireContext(),
-                    "\uD83D\uDE28 Wooops ${it.error}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+            binding.loadState = loadState
         }
     }
 

@@ -3,24 +3,24 @@ package com.mustafa.movieguideapp.view.ui.tv.tvlist
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingComponent
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentTvsBinding
 import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.extension.getGridLayoutManagerWithSpanSizeOne
+import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.LoadStateAdapter
 import com.mustafa.movieguideapp.view.adapter.TvsAdapter
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import com.mustafa.movieguideapp.view.ui.AutoDisposeFragment
+import com.mustafa.movieguideapp.view.ui.MainActivity
+import com.uber.autodispose.autoDispose
 import javax.inject.Inject
 
-class TvListFragment : Fragment(R.layout.fragment_tvs), Injectable {
+class TvListFragment : AutoDisposeFragment(R.layout.fragment_tvs), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -43,6 +43,7 @@ class TvListFragment : Fragment(R.layout.fragment_tvs), Injectable {
 
     private fun initializeUI() {
         intiToolbar(getString(R.string.fragment_tvs))
+        showBottomNavigationView()
         initAdapter()
         binding.toolbarSearch.searchIcon.setOnClickListener {
             findNavController().navigate(
@@ -74,11 +75,12 @@ class TvListFragment : Fragment(R.layout.fragment_tvs), Injectable {
 
 
     private fun subscribers() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.tvsStream.collectLatest {
-                pagingAdapter.submitData(it)
+
+        viewModel.tvsStream
+            .autoDispose(scopeProvider)
+            .subscribe {
+                pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
             }
-        }
     }
 
     private fun intiToolbar(title: String) {

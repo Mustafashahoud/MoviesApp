@@ -9,6 +9,7 @@ import androidx.paging.rxjava2.flowable
 import com.mustafa.movieguideapp.api.TheDiscoverService
 import com.mustafa.movieguideapp.models.FilterData
 import com.mustafa.movieguideapp.models.Movie
+import com.mustafa.movieguideapp.models.entity.MovieRecentQueries
 import com.mustafa.movieguideapp.room.MovieDao
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.Constants.Companion.TMDB_API_PAGE_SIZE
@@ -43,9 +44,7 @@ class MoviesRepository @Inject constructor(
         ) {
             SearchMoviesPagingSource(
                 service,
-                movieDao,
-                query = query,
-                search = true
+                query = query
             )
         }.flowable
     }
@@ -60,21 +59,12 @@ class MoviesRepository @Inject constructor(
             ) {
                 SearchMoviesPagingSource(
                     service,
-                    movieDao,
-                    query = query,
-                    search = false
+                    query = query
                 )
             }.flowable
         )
     }
 
-    suspend fun getMovieRecentQueries(): List<String> {
-        return movieDao.getAllMovieQueries()
-    }
-
-    suspend fun deleteAllMovieRecentQueries() {
-        movieDao.deleteAllMovieQueries()
-    }
 
     fun loadFilteredMovies(
         filterData: FilterData,
@@ -93,4 +83,17 @@ class MoviesRepository @Inject constructor(
             }.flowable
         )
     }
+
+    suspend fun getMovieRecentQueries(): List<String> {
+        return movieDao.getAllMovieQueries()
+    }
+
+    suspend fun deleteAllMovieRecentQueries() {
+        movieDao.deleteAllMovieQueries()
+    }
+
+    suspend fun saveQuery(query: String) {
+        movieDao.insertQuery(MovieRecentQueries(query))
+    }
+
 }

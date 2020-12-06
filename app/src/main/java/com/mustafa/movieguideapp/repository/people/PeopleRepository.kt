@@ -6,7 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.rxjava2.flowable
-import com.mustafa.movieguideapp.api.*
+import com.mustafa.movieguideapp.api.PeopleService
 import com.mustafa.movieguideapp.models.*
 import com.mustafa.movieguideapp.models.Resource.Error
 import com.mustafa.movieguideapp.models.Resource.Success
@@ -16,8 +16,6 @@ import com.mustafa.movieguideapp.utils.Constants
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,20 +36,15 @@ class PeopleRepository @Inject constructor(
             .flowable
     }
 
-    suspend fun loadPersonDetail(id: Int): Flow<Resource<PersonDetail>> {
-        return flow {
-            service.fetchPersonDetail(id).apply {
-                this.onSuccessSuspend {
-                    data?.let {
-                        emit(Success(data, false))
-                    }
-                }.onErrorSuspend {
-                    emit(Error(message()))
-                }.onExceptionSuspend {
-                    emit(Error(message()))
-                }
-            }
-        }
+    fun loadPersonDetail(id: Int): LiveData<Resource<PersonDetail>> {
+        return LiveDataReactiveStreams.fromPublisher(service.fetchPersonDetail(id = id)
+            .subscribeOn(Schedulers.io())
+            .map<Resource<PersonDetail>> { Success(it, false) }
+            .onErrorReturn { Error(it.toString()) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .toFlowable()
+        )
+
     }
 
     fun searchPeople(query: String): Flowable<PagingData<Person>> {
@@ -61,14 +54,11 @@ class PeopleRepository @Inject constructor(
                 enablePlaceholders = false
             )
         ) {
-            SearchPeoplePagingSource(
-                service = service, peopleDao = peopleDao, query = query, search = true
-            )
+            SearchPeoplePagingSource(service, query)
         }.flowable
     }
 
-    suspend fun loadMoviesForPerson(personId: Int): LiveData<Resource<List<MoviePerson>>> {
-
+    fun loadMoviesForPerson(personId: Int): LiveData<Resource<List<MoviePerson>>> {
         return LiveDataReactiveStreams.fromPublisher(
             service.fetchPersonMovies(id = personId)
                 .subscribeOn(Schedulers.io())
@@ -79,7 +69,7 @@ class PeopleRepository @Inject constructor(
         )
     }
 
-    suspend fun loadTvsForPerson(personId: Int): LiveData<Resource<List<TvPerson>>> {
+    fun loadTvsForPerson(personId: Int): LiveData<Resource<List<TvPerson>>> {
         return LiveDataReactiveStreams.fromPublisher(
             service.fetchPersonTvs(id = personId)
                 .subscribeOn(Schedulers.io())
@@ -100,9 +90,7 @@ class PeopleRepository @Inject constructor(
             ) {
                 SearchPeoplePagingSource(
                     service,
-                    peopleDao,
-                    query = query,
-                    search = false
+                    query = query
                 )
             }.flowable
         )

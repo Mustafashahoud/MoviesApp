@@ -8,6 +8,7 @@ import androidx.paging.rxjava2.cachedIn
 import com.mustafa.movieguideapp.models.Movie
 import com.mustafa.movieguideapp.repository.movies.MoviesRepository
 import com.mustafa.movieguideapp.testing.OpenForTesting
+import com.mustafa.movieguideapp.utils.AbsentLiveData
 import io.reactivex.Flowable
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,6 +29,11 @@ class MovieSearchViewModel @Inject constructor(
             return lastResult
         }
         currentQueryValue = queryString
+
+        // save the query
+        saveQuery(currentQueryValue!!)
+
+
         val newResult = repository
             .searchMovies(queryString)
             .map { pagingData -> pagingData.filter { it.poster_path != null } }
@@ -36,10 +42,18 @@ class MovieSearchViewModel @Inject constructor(
         return newResult
     }
 
+    private fun saveQuery(currentQueryValue: String) {
+        viewModelScope.launch {
+            repository.saveQuery(currentQueryValue)
+        }
+    }
+
     val querySuggestionLiveDta = MutableLiveData<String>()
     fun getSuggestions(): LiveData<PagingData<Movie>> {
-        return querySuggestionLiveDta.switchMap {
-            repository.getMovieSuggestions(it).cachedIn(viewModelScope)
+        return querySuggestionLiveDta.switchMap { suggestionQuery ->
+            repository.getMovieSuggestions(suggestionQuery).map { pagingData ->
+                pagingData.filter { it.poster_path != null }
+            }.cachedIn(viewModelScope)
         }
     }
 
@@ -47,14 +61,26 @@ class MovieSearchViewModel @Inject constructor(
         querySuggestionLiveDta.value = query
     }
 
-    val movieRecentQueries: LiveData<List<String>> = liveData(viewModelScope.coroutineContext) {
-        val movieRecentQueries = repository.getMovieRecentQueries()
-        emit(movieRecentQueries)
+    private final val isRecentQueriesChange = MutableLiveData<Boolean>()
+    val movieRecentQueries: LiveData<List<String>> = isRecentQueriesChange.switchMap {
+        if (it == true) {
+            liveData(viewModelScope.coroutineContext) {
+                val movieRecentQueries = repository.getMovieRecentQueries()
+                emit(movieRecentQueries)
+            }
+        } else {
+            AbsentLiveData()
+        }
     }
+
+    fun notifyRecentQueriesCleared() = isRecentQueriesChange.postValue(false)
+    fun notifyRecentQueriesChanged() = isRecentQueriesChange.postValue(true)
+
 
     fun deleteAllMovieRecentQueries() {
         viewModelScope.launch {
             repository.deleteAllMovieRecentQueries()
         }
     }
+
 }

@@ -11,6 +11,7 @@ import com.google.android.material.tabs.TabLayout
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.di.Injectable
+import com.mustafa.movieguideapp.extension.isEmptyOrBlank
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MoviesSearchAdapter
 import com.mustafa.movieguideapp.view.ui.search.base.SearchFragmentBase
@@ -91,20 +92,22 @@ class MovieSearchFragment : SearchFragmentBase(R.layout.fragment_search), Inject
                 if (queries.isNotEmpty()) setListViewOfRecentQueries(queries)
             }
         }
+        viewModel.notifyRecentQueriesChanged()
     }
 
     override fun deleteAllRecentQueries() {
         viewModel.deleteAllMovieRecentQueries()
+        viewModel.notifyRecentQueriesCleared()
     }
 
     override fun setSuggestionsQuery(newText: String?) {
         newText?.let { text ->
-            if (searchBinding.tabs.getTabAt(0)?.isSelected!! && !(text.isEmpty() || text.isBlank())) {
+            if (isRecentTabSelected() && !isEmptyOrBlank(text)) {
                 showSuggestionViewAndHideRecentSearches()
                 viewModel.setSuggestionQuery(text)
             }
 
-            if ((text.isEmpty() || text.isBlank()) && searchBinding.tabs.getTabAt(0)?.isSelected!!) {
+            if (isRecentTabSelected() && isEmptyOrBlank(text)) {
                 hideSuggestionViewAndShowRecentSearches()
                 movieAdapter.submitData(viewLifecycleOwner.lifecycle, PagingData.empty())
             }

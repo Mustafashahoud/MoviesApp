@@ -9,6 +9,7 @@ import androidx.paging.rxjava2.flowable
 import com.mustafa.movieguideapp.api.TheDiscoverService
 import com.mustafa.movieguideapp.models.FilterData
 import com.mustafa.movieguideapp.models.Tv
+import com.mustafa.movieguideapp.models.entity.TvRecentQueries
 import com.mustafa.movieguideapp.room.TvDao
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.Constants.Companion.TMDB_API_PAGE_SIZE
@@ -26,7 +27,7 @@ class TvsRepository @Inject constructor(
 ) {
 
 
-    fun loadPopularTvs(): Flow<PagingData<Tv>> {
+    fun loadPopularTvs(): Flowable<PagingData<Tv>> {
         return Pager(
             config = PagingConfig(
                 TMDB_API_PAGE_SIZE
@@ -35,7 +36,7 @@ class TvsRepository @Inject constructor(
             TvsPagingSource(
                 service
             )
-        }.flow
+        }.flowable
     }
 
 
@@ -47,9 +48,7 @@ class TvsRepository @Inject constructor(
         ) {
             SearchTvsPagingSource(
                 service = service,
-                tvDao = tvDao,
-                query = query,
-                search = true
+                query = query
             )
         }.flowable
     }
@@ -64,21 +63,12 @@ class TvsRepository @Inject constructor(
             ) {
                 SearchTvsPagingSource(
                     service,
-                    tvDao,
-                    query = query,
-                    search = false
+                    query = query
                 )
             }.flowable
         )
     }
 
-    suspend fun getTvRecentQueries(): List<String> {
-        return tvDao.getAllTvQueries()
-    }
-
-    suspend fun deleteAllTvRecentQueries() {
-        tvDao.deleteAllTvQueries()
-    }
 
     fun loadFilteredTvs(
         filterData: FilterData,
@@ -96,5 +86,17 @@ class TvsRepository @Inject constructor(
                 }
             }.flowable
         )
+    }
+
+    suspend fun getTvRecentQueries(): List<String> {
+        return tvDao.getAllTvQueries()
+    }
+
+    suspend fun deleteAllTvRecentQueries() {
+        tvDao.deleteAllTvQueries()
+    }
+
+    suspend fun saveQuery(query: String) {
+        tvDao.insertQuery(TvRecentQueries(query))
     }
 }

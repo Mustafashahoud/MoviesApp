@@ -3,28 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <import type="androidx.paging.LoadState" />
+
+        <variable
+            name="loadState"
+            type="androidx.paging.CombinedLoadStates" />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-            <include layout="@layout/toolbar_search"
-                android:id="@+id/toolbar_search"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+        <include
+            android:id="@+id/toolbar_search"
+            layout="@layout/toolbar_search"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView_list_celebrities"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="1dp"
-                android:scrollbars="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar_search"
-                tools:listitem="@layout/item_person" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_list_celebrities"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="1dp"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_search"
+            app:visibleGone="@{loadState.refresh instanceof LoadState.NotLoading}"
+            tools:listitem="@layout/item_person" />
+
         <ProgressBar
             android:id="@+id/progress_bar"
             style="?android:attr/progressBarStyle"
@@ -36,18 +49,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:visibleGone="@{loadState.refresh instanceof LoadState.Loading}" />
 
         <TextView
             android:id="@+id/retry"
             style="@style/RetryStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:bindToast="@{loadState}"
+            app:drawableTopCompat="@drawable/ic_retry"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:drawableTopCompat="@drawable/ic_retry" />
+            app:visibleGone="@{loadState.refresh instanceof LoadState.Error}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

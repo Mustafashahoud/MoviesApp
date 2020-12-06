@@ -24,6 +24,7 @@ import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.databinding.FragmentSearchBinding
 import com.mustafa.movieguideapp.extension.gone
 import com.mustafa.movieguideapp.extension.inVisible
+import com.mustafa.movieguideapp.extension.isEmptyOrBlank
 import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.models.SelectableItem
 import com.mustafa.movieguideapp.utils.FiltersConstants.Companion.COUNTRIES
@@ -368,9 +369,7 @@ abstract class SearchFragmentBase(@LayoutRes layout: Int) : Fragment(layout) {
                 R.layout.recent_query_item,
                 queries.requireNoNulls()
             )
-        if (searchBinding.tabs.getTabAt(0)?.isSelected!!) {
-            showRecentQueries()
-        }
+
         hasRecentQueriesChanged.value = true
         searchBinding.listViewRecentQueries.apply {
             setHeaderDividersEnabled(true)
@@ -435,12 +434,12 @@ abstract class SearchFragmentBase(@LayoutRes layout: Int) : Fragment(layout) {
         searchBinding.toolbarSearch.searchView.visible()
         searchBinding.toolbarSearch.voiceSearch.visible()
         searchBinding.toolbarSearch.filterLabel.gone()
-        if (searchBinding.toolbarSearch.searchView.query.isEmpty() || searchBinding.toolbarSearch.searchView.query.isBlank()) {
+        if (isEmptyOrBlank(searchBinding.toolbarSearch.searchView.query.toString())) {
             showRecentSearchesBar()
             showRecentQueries()
         } else {
             hideRecentQueries()
-            searchBinding.recyclerViewSuggestion.visible()
+            showSuggestion()
         }
     }
 
@@ -460,7 +459,6 @@ abstract class SearchFragmentBase(@LayoutRes layout: Int) : Fragment(layout) {
 
     private fun hideFiltersLayout() {
         searchBinding.filters.filters.inVisible()
-//        filters.inVisible()
     }
 
     private fun showFiltersLayout() {
@@ -476,22 +474,29 @@ abstract class SearchFragmentBase(@LayoutRes layout: Int) : Fragment(layout) {
         searchBinding.recentQueriesBar.visible()
     }
 
-
     private fun hideListViewAndRecyclerView() {
-        searchBinding.listViewRecentQueries.inVisible()
-        searchBinding.recyclerViewSuggestion.inVisible()
+        hideRecentQueries()
+        hideSuggestion()
     }
 
     private fun hideRecentQueries() {
-        searchBinding.listViewRecentQueries.inVisible()
+        searchBinding.listViewRecentQueries.gone()
     }
 
     private fun showRecentQueries() {
         searchBinding.listViewRecentQueries.visible()
     }
 
-    protected fun showSuggestionViewAndHideRecentSearches() {
+    private fun showSuggestion() {
         searchBinding.recyclerViewSuggestion.visible()
+    }
+
+    private fun hideSuggestion() {
+        searchBinding.recyclerViewSuggestion.inVisible()
+    }
+
+    protected fun showSuggestionViewAndHideRecentSearches() {
+        showSuggestion()
         hideRecentQueries()
         hideRecentSearchesBar()
     }
@@ -499,14 +504,16 @@ abstract class SearchFragmentBase(@LayoutRes layout: Int) : Fragment(layout) {
     protected fun hideSuggestionViewAndShowRecentSearches() {
         showRecentSearchesBar()
         showRecentQueries()
-        searchBinding.recyclerViewSuggestion.inVisible()
+        hideSuggestion()
     }
 
 
-    private fun Fragment.dismissKeyboard(windowToken: IBinder) {
+    private fun dismissKeyboard(windowToken: IBinder) {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         imm?.hideSoftInputFromWindow(windowToken, 0)
     }
+
+    protected fun isRecentTabSelected() = searchBinding.tabs.getTabAt(0)?.isSelected!!
 
     protected abstract fun setBindingVariables()
     protected abstract fun setSuggestionsQuery(newText: String?)
