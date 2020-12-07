@@ -5,8 +5,6 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.asExecutor
 
 /**
  * Copied from https://github.com/android/architecture-components-samples/tree/master/GithubBrowserSample
@@ -21,7 +19,6 @@ abstract class DataBoundListAdapter<T, V : ViewDataBinding>(
     diffCallback: DiffUtil.ItemCallback<T>
 ) : ListAdapter<T, DataBoundViewHolder<V>>(
     AsyncDifferConfig.Builder<T>(diffCallback)
-        .setBackgroundThreadExecutor(Dispatchers.IO.asExecutor())
         .build()
 ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBoundViewHolder<V> {

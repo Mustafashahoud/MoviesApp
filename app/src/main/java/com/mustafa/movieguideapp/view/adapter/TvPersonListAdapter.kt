@@ -20,7 +20,7 @@ class TvPersonListAdapter(
         }
 
         override fun areContentsTheSame(oldItem: TvPerson, newItem: TvPerson): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem == newItem
         }
     }
 ) {

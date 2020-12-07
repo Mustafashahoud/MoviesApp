@@ -20,7 +20,7 @@ class MoviePersonListAdapter(
         }
 
         override fun areContentsTheSame(oldItem: MoviePerson, newItem: MoviePerson): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem == newItem
         }
     }
 ) {
