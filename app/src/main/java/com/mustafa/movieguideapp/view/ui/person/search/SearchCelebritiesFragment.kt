@@ -22,6 +22,7 @@ import com.mustafa.movieguideapp.databinding.FragmentCelebritiesSearchBinding
 import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.extension.gone
 import com.mustafa.movieguideapp.extension.inVisible
+import com.mustafa.movieguideapp.extension.isEmptyOrBlank
 import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.PeopleSearchAdapter
@@ -97,12 +98,12 @@ class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search)
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 newText?.let { text ->
-                    if (!(text.isEmpty() || text.isBlank())) {
+                    if (!isEmptyOrBlank(text)) {
                         showSuggestionViewAndHideRecentSearches()
                         viewModel.setSuggestionQuery(text)
                     }
 
-                    if ((text.isEmpty() || text.isBlank())) {
+                    if (isEmptyOrBlank(text)) {
                         hideSuggestionViewAndShowRecentSearches()
                         adapter.submitData(viewLifecycleOwner.lifecycle, PagingData.empty())
                     }

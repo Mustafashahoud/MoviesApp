@@ -91,7 +91,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:visibleGone="@{loadState.refresh instanceof LoadState.NotLoading &amp;&amp; loadState.append.endOfPaginationReached &amp;&amp; itemCount == 0}"
+            app:visibleGone="@{loadState.source.refresh instanceof LoadState.NotLoading &amp;&amp; loadState.append.endOfPaginationReached &amp;&amp; itemCount == 0}"
             tools:layout_editor_absoluteY="247dp" />
 
 

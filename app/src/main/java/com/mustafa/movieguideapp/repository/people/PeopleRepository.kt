@@ -10,6 +10,7 @@ import com.mustafa.movieguideapp.api.PeopleService
 import com.mustafa.movieguideapp.models.*
 import com.mustafa.movieguideapp.models.Resource.Error
 import com.mustafa.movieguideapp.models.Resource.Success
+import com.mustafa.movieguideapp.models.entity.PeopleRecentQueries
 import com.mustafa.movieguideapp.room.PeopleDao
 import com.mustafa.movieguideapp.testing.OpenForTesting
 import com.mustafa.movieguideapp.utils.Constants
@@ -94,6 +95,10 @@ class PeopleRepository @Inject constructor(
                 )
             }.flowable
         )
+    }
+
+    suspend fun saveQuery(query: String) {
+        peopleDao.insertQuery(PeopleRecentQueries(query))
     }
 
     suspend fun getPeopleRecentQueries(): List<String> {

@@ -29,6 +29,10 @@ class SearchCelebritiesResultViewModel @Inject constructor(
             return lastResult
         }
         currentQueryValue = queryString
+
+        // save the query
+        saveQuery(currentQueryValue!!)
+
         val newResult = peopleRepository
             .searchPeople(queryString)
             .map { pagingData -> pagingData.filter { it.profile_path != null } }
@@ -37,10 +41,20 @@ class SearchCelebritiesResultViewModel @Inject constructor(
         return newResult
     }
 
+    private fun saveQuery(currentQueryValue: String) {
+        viewModelScope.launch {
+            peopleRepository.saveQuery(currentQueryValue)
+        }
+    }
+
     val querySuggestionLiveDta = MutableLiveData<String>()
     fun getSuggestions(): LiveData<PagingData<Person>> {
         return querySuggestionLiveDta.switchMap {
-            peopleRepository.getPeopleSuggestions(it).cachedIn(viewModelScope)
+            peopleRepository.getPeopleSuggestions(it).map { pagingData ->
+                pagingData.filter { person ->
+                    person.profile_path != null
+                }
+            }.cachedIn(viewModelScope)
         }
     }
 

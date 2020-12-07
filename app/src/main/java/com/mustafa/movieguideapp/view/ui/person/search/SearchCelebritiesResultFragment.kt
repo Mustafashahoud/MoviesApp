@@ -51,6 +51,12 @@ class SearchCelebritiesResultFragment :
                     pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
                 }
         }
+
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            query = querySearch
+            itemCount = pagingAdapter.itemCount
+        }
     }
 
     private fun initializeUI() {
@@ -88,24 +94,7 @@ class SearchCelebritiesResultFragment :
             this.setHasFixedSize(true)
         }
 
-        pagingAdapter.addLoadStateListener { loadState ->
-            binding.recyclerViewSearchResultPeople.isVisible =
-                loadState.refresh is LoadState.NotLoading
-            binding.progressBar.isVisible = loadState.refresh is LoadState.Loading
-            binding.retry.isVisible = loadState.refresh is LoadState.Error
-            // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
-            val errorState = loadState.source.append as? LoadState.Error
-                ?: loadState.source.prepend as? LoadState.Error
-                ?: loadState.append as? LoadState.Error
-                ?: loadState.prepend as? LoadState.Error
-            errorState?.let {
-                Toast.makeText(
-                    requireContext(),
-                    "\uD83D\uDE28 Wooops ${it.error}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
+        pagingAdapter.addLoadStateListener { loadState -> binding.loadState = loadState}
     }
 
     private fun setRetrySetOnClickListener() {

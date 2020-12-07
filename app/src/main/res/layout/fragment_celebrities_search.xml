@@ -55,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="invisible"
-                    tools:listitem="@layout/item_movie_search" />
+                    tools:listitem="@layout/item_person_search" />
 
                 <ListView
                     android:id="@+id/listView_recent_queries"
