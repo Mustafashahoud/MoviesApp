@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 import com.mustafa.movieguideapp.models.Keyword
 import com.mustafa.movieguideapp.models.Review
 import com.mustafa.movieguideapp.models.Video
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity( indices = [Index("id")])

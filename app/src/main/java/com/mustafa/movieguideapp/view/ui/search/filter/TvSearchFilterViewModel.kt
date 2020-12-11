@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.mustafa.movieguideapp.models.FilterData
 import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.models.entity.Tv
 import com.mustafa.movieguideapp.repository.DiscoverRepository
@@ -16,17 +17,12 @@ class TvSearchFilterViewModel @Inject constructor(
     private val discoverRepository: DiscoverRepository
 ) : ViewModel() {
 
-    // Filter variables
-    ////////////////////////
     private var pageFiltersNumber = 1
-    private var sort: String? = "popularity.desc"
-    private var year: Int? = null
-    private var keyword: String? = null
-    private var genres: String? = null
-    private var language: String? = null
-    private var runtime: Int? = null
-    private var rating: Int? = null
-    ////////////////////////
+
+    private val _totalMoviesCount = MutableLiveData<String>()
+    val totalMoviesCount: LiveData<String> get() = _totalMoviesCount
+
+    private var filterData = FilterData()
 
     private val searchTvFilterPageLiveData: MutableLiveData<Int> = MutableLiveData()
 
@@ -36,35 +32,19 @@ class TvSearchFilterViewModel @Inject constructor(
                 AbsentLiveData.create()
             } else {
                 discoverRepository.loadFilteredTvs(
-                    rating,
-                    sort,
-                    year,
-                    keyword,
-                    genres,
-                    language,
-                    runtime,
-                    it
-                )
+                    filterData = filterData,
+                    pageFiltersNumber
+                ) { totalCount ->
+                    _totalMoviesCount.postValue(totalCount.toString())
+                }
             }
         }
 
     fun setFilters(
-        rating: Int? = null,
-        sort: String? = null,
-        year: Int? = null,
-        keywords: String? = null,
-        genres: String? = null,
-        language: String? = null,
-        runtime: Int? = null,
+        filterData: FilterData,
         page: Int
     ) {
-        this.sort = sort
-        this.year = year
-        this.language = language
-        this.keyword = keywords
-        this.runtime = runtime
-        this.genres = genres
-        this.rating = rating
+        this.filterData = filterData
         searchTvFilterPageLiveData.value = page
     }
 
@@ -78,22 +58,13 @@ class TvSearchFilterViewModel @Inject constructor(
         searchTvFilterPageLiveData.value = pageFiltersNumber
     }
 
-    fun resetFilterValues() {
-        this.rating = null
-        this.genres = null
-        this.keyword = null
-        this.language = null
-        this.runtime = null
-        this.year = null
 
-        this.pageFiltersNumber = 1
+    fun resetFilters() {
+        filterData = FilterData()
     }
 
-    val totalTvFilterResult = Transformations.switchMap(searchTvFilterPageLiveData) {
-        it?.let {
-            discoverRepository.getTotalTvFilteredResults()
-        } ?: AbsentLiveData.create()
-    }
+
+
 
 
     fun refresh() {

@@ -1,11 +1,8 @@
 package com.mustafa.movieguideapp.view.ui.tv.tvlist
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -21,10 +18,9 @@ import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.TvListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
-import kotlinx.android.synthetic.main.toolbar_search.*
 import javax.inject.Inject
 
-class TvListFragment : Fragment(), Injectable {
+class TvListFragment : Fragment(R.layout.fragment_tvs), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -36,26 +32,13 @@ class TvListFragment : Fragment(), Injectable {
 
     private val viewModel by viewModels<TvListViewModel> { viewModelFactory }
     private var binding by autoCleared<FragmentTvsBinding>()
+    private var tvsAdapter by autoCleared<TvListAdapter>()
 
-    private var adapter by autoCleared<TvListAdapter>()
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_tvs,
-            container,
-            false
-        )
-
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        binding = FragmentTvsBinding.bind(view)
+
         with(binding) {
             lifecycleOwner = this@TvListFragment
             searchResult = viewModel.tvListLiveData
@@ -73,17 +56,17 @@ class TvListFragment : Fragment(), Injectable {
 
     private fun initializeUI() {
         intiToolbar(getString(R.string.fragment_tvs))
-        adapter = TvListAdapter(dataBindingComponent, appExecutors) {
+        tvsAdapter = TvListAdapter(dataBindingComponent, appExecutors) {
             findNavController().navigate(
                 TvListFragmentDirections.actionTvsToTvDetail(
                     it
                 )
             )
         }
-        with(binding) {
-            recyclerViewListTvs.adapter = adapter
-            recyclerViewListTvs.layoutManager = GridLayoutManager(context, 3)
-            recyclerViewListTvs.addOnScrollListener(object : InfinitePager(adapter) {
+        with(binding.recyclerViewListTvs) {
+            adapter = tvsAdapter
+            layoutManager = GridLayoutManager(context, 3)
+            addOnScrollListener(object : InfinitePager(tvsAdapter) {
                 override fun loadMoreCondition(): Boolean {
                     viewModel.tvListLiveData.value?.let { resource ->
                         return resource.hasNextPage && resource.status != Status.LOADING
@@ -98,7 +81,7 @@ class TvListFragment : Fragment(), Injectable {
         }
 
 
-        search_icon.setOnClickListener {
+        binding.toolbarSearch.searchIcon.setOnClickListener {
             findNavController().navigate(
                 TvListFragmentDirections.actionTvsFragmentToTvSearchFragment()
             )
@@ -108,13 +91,13 @@ class TvListFragment : Fragment(), Injectable {
     private fun subscribers() {
         viewModel.tvListLiveData.observe(viewLifecycleOwner) {
             if (it.data != null && it.data.isNotEmpty()) {
-                adapter.submitList(it.data)
+                tvsAdapter.submitList(it.data)
             }
         }
     }
 
     private fun intiToolbar(title: String) {
-        toolbar_title.text = title
+        binding.toolbarSearch.toolbarTitle.text = title
     }
 
 }

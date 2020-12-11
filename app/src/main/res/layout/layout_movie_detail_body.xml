@@ -10,7 +10,7 @@
             type="com.mustafa.movieguideapp.models.entity.Movie" />
 
         <variable
-            name="viewModel"
+            name="viewmodel"
             type="com.mustafa.movieguideapp.view.ui.movies.moviedetail.MovieDetailViewModel" />
     </data>
 
@@ -31,7 +31,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="gone"
-            app:visibilityByResource="@{viewModel.videoListLiveData}"
+            app:visibilityByResource="@{viewmodel.videoListLiveData}"
             tools:visibility="visible" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -40,8 +40,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:visibility="gone"
-            app:adapterVideoList="@{viewModel.videoListLiveData}"
-            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:adapterVideoList="@{viewmodel.videoListLiveData}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="horizontal"
             tools:orientation="horizontal"
             tools:visibility="visible" />
 
@@ -74,7 +75,7 @@
             app:container_background_color="@color/background800"
             app:container_border_color="@color/background800"
             app:container_enable_drag="false"
-            app:mapKeywordList="@{viewModel.keywordListLiveData}"
+            app:mapKeywordList="@{viewmodel.keywordListLiveData}"
             app:tag_background_color="@color/colorPrimary"
             app:tag_border_color="@color/colorPrimary"
             app:tag_clickable="false"
@@ -94,16 +95,19 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="gone"
-            app:visibilityByResource="@{viewModel.reviewListLiveData}"
+            app:visibilityByResource="@{viewmodel.reviewListLiveData}"
             tools:visibility="visible" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/detail_body_recyclerView_reviews"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:visibility="gone"
-            app:adapterReviewList="@{viewModel.reviewListLiveData}"
+            android:nestedScrollingEnabled="false"
+            app:adapterReviewList="@{viewmodel.reviewListLiveData}"
+            tools:listitem="@layout/item_review"
             tools:visibility="visible" />
     </LinearLayout>
 </layout>

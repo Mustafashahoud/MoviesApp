@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 apply plugin: "kotlin-allopen"
@@ -47,9 +47,7 @@ android {
     }
     buildFeatures {
         dataBinding = true
-    }
-    androidExtensions {
-        experimental = true
+        viewBinding true
     }
     dexOptions {
         preDexLibraries true
@@ -117,7 +115,6 @@ dependencies {
     def mockitoKotlinVersion = '2.2.0'
     def junitVersion = '4.13.1'
     def espressoVersion = '3.3.0'
-    def nav_version = '2.3.1'
     def androidxTestCoreVersion = '1.3.0'
     def archTestVersion = '2.1.0'
     def mockitoAndroid = '3.3.3'
@@ -126,7 +123,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.3.0-alpha02"
     implementation 'androidx.activity:activity-ktx:1.1.0'
     implementation "androidx.fragment:fragment-ktx:$androidFragment"
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.material:material:1.2.1'
     implementation "androidx.palette:palette-ktx:$androidxVersion"
     implementation "androidx.recyclerview:recyclerview:$recyclerVersion"
     implementation "androidx.constraintlayout:constraintlayout:2.0.4"
@@ -148,8 +145,8 @@ dependencies {
     implementation 'com.rbddevs.splashy:splashy:1.3.0'
 
     // navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:2.3.1"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.3.2"
+    implementation "androidx.navigation:navigation-ui-ktx:2.3.2"
 
     // dependency injection
     implementation "com.google.dagger:dagger:2.30"
@@ -206,7 +203,7 @@ dependencies {
 
     androidTestImplementation "org.mockito:mockito-android:$mockitoAndroid"
     androidTestImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
-    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+    androidTestImplementation "androidx.navigation:navigation-testing:2.3.2"
 
     //Leak canary: LeakCanary is a memory leak detection library for Android.
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'

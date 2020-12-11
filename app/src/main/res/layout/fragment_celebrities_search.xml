@@ -13,7 +13,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include layout="@layout/toolbar_search_iconfied" />
+            <include android:id="@+id/toolbar_search_iconfied" layout="@layout/toolbar_search_iconfied" />
 
             <RelativeLayout
                 android:id="@+id/recent_queries_bar"

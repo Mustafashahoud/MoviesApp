@@ -6,16 +6,18 @@ import android.speech.RecognizerIntent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LiveData
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination
-import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mustafa.movieguideapp.R
+import com.mustafa.movieguideapp.databinding.ActivityMainBinding
 import com.mustafa.movieguideapp.extension.*
 import com.mustafa.movieguideapp.utils.setupWithNavController
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import javax.inject.Inject
 
@@ -27,27 +29,32 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
+    lateinit var binding: ActivityMainBinding
+
+    private var currentNavController: LiveData<NavController>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
 //        setSplashy()
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
         setOnNavigationItemReselected()
 
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
-
-
-        navHostFragment.navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (isMainFragment(destination)) {
-                bottom_navigation.visible()
-            } else bottom_navigation.gone()
-
+        currentNavController?.observe(this) { navController ->
+            navController.addOnDestinationChangedListener { _, destination, _ ->
+                if (isMainFragment(destination)) {
+                    binding.bottomNavigation.visible()
+                } else {
+                    binding.bottomNavigation.gone()
+                }
+            }
         }
     }
-
 
     override fun onBackPressed() {
 //    val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_container)
@@ -56,28 +63,36 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 //      val entry = navHostFragment.childFragmentManager.getBackStackEntryAt(x)
 //      Timber.d("BackStack ${entry.name}")
 //    }
-        val currentFragment: Fragment? = supportFragmentManager.getCurrentNavigationFragment()
-        val currentFragmentName = (currentFragment as Fragment).javaClass.simpleName
+        val currentFragment = supportFragmentManager.getCurrentNavigationFragment()
 
-        if (currentFragmentName == MOVIE_LIST_FRAGMENT) {
-            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_movies)!!) {
-                currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_movies)
-            } else {
-                super.onBackPressed()
+        when (currentFragment?.id) {
+            R.id.moviesFragment -> {
+                if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_movies)) {
+                    currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_movies)
+                } else {
+                    super.onBackPressed()
+                }
             }
-        } else if (currentFragmentName == TV_LIST_FRAGMENT) {
-            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_tvs)!!) {
-                currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_tvs)
-            } else {
-                super.onBackPressed()
+
+            R.id.tvsFragment -> {
+                if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_tvs)) {
+                    currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_tvs)
+                } else {
+                    super.onBackPressed()
+                }
             }
-        } else if (currentFragmentName == CELEBRITY_LIST_FRAGMENT) {
-            if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_celebrities)!!) {
-                currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_celebrities)
-            } else {
-                super.onBackPressed()
+
+            R.id.celebritiesFragment -> {
+                if (!currentFragment.isRecyclerViewScrollPositionZero(R.id.recyclerView_list_celebrities)) {
+                    currentFragment.setSmoothScrollToZero(R.id.recyclerView_list_celebrities)
+                } else {
+                    super.onBackPressed()
+                }
             }
-        } else super.onBackPressed()
+
+            else -> super.onBackPressed()
+
+        }
     }
 
 
@@ -99,25 +114,19 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
         val navGraphIds = listOf(R.navigation.movie, R.navigation.tv, R.navigation.star)
 
         // Setup the bottom navigation view with a list of navigation graphs
-        bottomNavigationView.setupWithNavController(
+        val controller = bottomNavigationView.setupWithNavController(
             navGraphIds = navGraphIds,
             fragmentManager = supportFragmentManager,
             containerId = R.id.nav_host_container,
             intent = intent
         )
 
-        //Whenever the selected controller changes, setup the action bar.
-//    controller.observe(this, Observer { navController ->
-//      setupActionBarWithNavController(navController)
-//    })
+        currentNavController = controller
     }
 
-//  override fun onSupportNavigateUp(): Boolean {
-//    return currentNavController?.value?.navigateUp() ?: false
-//  }
 
     private fun setOnNavigationItemReselected() {
-        bottom_navigation.setOnNavigationItemReselectedListener {
+        binding.bottomNavigation.setOnNavigationItemReselectedListener {
             when (it.itemId) {
                 R.id.movie -> supportFragmentManager.getCurrentNavigationFragment()
                     ?.setSmoothScrollToZero(R.id.recyclerView_list_movies)
@@ -131,31 +140,12 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
 
 
     private fun isMainFragment(destination: NavDestination): Boolean =
-        destination.id == R.id.moviesFragment || destination.id == R.id.tvsFragment || destination.id == R.id.celebritiesFragment
+        destination.id == R.id.moviesFragment
+                || destination.id == R.id.tvsFragment
+                || destination.id == R.id.celebritiesFragment
 
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
-
-//    private fun setSplashy() {
-//        Splashy(this)
-//            .setLogo(R.mipmap.ic_launcher_foreground)
-//            .setTitle("MovieGuide")
-//            .setTitleColor(R.color.colorAccent)
-//            .showProgress(true)
-//            .setProgressColor(R.color.colorAccent)
-//            .setSubTitle("Eng. Mustafa Shahoud")
-//            .setProgressColor(R.color.colorAccent)
-//            .setBackgroundResource(R.color.backgroundDarker)
-//            .setFullScreen(true)
-//            .setDuration(3000)
-//            .show()
-//    }
-
-    companion object {
-        const val MOVIE_LIST_FRAGMENT = "MovieListFragment"
-        const val TV_LIST_FRAGMENT = "TvListFragment"
-        const val CELEBRITY_LIST_FRAGMENT = "CelebritiesListFragment"
-    }
 
     fun getVoiceRecognitionIntent(): Intent? {
         val voiceIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -181,8 +171,7 @@ class MainActivity : AppCompatActivity(), HasAndroidInjector {
             null
         }
     }
+
+    private fun FragmentManager.getCurrentNavigationFragment(): Fragment? =
+        primaryNavigationFragment?.childFragmentManager?.fragments?.first()
 }
-
-
-
-

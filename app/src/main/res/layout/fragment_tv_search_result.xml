@@ -4,10 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="com.mustafa.movieguideapp.models.entity.Tv" />
+
         <import type="androidx.lifecycle.LiveData" />
+
         <import type="com.mustafa.movieguideapp.models.Resource" />
+
         <import type="com.mustafa.movieguideapp.models.Status" />
+
         <import type="java.util.List" />
 
         <variable
@@ -29,12 +34,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include layout="@layout/toolbar_search_result" />
+            <include
+                android:id="@+id/toolbar_search_result"
+                layout="@layout/toolbar_search_result" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_search_result_tvs"
@@ -74,7 +82,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:resource="@{(Resource) searchResult}" />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

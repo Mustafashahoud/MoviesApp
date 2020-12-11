@@ -4,7 +4,7 @@ import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Entity
 import com.mustafa.movieguideapp.models.network.PersonDetail
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity(tableName = "People", primaryKeys = ["id"])

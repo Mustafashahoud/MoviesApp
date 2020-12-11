@@ -6,20 +6,19 @@ import androidx.lifecycle.LifecycleOwner
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-//Copied from https://github.com/android/architecture-components-samples/tree/master/GithubBrowserSample
 /**
- * A lazy property that gets cleaned up when the fragment is destroyed.
+ * A lazy property that gets cleaned up when the fragment's view is destroyed.
  *
- * Accessing this variable in a destroyed fragment will throw NPE.
+ * Accessing this variable while the fragment's view is destroyed will throw NPE.
  */
 class AutoClearedValue<T : Any>(val fragment: Fragment) : ReadWriteProperty<Fragment, T> {
     private var _value: T? = null
 
     init {
-        fragment.lifecycle.addObserver(object: DefaultLifecycleObserver {
+        fragment.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onCreate(owner: LifecycleOwner) {
                 fragment.viewLifecycleOwnerLiveData.observe(fragment) { viewLifecycleOwner ->
-                    viewLifecycleOwner?.lifecycle?.addObserver(object: DefaultLifecycleObserver {
+                    viewLifecycleOwner?.lifecycle?.addObserver(object : DefaultLifecycleObserver {
                         override fun onDestroy(owner: LifecycleOwner) {
                             _value = null
                         }

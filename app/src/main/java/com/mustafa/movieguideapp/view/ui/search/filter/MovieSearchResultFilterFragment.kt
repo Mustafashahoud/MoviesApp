@@ -1,19 +1,13 @@
 package com.mustafa.movieguideapp.view.ui.search.filter
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingComponent
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
-import com.mustafa.movieguideapp.databinding.FragmentSearchResultFilterBinding
 import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
@@ -22,7 +16,8 @@ import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
 import javax.inject.Inject
 
-class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectable,
+class MovieSearchResultFilterFragment :
+    SearchResultFilterFragmentBase(R.layout.fragment_search_result_filter), Injectable,
     PopupMenu.OnMenuItemClickListener {
 
     @Inject
@@ -33,23 +28,8 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
 
     private val viewModel by viewModels<MovieSearchFilterViewModel> { viewModelFactory }
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
-    private var binding by autoCleared<FragmentSearchResultFilterBinding>()
-    private var adapter by autoCleared<MovieSearchListAdapter>()
+    private var moviesAdapter by autoCleared<MovieSearchListAdapter>()
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_search_result_filter,
-            container,
-            false
-        )
-        return binding.root
-    }
 
     override fun getFilterMap(): HashMap<String, ArrayList<String>>? {
         @Suppress("UNCHECKED_CAST")
@@ -58,8 +38,8 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
 
     override fun setBindingVariables() {
         with(binding) {
-            lifecycleOwner = this@MovieSearchResultFilterFragment
-            totalFilterResult = viewModel.totalFilterResult
+            lifecycleOwner = this@MovieSearchResultFilterFragment.viewLifecycleOwner
+            totalFilterResult = viewModel.totalMoviesCount
             selectedFilters = setSelectedFilters()
             callback = object : RetryCallback {
                 override fun retry() {
@@ -73,13 +53,13 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
         viewModel.searchMovieListFilterLiveData.observe(viewLifecycleOwner) {
             binding.resource = viewModel.searchMovieListFilterLiveData.value
             if (it.data != null && it.data.isNotEmpty()) {
-                adapter.submitList(it.data)
+                moviesAdapter.submitList(it.data)
             }
         }
     }
 
     override fun setRecyclerViewAdapter() {
-        adapter = MovieSearchListAdapter(
+        moviesAdapter = MovieSearchListAdapter(
             appExecutors,
             dataBindingComponent
         ) {
@@ -90,9 +70,9 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
             )
         }
 
-        with(binding) {
-            filteredItemsRecyclerView.adapter = adapter
-            filteredItemsRecyclerView.layoutManager = LinearLayoutManager(
+        with(binding.filteredItemsRecyclerView) {
+            adapter = moviesAdapter
+            layoutManager = LinearLayoutManager(
                 context,
                 LinearLayoutManager.VERTICAL,
                 false
@@ -125,14 +105,7 @@ class MovieSearchResultFilterFragment : SearchResultFilterFragmentBase(), Inject
     override fun resetAndLoadFiltersSortedBy(order: String) {
         viewModel.resetFilterValues()
         viewModel.setFilters(
-            filtersData?.rating,
-            order,
-            filtersData?.year,
-            filtersData?.genres,
-            filtersData?.keywords,
-            filtersData?.language,
-            filtersData?.runtime,
-            filtersData?.region,
+            getFilterData(),
             1
         )
     }

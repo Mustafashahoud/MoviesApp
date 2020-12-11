@@ -2,22 +2,20 @@ package com.mustafa.movieguideapp.binding
 
 import android.annotation.SuppressLint
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import co.lujun.androidtagview.TagContainerLayout
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.mustafa.movieguideapp.api.Api
 import com.mustafa.movieguideapp.extension.bindResource
-import com.mustafa.movieguideapp.extension.requestGlideListener
 import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.models.Keyword
 import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.models.Review
 import com.mustafa.movieguideapp.models.Video
-import com.mustafa.movieguideapp.models.entity.*
+import com.mustafa.movieguideapp.models.entity.Movie
+import com.mustafa.movieguideapp.models.entity.MoviePerson
+import com.mustafa.movieguideapp.models.entity.Tv
+import com.mustafa.movieguideapp.models.entity.TvPerson
 import com.mustafa.movieguideapp.models.network.PersonDetail
 import com.mustafa.movieguideapp.utils.KeywordListMapper
 import com.mustafa.movieguideapp.utils.StringUtils
@@ -123,67 +121,6 @@ fun bindTvGenreForTvPerson(view: TextView, tv: TvPerson) {
     view.text = "Genre: ${StringUtils.getTvGenresById(tv.genre_ids)}"
 }
 
-@BindingAdapter("bindBackDrop")
-fun bindBackDrop(view: ImageView, movie: Movie) {
-    if (movie.backdrop_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(movie.backdrop_path))
-            .listener(view.requestGlideListener())
-            .into(view)
-    } else if (movie.poster_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(movie.poster_path))
-            .listener(view.requestGlideListener())
-            .into(view)
-    }
-}
-
-@BindingAdapter("bindBackDropForMoviePerson")
-fun bindBackDropForMoviePerson(view: ImageView, movie: MoviePerson) {
-    if (movie.backdrop_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(movie.backdrop_path))
-            .listener(view.requestGlideListener())
-            .into(view)
-    } else if (movie.poster_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(movie.poster_path))
-            .listener(view.requestGlideListener())
-            .into(view)
-    }
-}
-
-@BindingAdapter("bindBackDrop")
-fun bindBackDrop(view: ImageView, tv: Tv) {
-    if (tv.backdrop_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(tv.backdrop_path))
-            .listener(view.requestGlideListener())
-            .into(view)
-    } else {
-        Glide.with(view.context).load(tv.poster_path?.let { Api.getBackdropPath(it) })
-            .listener(view.requestGlideListener())
-            .into(view)
-    }
-}
-
-@BindingAdapter("bindBackDropForTvPerson")
-fun bindBackDropForTvPerson(view: ImageView, movie: TvPerson) {
-    if (movie.backdrop_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(movie.backdrop_path))
-            .listener(view.requestGlideListener())
-            .into(view)
-    } else if (movie.poster_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(movie.poster_path))
-            .listener(view.requestGlideListener())
-            .into(view)
-    }
-}
-
-@BindingAdapter("bindBackDrop")
-fun bindBackDrop(view: ImageView, person: Person) {
-    if (person.profile_path != null) {
-        Glide.with(view.context).load(Api.getBackdropPath(person.profile_path))
-            .apply(RequestOptions().circleCrop())
-            .into(view)
-    }
-}
-
 
 @BindingAdapter("setCharacterForTvPerson")
 fun setCharacterForTv(textView: TextView, tv: TvPerson) {
@@ -213,7 +150,7 @@ fun bindAdapterVideoList(view: RecyclerView, resource: Resource<List<Video>>?) {
     view.bindResource(resource) {
         if (resource != null) {
             val adapter = view.adapter as? VideoListAdapter
-            adapter?.addVideoList(resource)
+            adapter?.submitList(resource.data)
             if (resource.data?.isNotEmpty()!!) {
                 view.visible()
             }
@@ -226,7 +163,7 @@ fun bindAdapterReviewList(view: RecyclerView, resource: Resource<List<Review>>?)
     view.bindResource(resource) {
         if (resource != null) {
             val adapter = view.adapter as? ReviewListAdapter
-            adapter?.addReviewList(resource)
+            adapter?.submitList(resource.data)
             if (resource.data?.isNotEmpty()!!) {
                 view.visible()
             }

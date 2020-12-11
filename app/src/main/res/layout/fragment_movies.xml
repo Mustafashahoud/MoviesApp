@@ -4,18 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="com.mustafa.movieguideapp.models.entity.Movie" />
+
         <import type="androidx.lifecycle.LiveData" />
-        <import type="com.mustafa.movieguideapp.models.Resource"/>
-        <import type="com.mustafa.movieguideapp.models.Status"/>
+
+        <import type="com.mustafa.movieguideapp.models.Resource" />
+
+        <import type="com.mustafa.movieguideapp.models.Status" />
+
         <import type="java.util.List" />
+
         <variable
             name="searchResult"
             type="LiveData&lt;Resource&lt;List&lt;Movie>>>" />
+
         <variable
             name="callback"
             type="com.mustafa.movieguideapp.view.ui.common.RetryCallback" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,7 +34,9 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include layout="@layout/toolbar_search" />
+            <include
+                android:id="@+id/toolbar_search"
+                layout="@layout/toolbar_search" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_list_movies"

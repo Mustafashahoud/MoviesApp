@@ -12,14 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.mustafa.movieguideapp.R
 import kotlin.math.max
 
@@ -75,32 +73,16 @@ fun Fragment.simpleToolbarWithHome(toolbar: Toolbar, title_: String = "") {
     }
 }
 
-fun Fragment.applyToolbarMargin(toolbar: Toolbar) {
-    if (checkIsMaterialVersion()) {
-        toolbar.layoutParams =
-            (toolbar.layoutParams as CollapsingToolbarLayout.LayoutParams).apply {
-                topMargin = getStatusBarSize()
-            }
-    }
-}
-
-private fun Fragment.getStatusBarSize(): Int {
-    val idStatusBarHeight = resources.getIdentifier("status_bar_height", "dimen", "android")
-    return if (idStatusBarHeight > 0) {
-        resources.getDimensionPixelSize(idStatusBarHeight)
-    } else 0
-}
-
-
-fun FragmentManager.getCurrentNavigationFragment(): Fragment? =
-    primaryNavigationFragment?.childFragmentManager?.fragments?.first()
 
 /**
  * true if the findFirstCompletelyVisibleItemPosition is Zero
  */
-fun Fragment.isRecyclerViewScrollPositionZero(id: Int): Boolean? =
+fun Fragment.isRecyclerViewScrollPositionZero(id: Int): Boolean =
     (activity?.findViewById<RecyclerView>(id)?.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition() == 0
 
 fun Fragment.setSmoothScrollToZero(resId: Int) {
     activity?.findViewById<RecyclerView>(resId)?.smoothScrollToPosition(0)
 }
+
+
+fun Fragment.isEmptyOrBlank(text: String) = text.isEmpty() || text.isBlank()

@@ -1,14 +1,11 @@
 package com.mustafa.movieguideapp.view.ui.person.search
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingComponent
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
@@ -25,13 +22,11 @@ import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.utils.ActivityResultApiObserver
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.PeopleSearchListAdapter
-import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.main.MainActivity
-import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.android.synthetic.main.toolbar_search_iconfied.*
+import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import javax.inject.Inject
 
-class SearchCelebritiesFragment : Fragment(), Injectable {
+class SearchCelebritiesFragment : Fragment(R.layout.fragment_celebrities_search), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -53,22 +48,10 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
 
     private val hasRecentQueriesChanged = MutableLiveData<Boolean>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_celebrities_search,
-            container,
-            false
-        )
-
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        binding = FragmentCelebritiesSearchBinding.bind(view)
 
         initResultApiObserve()
         initializeUI()
@@ -95,23 +78,25 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
      * Init the toolbar
      */
     private fun initToolbar() {
-        search_view.onActionViewExpanded()
+        binding.toolbarSearchIconfied.searchView.apply {
+            onActionViewExpanded()
+            queryHint = "Search Celebrities"
+        }
 
-        search_view.queryHint = "Search Celebrities"
-
-        voice_search.setOnClickListener {
+        binding.toolbarSearchIconfied.voiceSearch.setOnClickListener {
             val voiceIntent = (activity as MainActivity).getVoiceRecognitionIntent()
             voiceIntent?.let {
                 activityResultApiObserver.startVoiceRecognitionActivityForResult(it)
             }
         }
 
-        arrow_back.setOnClickListener {
-            search_view.clearFocus()
+        binding.toolbarSearchIconfied.arrowBack.setOnClickListener {
+            binding.toolbarSearchIconfied.searchView.clearFocus()
             findNavController().navigate(SearchCelebritiesFragmentDirections.actionSearchCelebritiesFragmentToCelebritiesFragment())
         }
 
-        search_view.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        binding.toolbarSearchIconfied.searchView.setOnQueryTextListener(object :
+            SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 query?.let { navigateToSearchCelebritiesResultFragment(query) }
                 return true
@@ -131,7 +116,7 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
                     .setPositiveButton(R.string.clear) { _, _ ->
                         viewModel.deleteAllPeopleRecentQueries()
                         it.clear()
-                        listView_recent_queries.inVisible()
+                        binding.listViewRecentQueries.inVisible()
                     }
                     .setNegativeButton(R.string.cancel) { dialog, _ ->
                         dialog.dismiss()
@@ -174,7 +159,9 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
         }
 
         hasRecentQueriesChanged.observe(viewLifecycleOwner) {
-            arrayAdapter?.let { adapter -> clear_recent_queries.isClickable = !adapter.isEmpty }
+            arrayAdapter?.let { adapter ->
+                binding.clearRecentQueries.isClickable = !adapter.isEmpty
+            }
         }
     }
 
@@ -188,11 +175,11 @@ class SearchCelebritiesFragment : Fragment(), Injectable {
             queries.requireNoNulls()
         )
         hasRecentQueriesChanged.value = true
-        binding.apply {
-            listViewRecentQueries.setHeaderDividersEnabled(true)
-            listViewRecentQueries.setFooterDividersEnabled(true)
-            listViewRecentQueries.adapter = arrayAdapter
-            listViewRecentQueries.setOnItemClickListener { parent, _, position, _ ->
+        binding.listViewRecentQueries.apply {
+            setHeaderDividersEnabled(true)
+            setFooterDividersEnabled(true)
+            adapter = arrayAdapter
+            setOnItemClickListener { parent, _, position, _ ->
                 val query = parent.getItemAtPosition(position) as String
                 navigateToSearchCelebritiesResultFragment(query)
             }

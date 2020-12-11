@@ -1,11 +1,8 @@
 package com.mustafa.movieguideapp.view.ui.search.result
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -23,10 +20,9 @@ import com.mustafa.movieguideapp.view.adapter.MovieSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
 import com.mustafa.movieguideapp.view.ui.search.MovieSearchViewModel
-import kotlinx.android.synthetic.main.toolbar_search_result.*
 import javax.inject.Inject
 
-class MovieSearchResultFragment : Fragment(), Injectable {
+class MovieSearchResultFragment : Fragment(R.layout.fragment_movie_search_result), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -37,30 +33,18 @@ class MovieSearchResultFragment : Fragment(), Injectable {
     private val viewModel by viewModels<MovieSearchViewModel> { viewModelFactory }
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var binding by autoCleared<FragmentMovieSearchResultBinding>()
-    private var adapter by autoCleared<MovieSearchListAdapter>()
+    private var moviesAdapter by autoCleared<MovieSearchListAdapter>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_movie_search_result,
-            container,
-            false
-        )
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        binding = FragmentMovieSearchResultBinding.bind(view)
+
         initializeUI()
         subscribers()
 
-        viewModel.setSearchMovieQueryAndPage(getQuerySafeArgs(), 1)
-
         with(binding) {
-            lifecycleOwner = this@MovieSearchResultFragment
+            lifecycleOwner = this@MovieSearchResultFragment.viewLifecycleOwner
             searchResult = viewModel.searchMovieListLiveData
             query = viewModel.queryMovieLiveData
             callback = object : RetryCallback {
@@ -69,18 +53,22 @@ class MovieSearchResultFragment : Fragment(), Injectable {
                 }
             }
         }
+
+        viewModel.setSearchMovieQueryAndPage(getQuerySafeArgs(), 1)
+
+
     }
 
     private fun subscribers() {
         viewModel.searchMovieListLiveData.observe(viewLifecycleOwner) {
             if (it.data != null && it.data.isNotEmpty()) {
-                adapter.submitList(it.data)
+                moviesAdapter.submitList(it.data)
             }
         }
     }
 
 
-    private fun getQuerySafeArgs(): String? {
+    private fun getQuerySafeArgs(): String {
         val params =
             MovieSearchResultFragmentArgs.fromBundle(
                 requireArguments()
@@ -89,7 +77,7 @@ class MovieSearchResultFragment : Fragment(), Injectable {
     }
 
     private fun initializeUI() {
-        adapter = MovieSearchListAdapter(
+        moviesAdapter = MovieSearchListAdapter(
             appExecutors,
             dataBindingComponent
         ) {
@@ -101,10 +89,10 @@ class MovieSearchResultFragment : Fragment(), Injectable {
         }
 
         hideKeyboard()
-        with(binding) {
-            recyclerViewSearchResultMovies.adapter = adapter
-            recyclerViewSearchResultMovies.layoutManager = LinearLayoutManager(context)
-            recyclerViewSearchResultMovies.addOnScrollListener(object : InfinitePager(adapter) {
+        with(binding.recyclerViewSearchResultMovies) {
+            adapter = moviesAdapter
+            layoutManager = LinearLayoutManager(context)
+            addOnScrollListener(object : InfinitePager(moviesAdapter) {
                 override fun loadMoreCondition(): Boolean {
                     viewModel.searchMovieListLiveData.value?.let { resource ->
                         return resource.hasNextPage && resource.status != Status.LOADING
@@ -120,13 +108,13 @@ class MovieSearchResultFragment : Fragment(), Injectable {
 
 
 
-        search_view.setOnSearchClickListener {
+        binding.toolbarSearch.searchView.setOnSearchClickListener {
             findNavController().navigate(
                 MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieSearchFragment()
             )
         }
 
-        arrow_back.setOnClickListener {
+        binding.toolbarSearch.arrowBack.setOnClickListener {
             findNavController().navigate(
                 MovieSearchResultFragmentDirections.actionMovieSearchFragmentResultToMovieSearchFragment()
             )

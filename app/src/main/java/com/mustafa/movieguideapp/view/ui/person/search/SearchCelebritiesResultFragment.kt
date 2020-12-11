@@ -23,7 +23,6 @@ import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.PeopleSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
-import kotlinx.android.synthetic.main.toolbar_search_result.*
 import javax.inject.Inject
 
 class SearchCelebritiesResultFragment : Fragment(R.layout.fragment_celebrities_search_result),
@@ -71,7 +70,7 @@ class SearchCelebritiesResultFragment : Fragment(R.layout.fragment_celebrities_s
     }
 
 
-    private fun getQuerySafeArgs(): String? {
+    private fun getQuerySafeArgs(): String {
         val params =
             SearchCelebritiesResultFragmentArgs.fromBundle(
                 requireArguments()
@@ -111,11 +110,11 @@ class SearchCelebritiesResultFragment : Fragment(R.layout.fragment_celebrities_s
         }
 
 
-        search_view.setOnSearchClickListener {
+        binding.toolbarSearchResult.searchView.setOnSearchClickListener {
             findNavController().navigate(SearchCelebritiesResultFragmentDirections.actionSearchCelebritiesResultFragmentToSearchCelebritiesFragment())
         }
 
-        arrow_back.setOnClickListener {
+        binding.toolbarSearchResult.arrowBack.setOnClickListener {
             findNavController().navigate(SearchCelebritiesResultFragmentDirections.actionSearchCelebritiesResultFragmentToSearchCelebritiesFragment())
         }
     }
@@ -128,7 +127,7 @@ class SearchCelebritiesResultFragment : Fragment(R.layout.fragment_celebrities_s
             VOICE_REQUEST_CODE -> if (resultCode == Activity.RESULT_OK && data != null) {
                 val voiceQuery = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 hideKeyboard()
-                search_view.setQuery(voiceQuery?.let { it[0] }, true)
+                binding.toolbarSearchResult.searchView.setQuery(voiceQuery?.let { it[0] }, true)
             }
         }
     }

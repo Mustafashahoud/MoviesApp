@@ -7,6 +7,7 @@ import com.mustafa.movieguideapp.api.ApiResponse
 import com.mustafa.movieguideapp.api.TheDiscoverService
 import com.mustafa.movieguideapp.mappers.MoviePagingChecker
 import com.mustafa.movieguideapp.mappers.TvPagingChecker
+import com.mustafa.movieguideapp.models.FilterData
 import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.models.entity.*
 import com.mustafa.movieguideapp.models.network.DiscoverMovieResponse
@@ -306,23 +307,10 @@ class DiscoverRepository @Inject constructor(
         tvDao.deleteAllTvRecentQueries()
 
 
-    /**
-     * Total count of movie filter results
-     */
-    private val totalFilteredResults = MutableLiveData<String>()
-
-    fun getTotalFilteredResults(): LiveData<String> = totalFilteredResults
-
     fun loadFilteredMovies(
-        rating: Int? = null,
-        sort: String? = null,
-        year: Int? = null,
-        keywords: String? = null,
-        genres: String? = null,
-        language: String? = null,
-        runtime: Int? = null,
-        region: String? = null,
-        page: Int
+        filterData: FilterData,
+        page: Int,
+        totalCount: (Int) -> Unit
     ): LiveData<Resource<List<Movie>>> {
         return object :
             NetworkBoundResource<List<Movie>, DiscoverMovieResponse, MoviePagingChecker>(
@@ -344,8 +332,7 @@ class DiscoverRepository @Inject constructor(
                     ids.addAll(filterMovieResult.ids)
                 }
 
-                if (totalFilteredResults.value != items.total_results.toString())
-                    totalFilteredResults.postValue(items.total_results.toString())
+                totalCount(items.total_results)
 
                 ids.addAll(movieIds)
                 movieDao.insertMovieList(movies = items.results)
@@ -376,14 +363,14 @@ class DiscoverRepository @Inject constructor(
 
             override fun createCall(): LiveData<ApiResponse<DiscoverMovieResponse>> {
                 return discoverService.searchMovieFilters(
-                    rating,
-                    sort,
-                    year,
-                    genres,
-                    keywords,
-                    language,
-                    runtime,
-                    region,
+                    filterData.rating,
+                    filterData.sort,
+                    filterData.year,
+                    filterData.genres,
+                    filterData.keywords,
+                    filterData.language,
+                    filterData.runtime,
+                    filterData.region,
                     page
                 )
             }
@@ -391,21 +378,11 @@ class DiscoverRepository @Inject constructor(
     }
 
 
-    /**
-     * Total count of movie filter results
-     */
-    private val totalTvFilteredResults = MutableLiveData<String>()
-    fun getTotalTvFilteredResults(): LiveData<String> = totalTvFilteredResults
 
     fun loadFilteredTvs(
-        rating: Int? = null,
-        sort: String? = null,
-        year: Int? = null,
-        keywords: String? = null,
-        genres: String? = null,
-        language: String? = null,
-        runtime: Int? = null,
-        page: Int
+        filterData: FilterData,
+        page: Int,
+        totalCount: (Int) -> Unit
     ): LiveData<Resource<List<Tv>>> {
 
         return object :
@@ -428,8 +405,7 @@ class DiscoverRepository @Inject constructor(
                     ids.addAll(filterTvResult.ids)
                 }
 
-                if (totalTvFilteredResults.value != items.total_results.toString())
-                    totalTvFilteredResults.postValue(items.total_results.toString())
+                totalCount(items.total_results)
 
                 ids.addAll(movieIds)
                 tvDao.insertTvList(tvs = items.results)
@@ -460,13 +436,13 @@ class DiscoverRepository @Inject constructor(
 
             override fun createCall(): LiveData<ApiResponse<DiscoverTvResponse>> {
                 return discoverService.searchTvFilters(
-                    rating,
-                    sort,
-                    year,
-                    genres,
-                    keywords,
-                    language,
-                    runtime,
+                    filterData.rating,
+                    filterData.sort,
+                    filterData.year,
+                    filterData.genres,
+                    filterData.keywords,
+                    filterData.language,
+                    filterData.runtime,
                     page
                 )
             }

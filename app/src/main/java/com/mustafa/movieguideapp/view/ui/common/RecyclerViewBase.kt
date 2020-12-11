@@ -12,13 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 </V></T> */
 @Suppress("unused")
 abstract class RecyclerViewBase<T, V : ViewDataBinding> :
-        RecyclerView.Adapter<DataBoundViewHolder<V>>(){
+    RecyclerView.Adapter<DataBoundViewHolder<V>>(){
 
     private val itemList = arrayListOf<T>()
 
     fun submitList(newList: List<T>?) {
         newList?.let{itemList.addAll(newList)}
-        newList?.size?.let { notifyItemRangeInserted(itemList.size, it) }
+        notifyDataSetChanged()
     }
 
     fun clearList(){

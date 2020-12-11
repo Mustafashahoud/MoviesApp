@@ -34,7 +34,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include layout="@layout/toolbar_search" />
+            <include android:id="@+id/toolbar_search" layout="@layout/toolbar_search" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView_list_celebrities"

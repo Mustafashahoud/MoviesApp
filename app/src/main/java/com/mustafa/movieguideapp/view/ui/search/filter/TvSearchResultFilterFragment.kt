@@ -1,29 +1,22 @@
 package com.mustafa.movieguideapp.view.ui.search.filter
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.databinding.DataBindingComponent
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
-import com.mustafa.movieguideapp.databinding.FragmentSearchResultFilterBinding
 import com.mustafa.movieguideapp.di.Injectable
 import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.TvSearchListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
-import kotlinx.android.synthetic.main.fragment_search_result_filter.*
-import kotlinx.android.synthetic.main.fragment_search_result_filter.view.*
 import javax.inject.Inject
 
-class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectable,
+class TvSearchResultFilterFragment :
+    SearchResultFilterFragmentBase(R.layout.fragment_search_result_filter), Injectable,
     androidx.appcompat.widget.PopupMenu.OnMenuItemClickListener {
 
     @Inject
@@ -34,23 +27,8 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
 
     private val viewModel by viewModels<TvSearchFilterViewModel> { viewModelFactory }
     private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
-    private var binding by autoCleared<FragmentSearchResultFilterBinding>()
-    private var adapter by autoCleared<TvSearchListAdapter>()
+    private var tvsAdapter by autoCleared<TvSearchListAdapter>()
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_search_result_filter,
-            container,
-            false
-        )
-        return binding.root
-    }
 
     override fun getFilterMap(): HashMap<String, ArrayList<String>>? {
         @Suppress("UNCHECKED_CAST")
@@ -59,8 +37,8 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
 
     override fun setBindingVariables() {
         with(binding) {
-            lifecycleOwner = this@TvSearchResultFilterFragment
-            totalFilterResult = viewModel.totalTvFilterResult
+            lifecycleOwner = this@TvSearchResultFilterFragment.viewLifecycleOwner
+            totalFilterResult = viewModel.totalMoviesCount
             selectedFilters = setSelectedFilters()
             callback = object : RetryCallback {
                 override fun retry() {
@@ -74,13 +52,13 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
         viewModel.searchTvListFilterLiveData.observe(viewLifecycleOwner) {
             binding.resource = viewModel.searchTvListFilterLiveData.value
             if (it.data != null && it.data.isNotEmpty()) {
-                adapter.submitList(it.data)
+                tvsAdapter.submitList(it.data)
             }
         }
     }
 
     override fun setRecyclerViewAdapter() {
-        adapter = TvSearchListAdapter(
+        tvsAdapter = TvSearchListAdapter(
             appExecutors,
             dataBindingComponent
         ) {
@@ -91,13 +69,14 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
             )
         }
 
-        binding.root.filtered_items_recycler_view.adapter = adapter
-
-        filtered_items_recycler_view.layoutManager = LinearLayoutManager(
-            context,
-            LinearLayoutManager.VERTICAL,
-            false
-        )
+        binding.filteredItemsRecyclerView.apply {
+            adapter = tvsAdapter
+            layoutManager = LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        }
     }
 
     override fun loadMoreFilters() {
@@ -124,15 +103,9 @@ class TvSearchResultFilterFragment : SearchResultFilterFragmentBase(), Injectabl
 
 
     override fun resetAndLoadFiltersSortedBy(order: String) {
-        viewModel.resetFilterValues()
+        viewModel.resetFilters()
         viewModel.setFilters(
-            filtersData?.rating,
-            order,
-            filtersData?.year,
-            filtersData?.genres,
-            filtersData?.keywords,
-            filtersData?.language,
-            filtersData?.runtime,
+            getFilterData(),
             1
         )
     }
