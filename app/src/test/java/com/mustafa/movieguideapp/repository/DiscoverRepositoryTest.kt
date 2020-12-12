@@ -1,19 +1,19 @@
-package com.mustafa.movieguideapp.api.repository
+package com.mustafa.movieguideapp.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.mustafa.movieguideapp.api.TheDiscoverService
-import com.mustafa.movieguideapp.api.util.ApiUtil.successCall
-import com.mustafa.movieguideapp.api.util.InstantAppExecutors
+import com.mustafa.movieguideapp.models.FilterData
 import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.models.entity.*
 import com.mustafa.movieguideapp.models.network.DiscoverMovieResponse
 import com.mustafa.movieguideapp.models.network.DiscoverTvResponse
-import com.mustafa.movieguideapp.repository.DiscoverRepository
 import com.mustafa.movieguideapp.room.AppDatabase
 import com.mustafa.movieguideapp.room.MovieDao
 import com.mustafa.movieguideapp.room.TvDao
+import com.mustafa.movieguideapp.util.ApiUtil.successCall
+import com.mustafa.movieguideapp.util.InstantAppExecutors
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -140,7 +140,8 @@ class DiscoverRepositoryTest {
         val movies = MutableLiveData<List<Movie>>()
         `when`(movieDao.loadFilteredMovieListOrdered(ids)).thenReturn(movies)
 
-        repository.loadFilteredMovies(page = 1).observeForever(observer)
+        repository.loadFilteredMovies(FilterData(), 1){}
+            .observeForever(observer)
         verify(observer).onChanged(Resource.loading(null))
         verifyNoMoreInteractions(service)
 
@@ -184,7 +185,8 @@ class DiscoverRepositoryTest {
         val tvs = MutableLiveData<List<Tv>>()
         `when`(movieDao.loadFilteredTvListOrdered(ids)).thenReturn(tvs)
 
-        repository.loadFilteredTvs(page = 1).observeForever(observer)
+        repository.loadFilteredTvs(FilterData(), 1) {}
+            .observeForever(observer)
         verify(observer).onChanged(Resource.loading(null))
         verifyNoMoreInteractions(service)
 

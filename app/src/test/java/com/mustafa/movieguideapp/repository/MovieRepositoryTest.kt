@@ -1,4 +1,4 @@
-package com.mustafa.movieguideapp.api.repository
+package com.mustafa.movieguideapp.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
@@ -7,8 +7,8 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import com.mustafa.movieguideapp.api.MovieService
-import com.mustafa.movieguideapp.api.util.ApiUtil.successCall
-import com.mustafa.movieguideapp.api.util.InstantAppExecutors
+import com.mustafa.movieguideapp.util.ApiUtil.successCall
+import com.mustafa.movieguideapp.util.InstantAppExecutors
 import com.mustafa.movieguideapp.models.Keyword
 import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.models.Review
@@ -16,7 +16,6 @@ import com.mustafa.movieguideapp.models.Video
 import com.mustafa.movieguideapp.models.network.KeywordListResponse
 import com.mustafa.movieguideapp.models.network.ReviewListResponse
 import com.mustafa.movieguideapp.models.network.VideoListResponse
-import com.mustafa.movieguideapp.repository.MovieRepository
 import com.mustafa.movieguideapp.room.AppDatabase
 import com.mustafa.movieguideapp.room.MovieDao
 import com.mustafa.movieguideapp.utils.MockTestUtil.Companion.mockKeywordList

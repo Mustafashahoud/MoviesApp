@@ -1,7 +1,6 @@
-package com.mustafa.movieguideapp.api.api
+package com.mustafa.movieguideapp.api
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.mustafa.movieguideapp.api.LiveDataCallAdapterFactory
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest

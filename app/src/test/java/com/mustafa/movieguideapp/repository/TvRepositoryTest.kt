@@ -1,10 +1,8 @@
-package com.mustafa.movieguideapp.api.repository
+package com.mustafa.movieguideapp.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.mustafa.movieguideapp.api.TvService
-import com.mustafa.movieguideapp.api.util.ApiUtil
-import com.mustafa.movieguideapp.api.util.InstantAppExecutors
 import com.mustafa.movieguideapp.models.Keyword
 import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.models.Review
@@ -12,8 +10,9 @@ import com.mustafa.movieguideapp.models.Video
 import com.mustafa.movieguideapp.models.network.KeywordListResponse
 import com.mustafa.movieguideapp.models.network.ReviewListResponse
 import com.mustafa.movieguideapp.models.network.VideoListResponse
-import com.mustafa.movieguideapp.repository.TvRepository
 import com.mustafa.movieguideapp.room.TvDao
+import com.mustafa.movieguideapp.util.ApiUtil
+import com.mustafa.movieguideapp.util.InstantAppExecutors
 import com.mustafa.movieguideapp.utils.MockTestUtil
 import com.mustafa.movieguideapp.utils.MockTestUtil.Companion.mockKeywordList
 import com.mustafa.movieguideapp.utils.MockTestUtil.Companion.mockTv

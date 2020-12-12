@@ -1,19 +1,18 @@
-package com.mustafa.movieguideapp.api.repository
+package com.mustafa.movieguideapp.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.mustafa.movieguideapp.api.PeopleService
-import com.mustafa.movieguideapp.api.util.ApiUtil.successCall
-import com.mustafa.movieguideapp.api.util.InstantAppExecutors
 import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.models.entity.PeopleResult
 import com.mustafa.movieguideapp.models.entity.Person
 import com.mustafa.movieguideapp.models.network.PeopleResponse
 import com.mustafa.movieguideapp.models.network.PersonDetail
-import com.mustafa.movieguideapp.repository.PeopleRepository
 import com.mustafa.movieguideapp.room.AppDatabase
 import com.mustafa.movieguideapp.room.PeopleDao
+import com.mustafa.movieguideapp.util.ApiUtil.successCall
+import com.mustafa.movieguideapp.util.InstantAppExecutors
 import com.mustafa.movieguideapp.utils.MockTestUtil.Companion.mockPerson
 import com.mustafa.movieguideapp.utils.MockTestUtil.Companion.mockPersonDetail
 import com.nhaarman.mockitokotlin2.*
@@ -40,7 +39,7 @@ class PeopleRepositoryTest {
 
     @Before
     fun init() {
-        repository = PeopleRepository(service, peopleDao, db,  InstantAppExecutors())
+        repository = PeopleRepository(service, peopleDao, db, InstantAppExecutors())
     }
 
     @Test
@@ -51,7 +50,7 @@ class PeopleRepositoryTest {
         val mockResponse = PeopleResponse(1, emptyList(), 100, 10)
         val callLiveData = successCall(mockResponse)
         val observer = mock<Observer<Resource<List<Person>>>>()
-        val people =  MutableLiveData<List<Person>>()
+        val people = MutableLiveData<List<Person>>()
         val persons = listOf(mockPerson())
 
         `when`(service.fetchPopularPeople(1)).thenReturn(callLiveData)

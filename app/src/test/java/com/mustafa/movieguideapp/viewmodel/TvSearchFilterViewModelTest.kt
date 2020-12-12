@@ -1,20 +1,24 @@
-package com.mustafa.movieguideapp.api.viewmodel
+package com.mustafa.movieguideapp.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.mustafa.movieguideapp.models.FilterData
 import com.mustafa.movieguideapp.models.Resource
 import com.mustafa.movieguideapp.models.entity.Tv
 import com.mustafa.movieguideapp.repository.DiscoverRepository
 import com.mustafa.movieguideapp.utils.MockTestUtil.Companion.mockTv
 import com.mustafa.movieguideapp.view.ui.search.filter.TvSearchFilterViewModel
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.*
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.Mockito.`when`
 
+@RunWith(JUnit4::class)
 class TvSearchFilterViewModelTest {
     @Rule
     @JvmField
@@ -37,14 +41,9 @@ class TvSearchFilterViewModelTest {
 
         `when`(
             repository.loadFilteredTvs(
-                nullable(Int::class.java),
-                nullable(String::class.java),
-                nullable(Int::class.java),
-                nullable(String::class.java),
-                nullable(String::class.java),
-                nullable(String::class.java),
-                nullable(Int::class.java),
-                anyInt()
+                any(),
+                anyInt(),
+                any()
             )
         ).thenReturn(filteredTvsResultLiveData)
 
@@ -52,38 +51,14 @@ class TvSearchFilterViewModelTest {
 
         filteredTvsResultLiveData.postValue(resourceData)
 
-        viewModel.setFilters(page = 1)
-        verify(repository).loadFilteredTvs(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            1
-        )
+        val filterData = FilterData()
 
-        viewModel.setFilters(
-            8,
-            "popularity.desc",
-            null,
-            null,
-            null,
-            "EN",
-            null,
-            1
-        )
 
+        viewModel.setFilters(filterData, 1)
         verify(repository).loadFilteredTvs(
-            8,
-            "popularity.desc",
-            null,
-            null,
-            null,
-            "EN",
-            null,
-            1
+            any(),
+            anyInt(),
+            any()
         )
 
         verify(observer, times(1)).onChanged(resourceData)

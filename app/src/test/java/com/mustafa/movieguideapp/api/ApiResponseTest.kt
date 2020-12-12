@@ -1,8 +1,5 @@
-package com.mustafa.movieguideapp.api.api
+package com.mustafa.movieguideapp.api
 
-import com.mustafa.movieguideapp.api.ApiErrorResponse
-import com.mustafa.movieguideapp.api.ApiResponse
-import com.mustafa.movieguideapp.api.ApiSuccessResponse
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
@@ -24,15 +21,16 @@ class ApiResponseTest {
     @Test
     fun success() {
         val apiResponse = ApiResponse.create<String>(
-            Response.success("foo")) as ApiSuccessResponse<String>
+            Response.success("foo")
+        ) as ApiSuccessResponse<String>
         assertThat(apiResponse.body, `is`("foo"))
     }
 
-  @Test
-  fun error() {
-    val errorResponse = Response.error<String>(400, "Mustafa".toResponseBody())
-    val errorApi = ApiResponse.create<String>(errorResponse) as ApiErrorResponse
-    assertThat(errorApi.errorMessage, `is`("Mustafa"))
+    @Test
+    fun error() {
+        val errorResponse = Response.error<String>(400, "Mustafa".toResponseBody())
+        val errorApi = ApiResponse.create<String>(errorResponse) as ApiErrorResponse
+        assertThat(errorApi.errorMessage, `is`("Mustafa"))
 
-  }
+    }
 }

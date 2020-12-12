@@ -1,4 +1,4 @@
-package com.mustafa.movieguideapp.api.viewmodel
+package com.mustafa.movieguideapp.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
@@ -18,7 +18,6 @@ import org.junit.runners.JUnit4
 import org.mockito.Mockito.*
 
 @RunWith(JUnit4::class)
-
 class MovieListViewModelTest {
 
     @Rule

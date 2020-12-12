@@ -1,4 +1,4 @@
-package com.mustafa.movieguideapp.api.viewmodel
+package com.mustafa.movieguideapp.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
@@ -15,10 +15,13 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import org.mockito.Mockito.*
 
-class TvSearchViewModelTest {
 
+@RunWith(JUnit4::class)
+class TvSearchViewModelTest {
 
     @Rule
     @JvmField

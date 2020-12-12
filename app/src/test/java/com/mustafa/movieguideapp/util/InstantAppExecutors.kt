@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mustafa.movieguideapp.api.util
+package com.mustafa.movieguideapp.util
 
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 

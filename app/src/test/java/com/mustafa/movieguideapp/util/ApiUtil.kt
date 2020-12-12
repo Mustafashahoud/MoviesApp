@@ -1,4 +1,4 @@
-package com.mustafa.movieguideapp.api.util
+package com.mustafa.movieguideapp.util
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

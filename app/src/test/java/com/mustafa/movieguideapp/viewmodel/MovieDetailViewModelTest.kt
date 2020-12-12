@@ -1,4 +1,4 @@
-package com.mustafa.movieguideapp.api.viewmodel
+package com.mustafa.movieguideapp.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
@@ -15,8 +15,11 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import org.mockito.Mockito
 
+@RunWith(JUnit4::class)
 class MovieDetailViewModelTest {
 
     @Rule
@@ -40,7 +43,7 @@ class MovieDetailViewModelTest {
         viewModel.reviewListLiveData.observeForever(observerReview)
         viewModel.videoListLiveData.observeForever(observerVideo)
 
-        viewModel.setMovieId(null)
+//        viewModel.setMovieId(null)
         verifyNoMoreInteractions(repository)
         verify(repository, never()).loadKeywordList(Mockito.anyInt())
         verify(repository, never()).loadReviewsList(Mockito.anyInt())

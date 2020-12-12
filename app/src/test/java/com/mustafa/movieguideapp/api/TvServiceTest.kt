@@ -1,14 +1,15 @@
-package com.mustafa.movieguideapp.api.api
+package com.mustafa.movieguideapp.api
 
-import com.mustafa.movieguideapp.api.ApiSuccessResponse
-import com.mustafa.movieguideapp.api.TvService
 import com.mustafa.movieguideapp.utils.LiveDataTestUtil
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import java.io.IOException
 
+@RunWith(JUnit4::class)
 class TvServiceTest : ApiHelperAbstract<TvService>() {
 
     private lateinit var service: TvService
