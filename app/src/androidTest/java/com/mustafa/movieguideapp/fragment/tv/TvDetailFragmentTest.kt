@@ -16,6 +16,7 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.models.Keyword
 import com.mustafa.movieguideapp.models.Resource
@@ -85,8 +86,9 @@ class TvDetailFragmentTest {
 
         dataBindingIdlingResourceRule.monitorFragment(scenario)
         // Set the navigation graph to the NavHostController
-        navController.setGraph(R.navigation.tv)
-
+        runOnUiThread {
+            navController.setGraph(R.navigation.tv)
+        }
         scenario.onFragment { fragment ->
             Navigation.setViewNavController(fragment.requireView(), navController)
             fragment.disableProgressBarAnimations()

@@ -16,6 +16,7 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayout
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Description
@@ -59,9 +60,9 @@ private fun disableProgressBarAnimation(progressBar: ProgressBar) {
     progressBar.indeterminateDrawable = ColorDrawable(Color.BLUE)
 }
 
-fun matchesBackgroundColor(expectedResourceId: Int): Matcher<View?>? {
+fun matchesBackgroundColor(expectedResourceId: Int): Matcher<View?> {
     return object :
-        BoundedMatcher<View?, View>(Button::class.java) {
+        BoundedMatcher<View?, View>(MaterialButton::class.java) {
         var actualColor = 0
         var expectedColor = 0
         var message: String? = null

@@ -12,6 +12,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentBindingAdapters
 import com.mustafa.movieguideapp.models.Resource
@@ -65,10 +66,10 @@ class TvSearchResultFilterFragmentTest {
         viewModel = Mockito.mock(TvSearchFilterViewModel::class.java)
 
         `when`(viewModel.searchTvListFilterLiveData).thenReturn(resultsLiveData)
-        `when`(viewModel.totalTvFilterResult).thenReturn(totalResultLiveData)
+        `when`(viewModel.totalTvsCount).thenReturn(totalResultLiveData)
 
         // The arg here is a map of the name of the adapter to the filters that have been selected by the user
-        val mapFilters: Map<String, List<String>>? =
+        val mapFilters: Map<String, List<String>> =
             hashMapOf(
                 RATINGS to listOf("+9"),
                 LANGUAGES to listOf("English")
@@ -91,11 +92,16 @@ class TvSearchResultFilterFragmentTest {
         }
         dataBindingIdlingResourceRule.monitorFragment(scenario)
 
-        navController.setGraph(R.navigation.tv)
+        runOnUiThread {
+            navController.setGraph(R.navigation.tv)
+        }
 
         /*THIS IS SO IMPORTANT To tel the navController that Here we are now */
         /*Otherwise the navController won't know and the nodeDis will null */
-        navController.setCurrentDestination(R.id.tvSearchFragmentResultFilter)
+        runOnUiThread {
+            navController.setCurrentDestination(R.id.tvSearchFragmentResultFilter)
+        }
+
 
         scenario.onFragment { fragment ->
             Navigation.setViewNavController(fragment.requireView(), navController)

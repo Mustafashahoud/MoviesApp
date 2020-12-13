@@ -13,6 +13,8 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.internal.runner.junit4.statement.UiThreadStatement
+import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentBindingAdapters
 import com.mustafa.movieguideapp.models.Resource
@@ -79,13 +81,14 @@ class MovieListFragmentTest {
         dataBindingIdlingResourceRule.monitorFragment(scenario)
 
         // Set the navigation graph to the NavHostController
-        navController.setGraph(R.navigation.movie)
-
-        scenario.onFragment { fragment ->
-            Navigation.setViewNavController(fragment.requireView(), navController)
-            fragment.disableProgressBarAnimations()
+        runOnUiThread {
+            navController.setGraph(R.navigation.movie)
         }
-    }
+            scenario.onFragment { fragment ->
+                Navigation.setViewNavController(fragment.requireView(), navController)
+                fragment.disableProgressBarAnimations()
+            }
+        }
 
     @Test
     fun testBasics_ProgressBar_ToolbarTitle() {

@@ -13,6 +13,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentBindingAdapters
 import com.mustafa.movieguideapp.models.Resource
@@ -86,11 +87,17 @@ class TvSearchResultFragmentTest {
         }
         dataBindingIdlingResourceRule.monitorFragment(scenario)
 
-        navController.setGraph(R.navigation.tv)
+        runOnUiThread {
+            navController.setGraph(R.navigation.tv)
+        }
+
 
         /*THIS IS SO IMPORTANT To tel the navController that Here we are now */
         /*Otherwise the navController won't know and the nodeDis will null */
-        navController.setCurrentDestination(R.id.tvSearchFragmentResult)
+        runOnUiThread {
+            navController.setCurrentDestination(R.id.tvSearchFragmentResult)
+        }
+
 
         scenario.onFragment { fragment ->
             Navigation.setViewNavController(fragment.requireView(), navController)

@@ -8,6 +8,8 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.internal.runner.junit4.statement.UiThreadStatement
+import androidx.test.internal.runner.junit4.statement.UiThreadStatement.runOnUiThread
 import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.util.DataBindingIdlingResourceRule
 import com.mustafa.movieguideapp.util.disableProgressBarAnimations
@@ -46,8 +48,9 @@ class MoviePersonDetailFragmentTest {
         dataBindingIdlingResourceRule.monitorFragment(scenario)
 
         // Set the navigation graph to the NavHostController
-        navController.setGraph(R.navigation.star)
-
+        runOnUiThread {
+            navController.setGraph(R.navigation.star)
+        }
         scenario.onFragment { fragment ->
             Navigation.setViewNavController(fragment.requireView(), navController)
             fragment.disableProgressBarAnimations()
