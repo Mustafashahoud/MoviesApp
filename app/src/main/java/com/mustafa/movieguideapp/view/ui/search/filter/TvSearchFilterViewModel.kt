@@ -20,7 +20,7 @@ class TvSearchFilterViewModel @Inject constructor(
     private var pageFiltersNumber = 1
 
     private val _totalMoviesCount = MutableLiveData<String>()
-    val totalMoviesCount: LiveData<String> get() = _totalMoviesCount
+    val totalTvsCount: LiveData<String> get() = _totalMoviesCount
 
     private var filterData = FilterData()
 

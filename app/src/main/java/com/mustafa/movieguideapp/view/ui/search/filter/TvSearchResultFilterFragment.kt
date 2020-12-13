@@ -26,7 +26,7 @@ class TvSearchResultFilterFragment :
     lateinit var appExecutors: AppExecutors
 
     private val viewModel by viewModels<TvSearchFilterViewModel> { viewModelFactory }
-    private val dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
+    var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
     private var tvsAdapter by autoCleared<TvSearchListAdapter>()
 
 
@@ -38,7 +38,7 @@ class TvSearchResultFilterFragment :
     override fun setBindingVariables() {
         with(binding) {
             lifecycleOwner = this@TvSearchResultFilterFragment.viewLifecycleOwner
-            totalFilterResult = viewModel.totalMoviesCount
+            totalFilterResult = viewModel.totalTvsCount
             selectedFilters = setSelectedFilters()
             callback = object : RetryCallback {
                 override fun retry() {

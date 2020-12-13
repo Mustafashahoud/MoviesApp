@@ -156,6 +156,8 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:2.30"
 
     debugImplementation "androidx.fragment:fragment-testing:$androidFragment"
+    debugImplementation "androidx.test:core:$androidxTestCoreVersion"
+    debugImplementation "androidx.test:monitor:$androidxTestCoreVersion"
 
     // network
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
