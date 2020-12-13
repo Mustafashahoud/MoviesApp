@@ -2,7 +2,7 @@ package com.mustafa.movieguideapp.models
 
 data class FilterData (
     val rating: Int? = null,
-    val sort: String? = null,
+    var sort: String? = null,
     val year: Int? = null,
     val keywords: String? = null,
     val genres: String? = null,

@@ -63,7 +63,7 @@ class SearchCelebritiesResultFragment : Fragment(R.layout.fragment_celebrities_s
     private fun subscribers() {
         viewModel.searchPeopleListLiveData.observe(viewLifecycleOwner) {
             binding.searchResult = viewModel.searchPeopleListLiveData
-            if (it.data != null && it.data.isNotEmpty()) {
+            if (!it.data.isNullOrEmpty()) {
                 adapter.submitList(it.data)
             }
         }

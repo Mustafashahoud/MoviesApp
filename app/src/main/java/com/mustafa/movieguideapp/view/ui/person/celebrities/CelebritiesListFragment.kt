@@ -12,12 +12,14 @@ import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentCelebritiesBinding
 import com.mustafa.movieguideapp.di.Injectable
+import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.InfinitePager
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.PeopleAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
+import com.mustafa.movieguideapp.view.ui.main.MainActivity
 import javax.inject.Inject
 
 class CelebritiesListFragment : Fragment(R.layout.fragment_celebrities), Injectable {
@@ -53,6 +55,7 @@ class CelebritiesListFragment : Fragment(R.layout.fragment_celebrities), Injecta
 
     private fun initializeUI() {
         intiToolbar(getString(R.string.fragment_celebrities))
+        showBottomNavigationView()
         celebritiesAdapter = PeopleAdapter(appExecutors, dataBindingComponent) {
             findNavController().navigate(
                 CelebritiesListFragmentDirections.actionCelebritiesToCelebrity(
@@ -87,7 +90,7 @@ class CelebritiesListFragment : Fragment(R.layout.fragment_celebrities), Injecta
 
     private fun subscribers() {
         viewModel.peopleLiveData.observe(viewLifecycleOwner) {
-            if (it.data != null && it.data.isNotEmpty()) {
+            if (!it.data.isNullOrEmpty()) {
                 celebritiesAdapter.submitList(it.data)
             }
         }
@@ -95,5 +98,9 @@ class CelebritiesListFragment : Fragment(R.layout.fragment_celebrities), Injecta
 
     private fun intiToolbar(title: String) {
         binding.toolbarSearch.toolbarTitle.text = title
+    }
+
+    private fun showBottomNavigationView() {
+        (activity as MainActivity).binding.bottomNavigation.visible()
     }
 }

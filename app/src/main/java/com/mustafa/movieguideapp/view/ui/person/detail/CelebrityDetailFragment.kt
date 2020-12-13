@@ -60,7 +60,9 @@ class CelebrityDetailFragment : Fragment(R.layout.fragment_celebrity_detail), In
 
 
     private fun initializeUI() {
-        binding.toolbarDetail.toolbarBackArrow.setOnClickListener { activity?.onBackPressed() }
+        binding.toolbarDetail.toolbarBackArrow.setOnClickListener {
+            findNavController().navigate( CelebrityDetailFragmentDirections.actionCelebrityDetailToCelebritiesFragment())
+        }
         binding.toolbarDetail.toolbarTitle.text = getSelectedPerson().name
 
         adapterMoviesForCelebrity = MoviePersonListAdapter(

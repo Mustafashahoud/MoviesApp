@@ -52,7 +52,7 @@ class MovieSearchResultFilterFragment :
     override fun observeSubscribers() {
         viewModel.searchMovieListFilterLiveData.observe(viewLifecycleOwner) {
             binding.resource = viewModel.searchMovieListFilterLiveData.value
-            if (it.data != null && it.data.isNotEmpty()) {
+            if (!it.data.isNullOrEmpty()) {
                 moviesAdapter.submitList(it.data)
             }
         }
@@ -106,7 +106,8 @@ class MovieSearchResultFilterFragment :
         viewModel.resetFilterValues()
         viewModel.setFilters(
             getFilterData(),
-            1
+            1,
+            order
         )
     }
 }

@@ -59,7 +59,7 @@ class TvSearchResultFragment : Fragment(R.layout.fragment_tv_search_result), Inj
 
     private fun subscribers() {
         viewModel.searchTvListLiveData.observe(viewLifecycleOwner) {
-            if (it.data != null && it.data.isNotEmpty()) {
+            if (!it.data.isNullOrEmpty()) {
                 tvsadapter.submitList(it.data)
             }
         }

@@ -12,12 +12,14 @@ import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentMoviesBinding
 import com.mustafa.movieguideapp.di.Injectable
+import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.InfinitePager
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.MovieListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
+import com.mustafa.movieguideapp.view.ui.main.MainActivity
 import javax.inject.Inject
 
 class MovieListFragment : Fragment(R.layout.fragment_movies), Injectable {
@@ -59,6 +61,7 @@ class MovieListFragment : Fragment(R.layout.fragment_movies), Injectable {
     private fun initializeUI() {
 
         intiToolbar(getString(R.string.fragment_movies))
+        showBottomNavigationView()
 
         moviesAdapter = MovieListAdapter(appExecutors, dataBindingComponent) {
             findNavController().navigate(
@@ -89,7 +92,7 @@ class MovieListFragment : Fragment(R.layout.fragment_movies), Injectable {
 
     private fun subscribers() {
         viewModel.movieListLiveData.observe(viewLifecycleOwner) {
-            if (it.data != null && it.data.isNotEmpty()) {
+            if (!it.data.isNullOrEmpty()) {
                 moviesAdapter.submitList(it.data)
             }
         }
@@ -110,6 +113,10 @@ class MovieListFragment : Fragment(R.layout.fragment_movies), Injectable {
                     .actionMoviesFragmentToMovieSearchFragment()
             )
         }
+    }
+
+    private fun showBottomNavigationView() {
+        (activity as MainActivity).binding.bottomNavigation.visible()
     }
 
 }

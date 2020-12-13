@@ -32,6 +32,10 @@
             app:argType="com.mustafa.movieguideapp.models.entity.Person" />
 
         <action
+            android:id="@+id/action_celebrityDetail_to_celebritiesFragment"
+            app:popUpTo="@id/celebritiesFragment" />
+
+        <action
             android:id="@+id/action_celebrityDetail_to_celebrityMovieDetail"
             app:destination="@id/celebrityMovieDetail" />
 

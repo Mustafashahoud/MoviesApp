@@ -51,7 +51,7 @@ class TvSearchResultFilterFragment :
     override fun observeSubscribers() {
         viewModel.searchTvListFilterLiveData.observe(viewLifecycleOwner) {
             binding.resource = viewModel.searchTvListFilterLiveData.value
-            if (it.data != null && it.data.isNotEmpty()) {
+            if (!it.data.isNullOrEmpty()) {
                 tvsAdapter.submitList(it.data)
             }
         }

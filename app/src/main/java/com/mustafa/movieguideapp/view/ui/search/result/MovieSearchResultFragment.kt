@@ -61,7 +61,7 @@ class MovieSearchResultFragment : Fragment(R.layout.fragment_movie_search_result
 
     private fun subscribers() {
         viewModel.searchMovieListLiveData.observe(viewLifecycleOwner) {
-            if (it.data != null && it.data.isNotEmpty()) {
+            if (!it.data.isNullOrEmpty()) {
                 moviesAdapter.submitList(it.data)
             }
         }

@@ -12,12 +12,14 @@ import com.mustafa.movieguideapp.R
 import com.mustafa.movieguideapp.binding.FragmentDataBindingComponent
 import com.mustafa.movieguideapp.databinding.FragmentTvsBinding
 import com.mustafa.movieguideapp.di.Injectable
+import com.mustafa.movieguideapp.extension.visible
 import com.mustafa.movieguideapp.models.Status
 import com.mustafa.movieguideapp.utils.InfinitePager
 import com.mustafa.movieguideapp.utils.autoCleared
 import com.mustafa.movieguideapp.view.adapter.TvListAdapter
 import com.mustafa.movieguideapp.view.ui.common.AppExecutors
 import com.mustafa.movieguideapp.view.ui.common.RetryCallback
+import com.mustafa.movieguideapp.view.ui.main.MainActivity
 import javax.inject.Inject
 
 class TvListFragment : Fragment(R.layout.fragment_tvs), Injectable {
@@ -56,6 +58,7 @@ class TvListFragment : Fragment(R.layout.fragment_tvs), Injectable {
 
     private fun initializeUI() {
         intiToolbar(getString(R.string.fragment_tvs))
+        showBottomNavigationView()
         tvsAdapter = TvListAdapter(dataBindingComponent, appExecutors) {
             findNavController().navigate(
                 TvListFragmentDirections.actionTvsToTvDetail(
@@ -90,7 +93,7 @@ class TvListFragment : Fragment(R.layout.fragment_tvs), Injectable {
 
     private fun subscribers() {
         viewModel.tvListLiveData.observe(viewLifecycleOwner) {
-            if (it.data != null && it.data.isNotEmpty()) {
+            if (!it.data.isNullOrEmpty()) {
                 tvsAdapter.submitList(it.data)
             }
         }
@@ -98,6 +101,10 @@ class TvListFragment : Fragment(R.layout.fragment_tvs), Injectable {
 
     private fun intiToolbar(title: String) {
         binding.toolbarSearch.toolbarTitle.text = title
+    }
+
+    private fun showBottomNavigationView() {
+        (activity as MainActivity).binding.bottomNavigation.visible()
     }
 
 }

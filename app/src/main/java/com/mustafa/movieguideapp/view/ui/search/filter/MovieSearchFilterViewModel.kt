@@ -42,9 +42,12 @@ class MovieSearchFilterViewModel @Inject constructor(
 
     fun setFilters(
         filterData: FilterData,
-        page: Int
+        page: Int,
+        order: String
     ) {
-        this.filterData = filterData
+        this.filterData = filterData.also {
+            it.sort = order
+        }
         searchMovieFilterPageLiveData.value = page
     }
 
