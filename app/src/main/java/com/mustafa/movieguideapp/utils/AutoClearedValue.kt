@@ -1,6 +1,5 @@
 package com.mustafa.movieguideapp.utils
 
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -22,7 +21,6 @@ class AutoClearedValue<T : Any>(val fragment: Fragment) : ReadWriteProperty<Frag
                     viewLifecycleOwner?.lifecycle?.addObserver(object : DefaultLifecycleObserver {
                         override fun onDestroy(owner: LifecycleOwner) {
                             _value = null
-                            Log.d("AutoClearedValue", "AutoClearedValue is called for  " + fragment.javaClass.simpleName + "  was cleared")
                         }
                     })
                 }

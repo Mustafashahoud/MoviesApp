@@ -3,15 +3,19 @@
 package com.mustafa.movieguideapp.extension
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.view.View
 import android.view.ViewAnimationUtils
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.DataSource
@@ -20,7 +24,37 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.mustafa.movieguideapp.R
+import com.mustafa.movieguideapp.utils.Constants
 import kotlin.math.max
+
+
+fun Fragment.hideKeyboard() {
+    view?.let { activity?.hideKeyboard(it) }
+}
+
+fun Context.hideKeyboard(view: View) {
+    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+}
+
+/**
+ * This method returns a GridLayoutManager with spanSize 1 when the PagingDataAdapter is loading to show the load_state_item in the center
+ * as if it was linearLayoutManager and with spanSize [spanSize] when it is not loading.
+ * set span size to 1 in GridLayoutManager when LoadState is Loading in Paging Library
+ */
+fun Fragment.getGridLayoutManagerWithSpanSizeOne(
+    adapter: PagingDataAdapter<*, *>,
+    spanSize: Int
+): GridLayoutManager {
+    val gridLayoutManager = GridLayoutManager(requireContext(), spanSize)
+    gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+        override fun getSpanSize(position: Int): Int {
+            val viewType = adapter.getItemViewType(position)
+            return if (viewType == Constants.WALLPAPER_VIEW_TYPE) 1 else spanSize
+        }
+    }
+    return gridLayoutManager
+}
 
 @SuppressLint("ObsoleteSdkInt")
 fun checkIsMaterialVersion() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
