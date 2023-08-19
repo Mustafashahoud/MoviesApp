@@ -39,7 +39,7 @@
   <img src="https://user-images.githubusercontent.com/33812602/80284001-d5db3080-871b-11ea-9c14-201e1ca5df12.jpg" height="400" />
   <img src="https://user-images.githubusercontent.com/33812602/80284006-da9fe480-871b-11ea-8de4-c69530027f27.jpg" height="400" />
   <img src="https://user-images.githubusercontent.com/33812602/80284008-dd023e80-871b-11ea-96c0-848548a306af.jpg" height="400" />
-  <img src="https://user-images.githubusercontent.com/33812602/80284337-3c614e00-871e-11ea-82b6-5b8bcddb92db.gif" height="400" />
+  <img src="https://user-images.githubusercontent.com/33812602/80284337-3c614e00-871e-11ea-82b6-5b8bcddb92db.gif" height="400" width="200" />
 </p>
 
 ## License
